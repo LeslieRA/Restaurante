@@ -180,9 +180,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 	public void generarHashesIniciales() {
 	    System.out.println("\n========= GENERANDO HASHES =========");
 
-	    generarPassword("pjoel1");     // contraseña de joel
-	    generarPassword("palber1");    // contraseña de alberto
-	    generarPassword("padmin1");    // contraseña de admin
+	    generarPassword("111");     // contraseña de joel
+	    //generarPassword("palber1");    // contraseña de alberto
+	    //generarPassword("padmin1");    // contraseña de admin
 
 	    System.out.println("=====================================\n");
 	}
