@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const SECURITY_API_BASE_URL = "https://usuarios-w-production.up.railway.app//api/usuarios";
+const SECURITY_API_BASE_URL = "https://usuarios-w-production.up.railway.app/api/usuarios";
 
 //  Asegurar que axios use el token JWT
 function authHeader() {

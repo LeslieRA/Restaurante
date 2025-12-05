@@ -167,7 +167,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	     return passwordEncoder.matches(rawPassword, encodedPassword);
 	 }
-/*
+
 	// =====================================================
 	// 🔧 Método temporal para generar hashes de contraseña
 	// =====================================================
@@ -185,5 +185,5 @@ public class UsuarioServiceImpl implements UsuarioService {
 	    generarPassword("padmin1");    // contraseña de admin
 
 	    System.out.println("=====================================\n");
-	}*/
+	}
 }
