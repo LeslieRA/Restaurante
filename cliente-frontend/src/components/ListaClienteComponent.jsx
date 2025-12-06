@@ -14,7 +14,7 @@ export const ListaClienteComponent = () => {
   const [hoveredBtn, setHoveredBtn] = useState(null);
   const navegar = useNavigate();
 
-  // Estilos mejorados
+  // Estilos con paleta azul elegante
   const estilos = {
     container: {
       maxWidth: '1200px',
@@ -23,16 +23,16 @@ export const ListaClienteComponent = () => {
       backgroundColor: 'white',
       borderRadius: '15px',
       boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
-      border: '3px solid #f5a540'
+      border: '3px solid #c29c5e'
     },
     title: {
       fontFamily: 'Georgia, serif',
-      color: '#75421e',
+      color: '#2f4858',
       textAlign: 'center',
       fontSize: '2.5rem',
       marginBottom: '2rem',
       paddingBottom: '1rem',
-      borderBottom: '3px solid #f5a540',
+      borderBottom: '3px solid #c29c5e',
       fontWeight: 'bold',
       textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
     },
@@ -46,19 +46,19 @@ export const ListaClienteComponent = () => {
       flex: 1,
       minWidth: '250px',
       padding: '0.8rem 1rem',
-      border: '2px solid #f8bc56',
+      border: '2px solid #e0ddd0',
       borderRadius: '8px',
       fontSize: '1rem',
-      fontFamily: 'system-ui, Arial, sans-serif',
+      fontFamily: 'Arial, sans-serif',
       transition: 'all 0.3s ease',
       outline: 'none'
     },
     searchInputFocus: {
-      borderColor: '#f5a540',
-      boxShadow: '0 0 0 3px rgba(245, 165, 64, 0.2)'
+      borderColor: '#c29c5e',
+      boxShadow: '0 0 0 3px rgba(194, 156, 94, 0.2)'
     },
     btnPrimary: {
-      backgroundColor: '#f5a540',
+      backgroundColor: '#c29c5e',
       color: 'white',
       border: 'none',
       borderRadius: '8px',
@@ -75,8 +75,8 @@ export const ListaClienteComponent = () => {
     },
     btnSecondary: {
       backgroundColor: 'white',
-      color: '#75421e',
-      border: '2px solid #f5a540',
+      color: '#2f4858',
+      border: '2px solid #c29c5e',
       borderRadius: '8px',
       padding: '0.8rem 1.5rem',
       fontSize: '1rem',
@@ -97,8 +97,8 @@ export const ListaClienteComponent = () => {
       overflow: 'hidden'
     },
     thead: {
-      backgroundColor: '#f5a540',
-      color: '#75421e'
+      backgroundColor: '#2f4858',
+      color: '#c29c5e'
     },
     th: {
       padding: '1rem',
@@ -106,34 +106,34 @@ export const ListaClienteComponent = () => {
       fontWeight: 'bold',
       fontSize: '1rem',
       fontFamily: 'Georgia, serif',
-      borderBottom: '2px solid #f28926'
+      borderBottom: '2px solid #1e2f3a'
     },
     td: {
       padding: '1rem',
       textAlign: 'left',
-      borderBottom: '1px solid #f28926',
+      borderBottom: '1px solid #ddd',
       fontSize: '0.95rem',
       transition: 'all 0.2s ease'
     },
     tdCentered: {
       padding: '1rem',
       textAlign: 'center',
-      borderBottom: '1px solid #f28926',
+      borderBottom: '1px solid #ddd',
       fontSize: '0.95rem'
     },
-    rowOdd: {
-      backgroundColor: '#f8bc56'
-    },
     rowEven: {
-      backgroundColor: '#f5a540'
+      backgroundColor: '#f9f9f9'
+    },
+    rowOdd: {
+      backgroundColor: '#ffffff'
     },
     rowHover: {
-      backgroundColor: '#fbd46d',
+      backgroundColor: '#e8e4d9',
       transform: 'scale(1.01)',
       boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
     },
     btnEdit: {
-      backgroundColor: '#f5a540',
+      backgroundColor: '#c29c5e',
       color: 'white',
       border: 'none',
       borderRadius: '6px',
@@ -148,7 +148,7 @@ export const ListaClienteComponent = () => {
       marginRight: '0.5rem'
     },
     btnDelete: {
-      backgroundColor: '#d9534f',
+      backgroundColor: '#c0615f',
       color: 'white',
       border: 'none',
       borderRadius: '6px',
@@ -242,7 +242,7 @@ export const ListaClienteComponent = () => {
     const hoverStyle = {
       transform: 'translateY(-2px)',
       boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
-      backgroundColor: type === 'edit' ? '#f28926' : '#c9302c'
+      backgroundColor: type === 'edit' ? '#a78247' : '#a94442'
     };
     return isHovered ? { ...baseStyle, ...hoverStyle } : baseStyle;
   };
@@ -259,7 +259,7 @@ export const ListaClienteComponent = () => {
           style={{
             ...estilos.btnPrimary,
             ...(hoveredBtn === 'nuevo' ? {
-              backgroundColor: '#f28926',
+              backgroundColor: '#a78247',
               transform: 'translateY(-2px)',
               boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
             } : {})
@@ -285,7 +285,7 @@ export const ListaClienteComponent = () => {
             e.target.style.boxShadow = estilos.searchInputFocus.boxShadow;
           }}
           onBlur={(e) => {
-            e.target.style.borderColor = '#f8bc56';
+            e.target.style.borderColor = '#e0ddd0';
             e.target.style.boxShadow = 'none';
           }}
         />
@@ -293,7 +293,7 @@ export const ListaClienteComponent = () => {
           style={{
             ...estilos.btnSecondary,
             ...(hoveredBtn === 'limpiar' ? {
-              backgroundColor: '#f5a540',
+              backgroundColor: '#c29c5e',
               color: 'white',
               transform: 'translateY(-2px)',
               boxShadow: '0 4px 8px rgba(0,0,0,0.1)'

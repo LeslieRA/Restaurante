@@ -23,7 +23,7 @@ export const ClienteComponent = () => {
   const idUsuario = searchParams.get("idUsuario");
   const nombreFromUsuario = searchParams.get("nombre");
 
-  // Estilos mejorados
+  // Estilos con paleta azul elegante
   const estilos = {
     container: {
       maxWidth: '600px',
@@ -36,7 +36,7 @@ export const ClienteComponent = () => {
     },
     title: {
       fontFamily: 'Georgia, serif',
-      color: '#75421e',
+      color: '#2f4858',
       fontSize: '2.5rem',
       fontWeight: 'bold',
       margin: 0,
@@ -51,7 +51,7 @@ export const ClienteComponent = () => {
       padding: '2.5rem',
       borderRadius: '15px',
       boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
-      border: '3px solid #f5a540'
+      border: '3px solid #c29c5e'
     },
     formGroup: {
       marginBottom: '1.5rem'
@@ -60,37 +60,38 @@ export const ClienteComponent = () => {
       display: 'block',
       fontWeight: 'bold',
       marginBottom: '0.5rem',
-      color: '#75421e',
+      color: '#2f4858',
       fontSize: '1rem',
-      fontFamily: 'system-ui, Arial, sans-serif'
+      fontFamily: 'Arial, sans-serif'
     },
     input: {
       width: '100%',
       padding: '0.9rem 1rem',
-      border: '2px solid #f8bc56',
+      border: '2px solid #e0ddd0',
       borderRadius: '8px',
       fontSize: '1rem',
-      fontFamily: 'system-ui, Arial, sans-serif',
+      fontFamily: 'Arial, sans-serif',
       transition: 'all 0.3s ease',
       outline: 'none',
       backgroundColor: '#fefefe'
     },
     inputFocus: {
-      borderColor: '#f5a540',
-      boxShadow: '0 0 0 3px rgba(245, 165, 64, 0.2)',
+      borderColor: '#c29c5e',
+      boxShadow: '0 0 0 3px rgba(194, 156, 94, 0.2)',
       backgroundColor: 'white'
     },
     inputError: {
-      borderColor: '#d9534f',
+      borderColor: '#a94442',
       backgroundColor: '#fff5f5'
     },
     inputDisabled: {
-      backgroundColor: '#f0f0f0',
+      backgroundColor: '#f4f1ea',
       cursor: 'not-allowed',
-      color: '#888'
+      color: '#888',
+      border: '2px solid #e0ddd0'
     },
     errorMessage: {
-      color: '#d9534f',
+      color: '#a94442',
       fontSize: '0.85rem',
       marginTop: '0.5rem',
       display: 'flex',
@@ -106,7 +107,7 @@ export const ClienteComponent = () => {
       flexWrap: 'wrap'
     },
     btnPrimary: {
-      backgroundColor: '#f5a540',
+      backgroundColor: '#c29c5e',
       color: 'white',
       border: 'none',
       borderRadius: '8px',
@@ -122,8 +123,8 @@ export const ClienteComponent = () => {
     },
     btnSecondary: {
       backgroundColor: 'white',
-      color: '#d9534f',
-      border: '2px solid #d9534f',
+      color: '#c0615f',
+      border: '2px solid #c0615f',
       borderRadius: '8px',
       padding: '0.9rem 2rem',
       fontSize: '1rem',
@@ -142,13 +143,14 @@ export const ClienteComponent = () => {
     },
     badge: {
       display: 'inline-block',
-      backgroundColor: '#fbd46d',
-      color: '#75421e',
+      backgroundColor: '#f4f1ea',
+      color: '#2f4858',
       padding: '0.3rem 0.8rem',
       borderRadius: '20px',
       fontSize: '0.85rem',
       fontWeight: 'bold',
-      marginTop: '0.5rem'
+      marginTop: '0.5rem',
+      border: '1px solid #c29c5e'
     }
   };
 
@@ -296,11 +298,11 @@ export const ClienteComponent = () => {
   const getBtnStyle = (type) => {
     const baseStyle = type === 'primary' ? estilos.btnPrimary : estilos.btnSecondary;
     const hoverStyle = type === 'primary' ? {
-      backgroundColor: '#f28926',
+      backgroundColor: '#a78247',
       transform: 'translateY(-2px)',
       boxShadow: '0 6px 15px rgba(0,0,0,0.2)'
     } : {
-      backgroundColor: '#d9534f',
+      backgroundColor: '#c0615f',
       color: 'white',
       transform: 'translateY(-2px)',
       boxShadow: '0 4px 10px rgba(0,0,0,0.15)'
