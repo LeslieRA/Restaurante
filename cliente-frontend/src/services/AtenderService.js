@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const REST_API_BASE_URL = "https://reservaciones2-production.up.railway.app/api/atender";
+const REST_API_BASE_URL = "https://reservaciones-production-6aad.up.railway.app/api/atender";
 
 // Agregar JWT automáticamente
 function authHeader() {
