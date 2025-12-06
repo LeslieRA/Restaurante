@@ -7,6 +7,8 @@ export const ClienteComponent = () => {
   const [nombreCliente, setNombreCliente] = useState("");
   const [telefonoCliente, setTelefonoCliente] = useState("");
   const [correoCliente, setCorreoCliente] = useState("");
+  const [hoveredBtn, setHoveredBtn] = useState(null);
+  const [focusedInput, setFocusedInput] = useState(null);
 
   const [errors, setErrors] = useState({
     nombreCliente: "",
@@ -20,6 +22,135 @@ export const ClienteComponent = () => {
 
   const idUsuario = searchParams.get("idUsuario");
   const nombreFromUsuario = searchParams.get("nombre");
+
+  // Estilos mejorados
+  const estilos = {
+    container: {
+      maxWidth: '600px',
+      margin: '2rem auto',
+      padding: '2rem'
+    },
+    header: {
+      textAlign: 'center',
+      marginBottom: '2rem'
+    },
+    title: {
+      fontFamily: 'Georgia, serif',
+      color: '#75421e',
+      fontSize: '2.5rem',
+      fontWeight: 'bold',
+      margin: 0,
+      textShadow: '1px 1px 2px rgba(0,0,0,0.1)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '0.5rem'
+    },
+    formContainer: {
+      backgroundColor: 'white',
+      padding: '2.5rem',
+      borderRadius: '15px',
+      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
+      border: '3px solid #f5a540'
+    },
+    formGroup: {
+      marginBottom: '1.5rem'
+    },
+    label: {
+      display: 'block',
+      fontWeight: 'bold',
+      marginBottom: '0.5rem',
+      color: '#75421e',
+      fontSize: '1rem',
+      fontFamily: 'system-ui, Arial, sans-serif'
+    },
+    input: {
+      width: '100%',
+      padding: '0.9rem 1rem',
+      border: '2px solid #f8bc56',
+      borderRadius: '8px',
+      fontSize: '1rem',
+      fontFamily: 'system-ui, Arial, sans-serif',
+      transition: 'all 0.3s ease',
+      outline: 'none',
+      backgroundColor: '#fefefe'
+    },
+    inputFocus: {
+      borderColor: '#f5a540',
+      boxShadow: '0 0 0 3px rgba(245, 165, 64, 0.2)',
+      backgroundColor: 'white'
+    },
+    inputError: {
+      borderColor: '#d9534f',
+      backgroundColor: '#fff5f5'
+    },
+    inputDisabled: {
+      backgroundColor: '#f0f0f0',
+      cursor: 'not-allowed',
+      color: '#888'
+    },
+    errorMessage: {
+      color: '#d9534f',
+      fontSize: '0.85rem',
+      marginTop: '0.5rem',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.3rem',
+      fontWeight: '500'
+    },
+    buttonContainer: {
+      display: 'flex',
+      gap: '1rem',
+      justifyContent: 'center',
+      marginTop: '2rem',
+      flexWrap: 'wrap'
+    },
+    btnPrimary: {
+      backgroundColor: '#f5a540',
+      color: 'white',
+      border: 'none',
+      borderRadius: '8px',
+      padding: '0.9rem 2rem',
+      fontSize: '1rem',
+      fontWeight: 'bold',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem',
+      boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
+    },
+    btnSecondary: {
+      backgroundColor: 'white',
+      color: '#d9534f',
+      border: '2px solid #d9534f',
+      borderRadius: '8px',
+      padding: '0.9rem 2rem',
+      fontSize: '1rem',
+      fontWeight: 'bold',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem'
+    },
+    helperText: {
+      fontSize: '0.85rem',
+      color: '#888',
+      marginTop: '0.3rem',
+      fontStyle: 'italic'
+    },
+    badge: {
+      display: 'inline-block',
+      backgroundColor: '#fbd46d',
+      color: '#75421e',
+      padding: '0.3rem 0.8rem',
+      borderRadius: '20px',
+      fontSize: '0.85rem',
+      fontWeight: 'bold',
+      marginTop: '0.5rem'
+    }
+  };
 
   // Prellenar nombre al venir desde usuario
   useEffect(() => {
@@ -106,8 +237,6 @@ export const ClienteComponent = () => {
       .catch(console.error);
   }
 
-
-
   async function cancelar() {
     const loggedUser = JSON.parse(localStorage.getItem("usuario"));
 
@@ -145,85 +274,147 @@ export const ClienteComponent = () => {
   }
 
   function pagTitulo() {
-    return id ? "Modificar cliente" : "Agregar cliente";
+    return id ? "✏️ Modificar Cliente" : "➕ Agregar Cliente";
   }
 
+  const getInputStyle = (fieldName) => {
+    let style = { ...estilos.input };
+    
+    if (errors[fieldName]) {
+      style = { ...style, ...estilos.inputError };
+    } else if (focusedInput === fieldName) {
+      style = { ...style, ...estilos.inputFocus };
+    }
+    
+    if (fieldName === 'nombreCliente' && nombreFromUsuario) {
+      style = { ...style, ...estilos.inputDisabled };
+    }
+    
+    return style;
+  };
+
+  const getBtnStyle = (type) => {
+    const baseStyle = type === 'primary' ? estilos.btnPrimary : estilos.btnSecondary;
+    const hoverStyle = type === 'primary' ? {
+      backgroundColor: '#f28926',
+      transform: 'translateY(-2px)',
+      boxShadow: '0 6px 15px rgba(0,0,0,0.2)'
+    } : {
+      backgroundColor: '#d9534f',
+      color: 'white',
+      transform: 'translateY(-2px)',
+      boxShadow: '0 4px 10px rgba(0,0,0,0.15)'
+    };
+    
+    return hoveredBtn === type ? { ...baseStyle, ...hoverStyle } : baseStyle;
+  };
+
   return (
-    <div className="container mt-4">
-      <div className="form-header text-center mb-4" style={{ color: "#75421e" }}>
-        <h2>{pagTitulo()}</h2>
+    <div style={estilos.container}>
+      <div style={estilos.header}>
+        <h2 style={estilos.title}>{pagTitulo()}</h2>
       </div>
 
-      <form
-        className="p-4 shadow rounded mx-auto"
-        style={{ backgroundColor: "#fff7e6", maxWidth: "500px" }}
-      >
+      <form style={estilos.formContainer} onSubmit={saveCliente}>
+        
         {/* Nombre */}
-        <div className="mb-3">
-          <label className="form-label fw-bold" style={{ color: "#f28724" }}>
-            Nombre del Cliente
+        <div style={estilos.formGroup}>
+          <label style={estilos.label}>
+            👤 Nombre del Cliente
           </label>
           <input
             type="text"
-            className={`form-control ${errors.nombreCliente ? "is-invalid" : ""}`}
+            style={getInputStyle('nombreCliente')}
             value={nombreCliente}
             onChange={(e) => setNombreCliente(e.target.value)}
+            onFocus={() => setFocusedInput('nombreCliente')}
+            onBlur={() => setFocusedInput(null)}
             disabled={!!nombreFromUsuario}
+            placeholder="Ingrese el nombre completo"
           />
+          {nombreFromUsuario && (
+            <div style={estilos.badge}>
+              🔒 Nombre bloqueado (proviene del usuario)
+            </div>
+          )}
           {errors.nombreCliente && (
-            <div className="invalid-feedback">{errors.nombreCliente}</div>
+            <div style={estilos.errorMessage}>
+              ⚠️ {errors.nombreCliente}
+            </div>
           )}
         </div>
 
         {/* Teléfono */}
-        <div className="mb-3">
-          <label className="form-label fw-bold" style={{ color: "#f28724" }}>
-            Teléfono
+        <div style={estilos.formGroup}>
+          <label style={estilos.label}>
+            📞 Teléfono
           </label>
           <input
             type="tel"
-            className={`form-control ${errors.telefonoCliente ? "is-invalid" : ""}`}
+            style={getInputStyle('telefonoCliente')}
             value={telefonoCliente}
             onChange={(e) => setTelefonoCliente(e.target.value)}
+            onFocus={() => setFocusedInput('telefonoCliente')}
+            onBlur={() => setFocusedInput(null)}
+            placeholder="Ej: 7471234567"
           />
+          {!errors.telefonoCliente && (
+            <div style={estilos.helperText}>
+              💡 Ingrese un número de 10 dígitos
+            </div>
+          )}
           {errors.telefonoCliente && (
-            <div className="invalid-feedback">{errors.telefonoCliente}</div>
+            <div style={estilos.errorMessage}>
+              ⚠️ {errors.telefonoCliente}
+            </div>
           )}
         </div>
 
         {/* Correo */}
-        <div className="mb-3">
-          <label className="form-label fw-bold" style={{ color: "#f28724" }}>
-            Correo
+        <div style={estilos.formGroup}>
+          <label style={estilos.label}>
+            📧 Correo Electrónico
           </label>
           <input
             type="email"
-            className={`form-control ${errors.correoCliente ? "is-invalid" : ""}`}
+            style={getInputStyle('correoCliente')}
             value={correoCliente}
             onChange={(e) => setCorreoCliente(e.target.value)}
+            onFocus={() => setFocusedInput('correoCliente')}
+            onBlur={() => setFocusedInput(null)}
+            placeholder="ejemplo@correo.com"
           />
+          {!errors.correoCliente && (
+            <div style={estilos.helperText}>
+              💡 Correo válido para notificaciones
+            </div>
+          )}
           {errors.correoCliente && (
-            <div className="invalid-feedback">{errors.correoCliente}</div>
+            <div style={estilos.errorMessage}>
+              ⚠️ {errors.correoCliente}
+            </div>
           )}
         </div>
 
         {/* Botones */}
-        <div className="d-flex gap-2 justify-content-center">
+        <div style={estilos.buttonContainer}>
           <button
             type="submit"
-            onClick={saveCliente}
-            className="btn text-white"
-            style={{ backgroundColor: "#f28724" }}
+            style={getBtnStyle('primary')}
+            onMouseEnter={() => setHoveredBtn('primary')}
+            onMouseLeave={() => setHoveredBtn(null)}
           >
-            {id ? "🔄Actualizar" : "✅Guardar"}
+            {id ? "🔄 Actualizar" : "✅ Guardar"}
           </button>
+          
           <button
             type="button"
-            className="btn"
-            style={{ borderColor: "#f28724", color: "#f28724" }}
+            style={getBtnStyle('secondary')}
             onClick={cancelar}
+            onMouseEnter={() => setHoveredBtn('secondary')}
+            onMouseLeave={() => setHoveredBtn(null)}
           >
-            ❌Cancelar
+            ❌ Cancelar
           </button>
         </div>
       </form>
