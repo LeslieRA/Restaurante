@@ -17,7 +17,7 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.setAllowedOrigins(Arrays.asList(
-                "https://front-production-8086.up.railway.app/",
+                "https://front-production-8086.up.railway.app",
                 "http://localhost:3000"
         ));
         config.setAllowedHeaders(Arrays.asList(
