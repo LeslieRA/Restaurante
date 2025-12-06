@@ -1,3 +1,4 @@
+/* --- Base de la Aplicación (Modificado) --- */
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -11,6 +12,10 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+  /* Nuevas variables para unificar la paleta de color cálida */
+  --color-salsa-roja: #d9534f; /* Rojo vivo para acciones/hover */
+  --color-cafe-oscuro: #75421e; /* Café para botones de fondo */
 }
 
 .navbar {
@@ -21,13 +26,14 @@
   z-index: 1000;
 }
 
+/* Enlaces (Modificado) */
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--color-salsa-roja); /* Usando Rojo Salsa */
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: #c9302c; /* Tono más oscuro del Rojo Salsa */
 }
 
 body {
@@ -48,6 +54,7 @@ main {
   margin-top: 70px; /* ajusta según la altura de tu navbar */
 }
 
+/* Botones (Modificado) */
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -55,16 +62,18 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--color-cafe-oscuro); /* Usando Café Oscuro */
+  color: white; /* Para asegurar contraste sobre café */
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: border-color 0.25s, background-color 0.25s; /* Agregamos background para la transición */
 }
 button:hover {
-  border-color: #646cff;
+  border-color: var(--color-salsa-roja); /* Borde Rojo Salsa */
+  background-color: #5d351b; /* Tono más oscuro para el hover del botón */
 }
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 4px auto var(--color-salsa-roja); /* Outline Rojo Salsa */
 }
 
 @media (prefers-color-scheme: light) {
@@ -73,13 +82,20 @@ button:focus-visible {
     background-color: #ffffff;
   }
   a:hover {
-    color: #747bff;
+    color: #c9302c; /* Tono oscuro del Rojo Salsa */
   }
   button {
     background-color: #f9f9f9;
+    color: #213547;
+    border: 1px solid #ccc;
+  }
+  button:hover {
+    background-color: #e0e0e0;
+    border-color: var(--color-salsa-roja);
   }
 }
 
+/* --- Estilos de la Tabla --- */
 /* Título de la tabla */
 .titulo-clientes {
   font-weight: bold;
@@ -106,10 +122,14 @@ button:focus-visible {
 
 /* Bordes más definidos */
 .tabla-clientes {
+  border-collapse: collapse; /* Añadido para mejor visualización */
+  width: 100%; /* Añadido para ocupar todo el ancho */
+  margin: 0 auto;
   border: 1px solid #f28926;
 }
 
 .tabla-clientes td, 
 .tabla-clientes th {
+  padding: 10px; /* Añadido padding para legibilidad */
   border: 1px solid #f28926;
 }
