@@ -54,7 +54,7 @@ public class SecurityConfig {
 
         config.setAllowedOrigins(
             java.util.List.of(
-                "https://frontend-production-5988.up.railway.app"
+                "https://front-production-8086.up.railway.app/"
             )
         );
 
