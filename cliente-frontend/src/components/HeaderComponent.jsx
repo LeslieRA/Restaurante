@@ -21,7 +21,7 @@ export const HeaderComponent = () => {
           {/* LOGO */}
           <div className="d-flex align-items-center">
             <img src="/logo.png" width="60" height="60" alt="Logo" />
-            <span className="navbar-brand fw-bold text-white ms-3">Qué Birria</span>
+            <span className="navbar-brand fw-bold text-white ms-3">El Café</span>
           </div>
 
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
