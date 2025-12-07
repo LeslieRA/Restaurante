@@ -91,7 +91,7 @@ export const HomeComponent = () => {
           
           <p style={{
             fontSize: '1.3rem',
-            color: 'white',
+            color: 'black',
             maxWidth: '600px',
             margin: '0 auto 30px',
             lineHeight: '1.6'
@@ -116,7 +116,7 @@ export const HomeComponent = () => {
             </button>
             <button style={{
               backgroundColor: 'transparent',
-              color: 'white',
+              color: 'black',
               border: '2px solid white',
               padding: '15px 35px',
               borderRadius: '30px',
@@ -291,7 +291,7 @@ export const HomeComponent = () => {
                         top: '15px',
                         right: '15px',
                         backgroundColor: colores.verde,
-                        color: 'white',
+                        color: 'black',
                         padding: '6px 12px',
                         borderRadius: '20px',
                         fontSize: '12px',
@@ -357,7 +357,7 @@ export const HomeComponent = () => {
             ) : (
               <div className="col-12 text-center" style={{ padding: '60px 20px' }}>
                 <div style={{ fontSize: '4rem', marginBottom: '20px' }}>☕</div>
-                <p style={{ color: '#999', fontSize: '1.1rem' }}>
+                <p style={{ color: '#000000ff', fontSize: '1.1rem' }}>
                   No hay productos disponibles en este momento
                 </p>
               </div>
@@ -393,7 +393,7 @@ export const HomeComponent = () => {
                 fontSize: '2.5rem',
                 fontWeight: 'bold',
                 marginBottom: '25px',
-                color: 'white'
+                color: 'black'
               }}>
                 Pasión por el Café Perfecto
               </h2>
@@ -402,7 +402,7 @@ export const HomeComponent = () => {
                 lineHeight: '1.8',
                 marginBottom: '20px',
                 opacity: 0.95,
-                color: 'white'
+                color: 'black'
               }}>
                 En <strong>El Café Elegante</strong>, cada taza es una obra de arte. 
                 Desde 1995, hemos perfeccionado el arte de crear experiencias 
@@ -429,7 +429,7 @@ export const HomeComponent = () => {
                   fontSize: '1.2rem',
                   fontStyle: 'italic',
                   opacity: 0.9,
-                  color: 'white'
+                  color: 'black'
                 }}>
                   "El café es el abrazo líquido para tu alma"
                 </p>
@@ -557,7 +557,7 @@ export const HomeComponent = () => {
             fontSize: '2.2rem',
             fontWeight: 'bold',
             marginBottom: '15px',
-            color: 'white'
+            color: 'black'
           }}>
             ¿Listo para tu próxima experiencia?
           </h3>
@@ -626,7 +626,7 @@ export const HomeComponent = () => {
               margin: 0,
               color: 'white'
             }}>
-              © 2024 El Café Elegante. Todos los derechos reservados.
+             
             </p>
           </div>
         </div>
