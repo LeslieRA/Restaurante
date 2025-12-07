@@ -4,9 +4,9 @@ import { HeroSlider } from "./HeroSlider";
 import { listaProductos } from "../services/ProductoService";
 
 export const HomeComponent = () => {
-
   const [productos, setProductos] = useState([]);
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('todos');
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f5f5dc";
@@ -24,278 +24,640 @@ export const HomeComponent = () => {
       .catch(console.error);
   }, []);
 
-  const estilos = {
-    heroSection: {
-      backgroundColor: '#2f4858',
-      color: 'white'
-    },
-    welcomeSection: {
-      backgroundColor: '#c29c5e',
-      color: 'white'
-    },
-    menuSection: {
-      backgroundColor: '#f5f5dc'
-    },
-    aboutSection: {
-      backgroundColor: '#899458',
-      color: 'white'
-    },
-    testimonialSection: {
-      backgroundColor: '#f5f5dc'
-    },
-    productCard: {
-      backgroundColor: 'white',
-      transition: 'all 0.3s ease',
-      border: '2px solid #e0ddd0',
-      cursor: 'pointer'
-    },
-    productCardHover: {
-      transform: 'translateY(-8px)',
-      boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
-      borderColor: '#c29c5e'
-    },
-    testimonialCard: {
-      backgroundColor: 'white',
-      border: '2px solid #c29c5e'
-    },
-    titlePrimary: {
-      color: '#2f4858',
-      fontFamily: 'Georgia, serif'
-    },
-    priceTag: {
-      color: '#578661',
-      fontSize: '1.2rem'
-    }
+  const colores = {
+    azulOscuro: '#2f4858',
+    dorado: '#c29c5e',
+    beige: '#f5f5dc',
+    verdeOliva: '#899458',
+    verde: '#578661',
+    beigeClaro: '#f4f1ea'
   };
 
-  const getCardStyle = (index) => {
-    const baseStyle = estilos.productCard;
-    return hoveredCard === index 
-      ? { ...baseStyle, ...estilos.productCardHover }
-      : baseStyle;
-  };
+  const categorias = [
+    { id: 'todos', nombre: '☕ Todos', icono: '🍽️' },
+    { id: 'bebidas', nombre: 'Bebidas Calientes', icono: '☕' },
+    { id: 'frias', nombre: 'Bebidas Frías', icono: '🥤' },
+    { id: 'postres', nombre: 'Postres', icono: '🍰' },
+    { id: 'snacks', nombre: 'Snacks', icono: '🥐' }
+  ];
 
   return (
-    <div className="w-100" style={{ overflowX: "hidden", padding: 0, margin: 0 }}>
-
-      {/* 🎞️ HERO SLIDER */}
+    <div style={{ backgroundColor: colores.beige, minHeight: '100vh' }}>
+      
+      {/* HERO SLIDER */}
       <HeroSlider />
 
-      {/* 🟦 SECCIÓN AZUL ELEGANTE DE BIENVENIDA */}
-      <section
-        className="text-white py-5 w-100"
-        style={estilos.welcomeSection}
+      {/* BANNER PRINCIPAL CON DEGRADADO */}
+      <div 
+        style={{
+          background: `linear-gradient(135deg, ${colores.azulOscuro} 0%, ${colores.verdeOliva} 100%)`,
+          padding: '80px 20px',
+          position: 'relative',
+          overflow: 'hidden'
+        }}
       >
-        <div className="container-fluid text-center">
-          <h1 className="fw-bold display-5" style={{ fontFamily: 'Georgia, serif' }}>
-            Bienvenido a El Café Elegante
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)',
+          backgroundSize: '30px 30px',
+          opacity: 0.3
+        }}></div>
+        
+        <div className="container text-center position-relative" style={{ zIndex: 1 }}>
+          <div style={{
+            display: 'inline-block',
+            backgroundColor: colores.dorado,
+            padding: '8px 24px',
+            borderRadius: '25px',
+            marginBottom: '20px',
+            fontSize: '14px',
+            fontWeight: 'bold',
+            color: 'white',
+            letterSpacing: '1px'
+          }}>
+            ✨ CAFETERÍA PREMIUM
+          </div>
+          
+          <h1 style={{
+            fontFamily: 'Georgia, serif',
+            fontSize: '3.5rem',
+            fontWeight: 'bold',
+            color: 'white',
+            marginBottom: '20px',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
+          }}>
+            El Café Elegante
           </h1>
-          <p className="lead mt-3 mx-auto" style={{ maxWidth: "800px" }}>
-            El sabor auténtico que conquista desde el primer sorbo.
+          
+          <p style={{
+            fontSize: '1.3rem',
+            color: colores.beige,
+            maxWidth: '600px',
+            margin: '0 auto 30px',
+            lineHeight: '1.6'
+          }}>
+            Donde cada taza cuenta una historia de sabor y tradición
           </p>
-          <p className="lead mt-3 mx-auto" style={{ maxWidth: "800px" }}>
-            Tradición, sazón y amor en cada plato 🍽️✨
-          </p>
+
+          <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button style={{
+              backgroundColor: colores.dorado,
+              color: 'white',
+              border: 'none',
+              padding: '15px 35px',
+              borderRadius: '30px',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+            }}>
+              Ver Menú 📖
+            </button>
+            <button style={{
+              backgroundColor: 'transparent',
+              color: 'white',
+              border: '2px solid white',
+              padding: '15px 35px',
+              borderRadius: '30px',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease'
+            }}>
+              Hacer Pedido 🛒
+            </button>
+          </div>
         </div>
-      </section>
+      </div>
 
-      {/* 📌 EXPLORA EL MENÚ */}
-      <section className="py-5 w-100" style={estilos.menuSection}>
-        <div className="container-fluid text-center">
-          <h2 className="fw-bold mb-3" style={estilos.titlePrimary}>
-            Explora Nuestro Menú
-          </h2>
-          <p className="text-muted mb-4 mx-auto" style={{ maxWidth: "600px" }}>
-            Descubre nuestros platillos especiales preparados con ingredientes frescos
-            y un toque único que nos distingue.
-          </p>
+      {/* CARACTERÍSTICAS PRINCIPALES */}
+      <div style={{ backgroundColor: 'white', padding: '60px 20px' }}>
+        <div className="container">
+          <div className="row g-4">
+            {[
+              { icono: '☕', titulo: 'Café Premium', desc: 'Granos seleccionados de las mejores regiones' },
+              { icono: '🍰', titulo: 'Repostería Artesanal', desc: 'Postres frescos hechos diariamente' },
+              { icono: '🌿', titulo: '100% Natural', desc: 'Ingredientes orgánicos y de temporada' },
+              { icono: '⚡', titulo: 'Servicio Rápido', desc: 'Tu pedido listo en minutos' }
+            ].map((item, idx) => (
+              <div key={idx} className="col-md-3 col-sm-6">
+                <div style={{
+                  textAlign: 'center',
+                  padding: '30px 20px',
+                  borderRadius: '15px',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer',
+                  backgroundColor: hoveredCard === `feature-${idx}` ? colores.beigeClaro : 'transparent'
+                }}
+                onMouseEnter={() => setHoveredCard(`feature-${idx}`)}
+                onMouseLeave={() => setHoveredCard(null)}
+                >
+                  <div style={{
+                    fontSize: '3rem',
+                    marginBottom: '15px'
+                  }}>
+                    {item.icono}
+                  </div>
+                  <h5 style={{
+                    color: colores.azulOscuro,
+                    fontWeight: 'bold',
+                    marginBottom: '10px',
+                    fontFamily: 'Georgia, serif'
+                  }}>
+                    {item.titulo}
+                  </h5>
+                  <p style={{
+                    color: '#666',
+                    fontSize: '14px',
+                    margin: 0
+                  }}>
+                    {item.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
+      </div>
 
-        <div className="container-fluid mt-4">
-          <div className="row justify-content-center g-4">
+      {/* CATEGORÍAS Y PRODUCTOS */}
+      <div style={{ backgroundColor: colores.beige, padding: '80px 20px' }}>
+        <div className="container">
+          <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+            <h2 style={{
+              fontFamily: 'Georgia, serif',
+              fontSize: '2.8rem',
+              color: colores.azulOscuro,
+              fontWeight: 'bold',
+              marginBottom: '15px'
+            }}>
+              Nuestro Menú Especial
+            </h2>
+            <div style={{
+              width: '80px',
+              height: '4px',
+              backgroundColor: colores.dorado,
+              margin: '0 auto 20px',
+              borderRadius: '2px'
+            }}></div>
+            <p style={{
+              color: '#666',
+              fontSize: '1.1rem',
+              maxWidth: '600px',
+              margin: '0 auto'
+            }}>
+              Explora nuestra selección de bebidas y delicias preparadas con amor
+            </p>
+          </div>
 
+          {/* Filtros de categorías */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '12px',
+            marginBottom: '40px',
+            flexWrap: 'wrap'
+          }}>
+            {categorias.map(cat => (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                style={{
+                  backgroundColor: selectedCategory === cat.id ? colores.dorado : 'white',
+                  color: selectedCategory === cat.id ? 'white' : colores.azulOscuro,
+                  border: `2px solid ${selectedCategory === cat.id ? colores.dorado : '#ddd'}`,
+                  padding: '12px 24px',
+                  borderRadius: '25px',
+                  fontSize: '15px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: selectedCategory === cat.id ? '0 4px 12px rgba(194,156,94,0.3)' : 'none'
+                }}
+              >
+                {cat.icono} {cat.nombre}
+              </button>
+            ))}
+          </div>
+
+          {/* Grid de Productos */}
+          <div className="row g-4">
             {productos.length > 0 ? (
               productos.map((producto, index) => (
-                <div
-                  key={producto.id_producto}
-                  className="col-12 col-sm-6 col-md-4 col-lg-3"
-                >
+                <div key={producto.id_producto} className="col-lg-3 col-md-4 col-sm-6">
                   <div
-                    className="shadow-sm h-100 p-3 rounded"
-                    style={getCardStyle(index)}
+                    style={{
+                      backgroundColor: 'white',
+                      borderRadius: '20px',
+                      overflow: 'hidden',
+                      boxShadow: hoveredCard === index ? '0 12px 30px rgba(0,0,0,0.15)' : '0 4px 15px rgba(0,0,0,0.08)',
+                      transition: 'all 0.4s ease',
+                      transform: hoveredCard === index ? 'translateY(-10px)' : 'translateY(0)',
+                      cursor: 'pointer',
+                      border: `3px solid ${hoveredCard === index ? colores.dorado : 'transparent'}`
+                    }}
                     onMouseEnter={() => setHoveredCard(index)}
                     onMouseLeave={() => setHoveredCard(null)}
                   >
-
-                    {producto.imagen ? (
-                      <img
-                        src={producto.imagen}
-                        className="card-img-top rounded"
-                        alt={producto.nombreProducto}
-                        style={{ 
-                          height: "200px", 
-                          objectFit: "cover",
-                          border: '2px solid #e0ddd0'
-                        }}
-                      />
-                    ) : (
-                      <div
-                        className="d-flex align-items-center justify-content-center rounded"
-                        style={{ 
-                          height: "200px",
-                          backgroundColor: '#f4f1ea',
-                          border: '2px solid #e0ddd0'
-                        }}
-                      >
-                        <span className="text-muted">Sin imagen</span>
+                    <div style={{ position: 'relative', overflow: 'hidden' }}>
+                      {producto.imagen ? (
+                        <img
+                          src={producto.imagen}
+                          alt={producto.nombreProducto}
+                          style={{
+                            width: '100%',
+                            height: '220px',
+                            objectFit: 'cover',
+                            transition: 'transform 0.4s ease',
+                            transform: hoveredCard === index ? 'scale(1.1)' : 'scale(1)'
+                          }}
+                        />
+                      ) : (
+                        <div style={{
+                          width: '100%',
+                          height: '220px',
+                          backgroundColor: colores.beigeClaro,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '3rem'
+                        }}>
+                          ☕
+                        </div>
+                      )}
+                      <div style={{
+                        position: 'absolute',
+                        top: '15px',
+                        right: '15px',
+                        backgroundColor: colores.verde,
+                        color: 'white',
+                        padding: '6px 12px',
+                        borderRadius: '20px',
+                        fontSize: '12px',
+                        fontWeight: 'bold'
+                      }}>
+                        Disponible
                       </div>
-                    )}
-
-                    <div className="text-center mt-3">
-                      <h5 
-                        className="card-title" 
-                        style={{ 
-                          color: '#2f4858',
-                          fontFamily: 'Georgia, serif',
-                          fontWeight: 'bold'
-                        }}
-                      >
-                        {producto.nombreProducto}
-                      </h5>
-                      <p className="card-text text-muted small">
-                        {producto.descripcionProducto}
-                      </p>
-                      <p className="fw-bold" style={estilos.priceTag}>
-                        ${producto.precioProducto.toFixed(2)}
-                      </p>
                     </div>
 
+                    <div style={{ padding: '20px' }}>
+                      <h5 style={{
+                        fontFamily: 'Georgia, serif',
+                        color: colores.azulOscuro,
+                        fontWeight: 'bold',
+                        fontSize: '1.2rem',
+                        marginBottom: '8px'
+                      }}>
+                        {producto.nombreProducto}
+                      </h5>
+                      
+                      <p style={{
+                        color: '#777',
+                        fontSize: '14px',
+                        marginBottom: '15px',
+                        lineHeight: '1.5',
+                        minHeight: '40px'
+                      }}>
+                        {producto.descripcionProducto}
+                      </p>
+
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                      }}>
+                        <span style={{
+                          fontSize: '1.5rem',
+                          fontWeight: 'bold',
+                          color: colores.verde,
+                          fontFamily: 'Georgia, serif'
+                        }}>
+                          ${producto.precioProducto.toFixed(2)}
+                        </span>
+                        <button style={{
+                          backgroundColor: colores.dorado,
+                          color: 'white',
+                          border: 'none',
+                          padding: '10px 20px',
+                          borderRadius: '20px',
+                          fontSize: '14px',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          transition: 'all 0.3s ease',
+                          opacity: hoveredCard === index ? 1 : 0.8
+                        }}>
+                          Ordenar +
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-center text-muted">No hay productos disponibles.</p>
+              <div className="col-12 text-center" style={{ padding: '60px 20px' }}>
+                <div style={{ fontSize: '4rem', marginBottom: '20px' }}>☕</div>
+                <p style={{ color: '#999', fontSize: '1.1rem' }}>
+                  No hay productos disponibles en este momento
+                </p>
+              </div>
             )}
-
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* 🌿 SOBRE NOSOTROS */}
-      <section className="py-5 w-100" style={estilos.aboutSection}>
-        <div className="container-fluid text-center">
-          <h2 className="fw-bold mb-3" style={{ fontFamily: 'Georgia, serif' }}>
-            Sobre Nosotros
-          </h2>
-          <p
-            className="mx-auto"
-            style={{ 
-              maxWidth: "800px", 
-              lineHeight: "1.7",
-              fontSize: '1.1rem'
-            }}
-          >
-            En <strong style={{ color: '#f5f5dc' }}>El Café Elegante</strong> nos apasiona brindar un sabor único lleno de tradición.
-            Cocinamos nuestros platillos con dedicación, siguiendo recetas familiares de generaciones.
-          </p>
-          <p
-            className="mx-auto mt-3"
-            style={{ 
-              maxWidth: "800px", 
-              lineHeight: "1.7"
-            }}
-          >
-            Cada plato es preparado con amor y los mejores ingredientes para ofrecerte una experiencia gastronómica inolvidable.
-          </p>
-        </div>
-      </section>
-
-      {/* ⭐ TESTIMONIOS */}
-      <section className="py-5 w-100" style={estilos.testimonialSection}>
-        <div className="container-fluid text-center">
-          <h2 className="fw-bold mb-4" style={estilos.titlePrimary}>
-            Lo que Dicen Nuestros Clientes
-          </h2>
-        </div>
-
-        <div className="container-fluid">
-          <div className="row g-4 justify-content-center">
-
-            {/* Testimonio 1 */}
-            <div className="col-md-4 col-lg-3">
-              <div
-                className="p-4 rounded shadow-sm h-100"
-                style={estilos.testimonialCard}
-              >
-                <h5 className="fw-bold" style={{ color: '#2f4858' }}>
-                  María Gómez
-                </h5>
-                <p className="text-muted small">Cliente frecuente</p>
-                <p className="fst-italic" style={{ color: '#555' }}>
-                  "La mejor experiencia gastronómica. Los sabores están en otro nivel."
-                </p>
-                <div style={{ color: '#c29c5e', fontSize: '1.2rem' }}>
-                  ⭐⭐⭐⭐⭐
+      {/* SECCIÓN SOBRE NOSOTROS CON IMAGEN */}
+      <div style={{
+        background: `linear-gradient(to right, ${colores.verdeOliva}, ${colores.verde})`,
+        padding: '80px 20px',
+        color: 'white'
+      }}>
+        <div className="container">
+          <div className="row align-items-center">
+            <div className="col-md-6">
+              <div style={{
+                backgroundColor: colores.dorado,
+                padding: '8px 20px',
+                borderRadius: '20px',
+                display: 'inline-block',
+                fontSize: '13px',
+                fontWeight: 'bold',
+                marginBottom: '20px',
+                letterSpacing: '1px'
+              }}>
+                🌿 NUESTRA HISTORIA
+              </div>
+              <h2 style={{
+                fontFamily: 'Georgia, serif',
+                fontSize: '2.5rem',
+                fontWeight: 'bold',
+                marginBottom: '25px'
+              }}>
+                Pasión por el Café Perfecto
+              </h2>
+              <p style={{
+                fontSize: '1.1rem',
+                lineHeight: '1.8',
+                marginBottom: '20px',
+                opacity: 0.95
+              }}>
+                En <strong>El Café Elegante</strong>, cada taza es una obra de arte. 
+                Desde 1995, hemos perfeccionado el arte de crear experiencias 
+                inolvidables a través del café y la repostería artesanal.
+              </p>
+              <p style={{
+                fontSize: '1.1rem',
+                lineHeight: '1.8',
+                opacity: 0.95
+              }}>
+                Nuestros baristas expertos seleccionan los mejores granos y 
+                nuestros pasteleros preparan delicias frescas cada mañana. 
+                Todo con amor y dedicación para ti.
+              </p>
+              <div style={{ marginTop: '30px' }}>
+                <div style={{ display: 'flex', gap: '30px', flexWrap: 'wrap' }}>
+                  {[
+                    { num: '28+', label: 'Años de Experiencia' },
+                    { num: '50K+', label: 'Clientes Felices' },
+                    { num: '100+', label: 'Recetas Únicas' }
+                  ].map((stat, idx) => (
+                    <div key={idx}>
+                      <div style={{
+                        fontSize: '2rem',
+                        fontWeight: 'bold',
+                        fontFamily: 'Georgia, serif',
+                        color: colores.dorado
+                      }}>
+                        {stat.num}
+                      </div>
+                      <div style={{ fontSize: '14px', opacity: 0.9 }}>
+                        {stat.label}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
-
-            {/* Testimonio 2 */}
-            <div className="col-md-4 col-lg-3">
-              <div
-                className="p-4 rounded shadow-sm h-100"
-                style={estilos.testimonialCard}
-              >
-                <h5 className="fw-bold" style={{ color: '#2f4858' }}>
-                  José Ramírez
-                </h5>
-                <p className="text-muted small">Visitante</p>
-                <p className="fst-italic" style={{ color: '#555' }}>
-                  "Los platillos tienen un sabor único. El servicio es excepcional."
-                </p>
-                <div style={{ color: '#c29c5e', fontSize: '1.2rem' }}>
-                  ⭐⭐⭐⭐⭐
+            <div className="col-md-6">
+              <div style={{
+                backgroundColor: 'rgba(255,255,255,0.1)',
+                borderRadius: '20px',
+                padding: '40px',
+                backdropFilter: 'blur(10px)',
+                border: '2px solid rgba(255,255,255,0.2)'
+              }}>
+                <div style={{
+                  fontSize: '6rem',
+                  textAlign: 'center',
+                  marginBottom: '20px'
+                }}>
+                  ☕
                 </div>
+                <p style={{
+                  textAlign: 'center',
+                  fontSize: '1.2rem',
+                  fontStyle: 'italic',
+                  opacity: 0.9
+                }}>
+                  "El café es el abrazo líquido para tu alma"
+                </p>
               </div>
             </div>
-
-            {/* Testimonio 3 */}
-            <div className="col-md-4 col-lg-3">
-              <div
-                className="p-4 rounded shadow-sm h-100"
-                style={estilos.testimonialCard}
-              >
-                <h5 className="fw-bold" style={{ color: '#2f4858' }}>
-                  Ana Torres
-                </h5>
-                <p className="text-muted small">Cliente nueva</p>
-                <p className="fst-italic" style={{ color: '#555' }}>
-                  "Ambiente elegante y servicio impecable. Altamente recomendado."
-                </p>
-                <div style={{ color: '#c29c5e', fontSize: '1.2rem' }}>
-                  ⭐⭐⭐⭐⭐
-                </div>
-              </div>
-            </div>
-
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* 📍 FOOTER / LLAMADO A LA ACCIÓN */}
-      <section 
-        className="py-4 w-100 text-center text-white"
-        style={{ backgroundColor: '#2f4858' }}
-      >
-        <div className="container-fluid">
-          <p className="mb-2" style={{ fontSize: '1.1rem' }}>
-            📍 Visítanos o haz tu pedido en línea
-          </p>
-          <p className="text-muted mb-0" style={{ fontSize: '0.9rem' }}>
-            © 2024 El Café Elegante. Todos los derechos reservados.
-          </p>
+      {/* TESTIMONIOS MODERNOS */}
+      <div style={{ backgroundColor: 'white', padding: '80px 20px' }}>
+        <div className="container">
+          <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+            <h2 style={{
+              fontFamily: 'Georgia, serif',
+              fontSize: '2.5rem',
+              color: colores.azulOscuro,
+              fontWeight: 'bold',
+              marginBottom: '15px'
+            }}>
+              Voces de Nuestros Clientes
+            </h2>
+            <div style={{
+              width: '80px',
+              height: '4px',
+              backgroundColor: colores.dorado,
+              margin: '0 auto',
+              borderRadius: '2px'
+            }}></div>
+          </div>
+
+          <div className="row g-4">
+            {[
+              {
+                nombre: 'María Gómez',
+                rol: 'Cliente VIP',
+                texto: 'El mejor café que he probado en mi vida. El ambiente es acogedor y el personal siempre amable.',
+                avatar: '👩'
+              },
+              {
+                nombre: 'José Ramírez',
+                rol: 'Visitante Frecuente',
+                texto: 'Sus postres son espectaculares. Cada visita es una experiencia única que vale totalmente la pena.',
+                avatar: '👨'
+              },
+              {
+                nombre: 'Ana Torres',
+                rol: 'Cliente Nueva',
+                texto: 'Quedé fascinada con la calidad. Sin duda mi nueva cafetería favorita en la ciudad.',
+                avatar: '👩‍🦰'
+              }
+            ].map((testimonio, idx) => (
+              <div key={idx} className="col-md-4">
+                <div style={{
+                  backgroundColor: colores.beigeClaro,
+                  padding: '30px',
+                  borderRadius: '20px',
+                  border: `3px solid ${colores.dorado}`,
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer',
+                  transform: hoveredCard === `test-${idx}` ? 'translateY(-5px)' : 'translateY(0)',
+                  boxShadow: hoveredCard === `test-${idx}` ? '0 8px 25px rgba(0,0,0,0.1)' : '0 4px 10px rgba(0,0,0,0.05)'
+                }}
+                onMouseEnter={() => setHoveredCard(`test-${idx}`)}
+                onMouseLeave={() => setHoveredCard(null)}
+                >
+                  <div style={{
+                    fontSize: '3rem',
+                    marginBottom: '15px'
+                  }}>
+                    {testimonio.avatar}
+                  </div>
+                  <p style={{
+                    fontStyle: 'italic',
+                    color: '#555',
+                    lineHeight: '1.7',
+                    marginBottom: '20px',
+                    fontSize: '15px'
+                  }}>
+                    "{testimonio.texto}"
+                  </p>
+                  <div style={{
+                    borderTop: `2px solid ${colores.dorado}`,
+                    paddingTop: '15px'
+                  }}>
+                    <h6 style={{
+                      color: colores.azulOscuro,
+                      fontWeight: 'bold',
+                      marginBottom: '5px'
+                    }}>
+                      {testimonio.nombre}
+                    </h6>
+                    <p style={{
+                      color: '#999',
+                      fontSize: '13px',
+                      margin: 0
+                    }}>
+                      {testimonio.rol}
+                    </p>
+                    <div style={{
+                      color: colores.dorado,
+                      fontSize: '1rem',
+                      marginTop: '8px'
+                    }}>
+                      ⭐⭐⭐⭐⭐
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </section>
+      </div>
+
+      {/* LLAMADO A LA ACCIÓN FINAL */}
+      <div style={{
+        background: `linear-gradient(135deg, ${colores.azulOscuro} 0%, ${colores.verdeOliva} 100%)`,
+        padding: '60px 20px',
+        textAlign: 'center',
+        color: 'white'
+      }}>
+        <div className="container">
+          <h3 style={{
+            fontFamily: 'Georgia, serif',
+            fontSize: '2.2rem',
+            fontWeight: 'bold',
+            marginBottom: '15px'
+          }}>
+            ¿Listo para tu próxima experiencia?
+          </h3>
+          <p style={{
+            fontSize: '1.1rem',
+            marginBottom: '30px',
+            opacity: 0.9
+          }}>
+            Visítanos hoy y descubre por qué somos la cafetería favorita de la ciudad
+          </p>
+          <button style={{
+            backgroundColor: colores.dorado,
+            color: 'white',
+            border: 'none',
+            padding: '18px 45px',
+            borderRadius: '30px',
+            fontSize: '17px',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+            boxShadow: '0 6px 20px rgba(0,0,0,0.3)',
+            transition: 'all 0.3s ease'
+          }}>
+            📍 Hacer mi Pedido Ahora
+          </button>
+        </div>
+      </div>
+
+      {/* FOOTER */}
+      <div style={{
+        backgroundColor: colores.azulOscuro,
+        color: 'white',
+        padding: '40px 20px 20px',
+        textAlign: 'center'
+      }}>
+        <div className="container">
+          <div style={{
+            fontSize: '2.5rem',
+            marginBottom: '15px'
+          }}>
+            ☕
+          </div>
+          <h4 style={{
+            fontFamily: 'Georgia, serif',
+            marginBottom: '10px'
+          }}>
+            El Café Elegante
+          </h4>
+          <p style={{
+            opacity: 0.7,
+            fontSize: '14px',
+            marginBottom: '20px'
+          }}>
+            Tradición, sabor y elegancia en cada taza
+          </p>
+          <div style={{
+            borderTop: '1px solid rgba(255,255,255,0.2)',
+            paddingTop: '20px',
+            marginTop: '20px'
+          }}>
+            <p style={{
+              fontSize: '13px',
+              opacity: 0.6,
+              margin: 0
+            }}>
+              © 2024 El Café Elegante. Todos los derechos reservados.
+            </p>
+          </div>
+        </div>
+      </div>
 
     </div>
   );
