@@ -439,110 +439,7 @@ export const HomeComponent = () => {
         </div>
       </div>
 
-      {/* TESTIMONIOS MODERNOS */}
-      <div style={{ backgroundColor: 'white', padding: '80px 20px', color: '#000' }}>
-        <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '50px' }}>
-            <h2 style={{
-              fontFamily: 'Georgia, serif',
-              fontSize: '2.5rem',
-              color: '#000',
-              fontWeight: 'bold',
-              marginBottom: '15px'
-            }}>
-              Voces de Nuestros Clientes
-            </h2>
-            <div style={{
-              width: '80px',
-              height: '4px',
-              backgroundColor: colores.dorado,
-              margin: '0 auto',
-              borderRadius: '2px'
-            }}></div>
-          </div>
-
-          <div className="row g-4">
-            {[
-              {
-                nombre: 'María Gómez',
-                rol: 'Cliente VIP',
-                texto: 'El mejor café que he probado en mi vida. El ambiente es acogedor y el personal siempre amable.',
-                avatar: '👩'
-              },
-              {
-                nombre: 'José Ramírez',
-                rol: 'Visitante Frecuente',
-                texto: 'Sus postres son espectaculares. Cada visita es una experiencia única que vale totalmente la pena.',
-                avatar: '👨'
-              },
-              {
-                nombre: 'Ana Torres',
-                rol: 'Cliente Nueva',
-                texto: 'Quedé fascinada con la calidad. Sin duda mi nueva cafetería favorita en la ciudad.',
-                avatar: '👩‍🦰'
-              }
-            ].map((testimonio, idx) => (
-              <div key={idx} className="col-md-4">
-                <div style={{
-                  backgroundColor: colores.beigeClaro,
-                  padding: '30px',
-                  borderRadius: '20px',
-                  border: `3px solid ${colores.dorado}`,
-                  transition: 'all 0.3s ease',
-                  cursor: 'pointer',
-                  transform: hoveredCard === `test-${idx}` ? 'translateY(-5px)' : 'translateY(0)',
-                  boxShadow: hoveredCard === `test-${idx}` ? '0 8px 25px rgba(0,0,0,0.1)' : '0 4px 10px rgba(0,0,0,0.05)'
-                }}
-                onMouseEnter={() => setHoveredCard(`test-${idx}`)}
-                onMouseLeave={() => setHoveredCard(null)}
-                >
-                  <div style={{
-                    fontSize: '3rem',
-                    marginBottom: '15px'
-                  }}>
-                    {testimonio.avatar}
-                  </div>
-                  <p style={{
-                    fontStyle: 'italic',
-                    color: '#000',
-                    lineHeight: '1.7',
-                    marginBottom: '20px',
-                    fontSize: '15px'
-                  }}>
-                    "{testimonio.texto}"
-                  </p>
-                  <div style={{
-                    borderTop: `2px solid ${colores.dorado}`,
-                    paddingTop: '15px'
-                  }}>
-                    <h6 style={{
-                      color: '#000',
-                      fontWeight: 'bold',
-                      marginBottom: '5px'
-                    }}>
-                      {testimonio.nombre}
-                    </h6>
-                    <p style={{
-                      color: '#666',
-                      fontSize: '13px',
-                      margin: 0
-                    }}>
-                      {testimonio.rol}
-                    </p>
-                    <div style={{
-                      color: colores.dorado,
-                      fontSize: '1rem',
-                      marginTop: '8px'
-                    }}>
-                      ⭐⭐⭐⭐⭐
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+     
 
       {/* LLAMADO A LA ACCIÓN FINAL */}
       <div style={{
@@ -608,7 +505,7 @@ export const HomeComponent = () => {
             El Café Elegante
           </h4>
           <p style={{
-            color: 'white',
+            color: 'black',
             opacity: 0.9,
             fontSize: '14px',
             marginBottom: '20px'
