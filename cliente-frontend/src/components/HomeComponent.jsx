@@ -43,10 +43,7 @@ export const HomeComponent = () => {
   return (
     <div style={{ backgroundColor: colores.beige, minHeight: '100vh' }}>
       
-      {/* HERO SLIDER */}
-      <HeroSlider />
-
-      {/* BANNER PRINCIPAL CON DEGRADADO */}
+      {/* BANNER PRINCIPAL CON DEGRADADO (NO CAMBIO A NEGRO porque el fondo es oscuro) */}
       <div 
         style={{
           background: `linear-gradient(135deg, ${colores.azulOscuro} 0%, ${colores.verdeOliva} 100%)`,
@@ -94,7 +91,7 @@ export const HomeComponent = () => {
           
           <p style={{
             fontSize: '1.3rem',
-            color: colores.beige,
+            color: 'white',
             maxWidth: '600px',
             margin: '0 auto 30px',
             lineHeight: '1.6'
@@ -105,7 +102,7 @@ export const HomeComponent = () => {
           <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <button style={{
               backgroundColor: colores.dorado,
-              color: 'white',
+              color: 'black',
               border: 'none',
               padding: '15px 35px',
               borderRadius: '30px',
@@ -135,7 +132,7 @@ export const HomeComponent = () => {
       </div>
 
       {/* CARACTERÍSTICAS PRINCIPALES */}
-      <div style={{ backgroundColor: 'white', padding: '60px 20px' }}>
+      <div style={{ backgroundColor: 'white', padding: '60px 20px', color: '#000' }}>
         <div className="container">
           <div className="row g-4">
             {[
@@ -163,7 +160,7 @@ export const HomeComponent = () => {
                     {item.icono}
                   </div>
                   <h5 style={{
-                    color: colores.azulOscuro,
+                    color: '#000',
                     fontWeight: 'bold',
                     marginBottom: '10px',
                     fontFamily: 'Georgia, serif'
@@ -171,7 +168,7 @@ export const HomeComponent = () => {
                     {item.titulo}
                   </h5>
                   <p style={{
-                    color: '#666',
+                    color: '#000',
                     fontSize: '14px',
                     margin: 0
                   }}>
@@ -185,13 +182,13 @@ export const HomeComponent = () => {
       </div>
 
       {/* CATEGORÍAS Y PRODUCTOS */}
-      <div style={{ backgroundColor: colores.beige, padding: '80px 20px' }}>
+      <div style={{ backgroundColor: colores.beige, padding: '80px 20px', color: '#000' }}>
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: '50px' }}>
             <h2 style={{
               fontFamily: 'Georgia, serif',
               fontSize: '2.8rem',
-              color: colores.azulOscuro,
+              color: '#000',
               fontWeight: 'bold',
               marginBottom: '15px'
             }}>
@@ -205,7 +202,7 @@ export const HomeComponent = () => {
               borderRadius: '2px'
             }}></div>
             <p style={{
-              color: '#666',
+              color: '#000',
               fontSize: '1.1rem',
               maxWidth: '600px',
               margin: '0 auto'
@@ -228,7 +225,7 @@ export const HomeComponent = () => {
                 onClick={() => setSelectedCategory(cat.id)}
                 style={{
                   backgroundColor: selectedCategory === cat.id ? colores.dorado : 'white',
-                  color: selectedCategory === cat.id ? 'white' : colores.azulOscuro,
+                  color: selectedCategory === cat.id ? 'white' : '#000',
                   border: `2px solid ${selectedCategory === cat.id ? colores.dorado : '#ddd'}`,
                   padding: '12px 24px',
                   borderRadius: '25px',
@@ -304,10 +301,10 @@ export const HomeComponent = () => {
                       </div>
                     </div>
 
-                    <div style={{ padding: '20px' }}>
+                    <div style={{ padding: '20px', color: '#000' }}>
                       <h5 style={{
                         fontFamily: 'Georgia, serif',
-                        color: colores.azulOscuro,
+                        color: '#000',
                         fontWeight: 'bold',
                         fontSize: '1.2rem',
                         marginBottom: '8px'
@@ -316,7 +313,7 @@ export const HomeComponent = () => {
                       </h5>
                       
                       <p style={{
-                        color: '#777',
+                        color: '#000',
                         fontSize: '14px',
                         marginBottom: '15px',
                         lineHeight: '1.5',
@@ -340,7 +337,7 @@ export const HomeComponent = () => {
                         </span>
                         <button style={{
                           backgroundColor: colores.dorado,
-                          color: 'white',
+                          color: '#000',
                           border: 'none',
                           padding: '10px 20px',
                           borderRadius: '20px',
@@ -369,7 +366,7 @@ export const HomeComponent = () => {
         </div>
       </div>
 
-      {/* SECCIÓN SOBRE NOSOTROS CON IMAGEN */}
+      {/* SECCIÓN SOBRE NOSOTROS CON IMAGEN (texto principal en negro para fondo claro y en blanco cuando fondo oscuro) */}
       <div style={{
         background: `linear-gradient(to right, ${colores.verdeOliva}, ${colores.verde})`,
         padding: '80px 20px',
@@ -386,7 +383,8 @@ export const HomeComponent = () => {
                 fontSize: '13px',
                 fontWeight: 'bold',
                 marginBottom: '20px',
-                letterSpacing: '1px'
+                letterSpacing: '1px',
+                color: '#000'
               }}>
                 🌿 NUESTRA HISTORIA
               </div>
@@ -394,7 +392,8 @@ export const HomeComponent = () => {
                 fontFamily: 'Georgia, serif',
                 fontSize: '2.5rem',
                 fontWeight: 'bold',
-                marginBottom: '25px'
+                marginBottom: '25px',
+                color: 'white'
               }}>
                 Pasión por el Café Perfecto
               </h2>
@@ -402,44 +401,13 @@ export const HomeComponent = () => {
                 fontSize: '1.1rem',
                 lineHeight: '1.8',
                 marginBottom: '20px',
-                opacity: 0.95
+                opacity: 0.95,
+                color: 'white'
               }}>
                 En <strong>El Café Elegante</strong>, cada taza es una obra de arte. 
                 Desde 1995, hemos perfeccionado el arte de crear experiencias 
                 inolvidables a través del café y la repostería artesanal.
               </p>
-              <p style={{
-                fontSize: '1.1rem',
-                lineHeight: '1.8',
-                opacity: 0.95
-              }}>
-                Nuestros baristas expertos seleccionan los mejores granos y 
-                nuestros pasteleros preparan delicias frescas cada mañana. 
-                Todo con amor y dedicación para ti.
-              </p>
-              <div style={{ marginTop: '30px' }}>
-                <div style={{ display: 'flex', gap: '30px', flexWrap: 'wrap' }}>
-                  {[
-                    { num: '28+', label: 'Años de Experiencia' },
-                    { num: '50K+', label: 'Clientes Felices' },
-                    { num: '100+', label: 'Recetas Únicas' }
-                  ].map((stat, idx) => (
-                    <div key={idx}>
-                      <div style={{
-                        fontSize: '2rem',
-                        fontWeight: 'bold',
-                        fontFamily: 'Georgia, serif',
-                        color: colores.dorado
-                      }}>
-                        {stat.num}
-                      </div>
-                      <div style={{ fontSize: '14px', opacity: 0.9 }}>
-                        {stat.label}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
             <div className="col-md-6">
               <div style={{
@@ -460,7 +428,8 @@ export const HomeComponent = () => {
                   textAlign: 'center',
                   fontSize: '1.2rem',
                   fontStyle: 'italic',
-                  opacity: 0.9
+                  opacity: 0.9,
+                  color: 'white'
                 }}>
                   "El café es el abrazo líquido para tu alma"
                 </p>
@@ -471,13 +440,13 @@ export const HomeComponent = () => {
       </div>
 
       {/* TESTIMONIOS MODERNOS */}
-      <div style={{ backgroundColor: 'white', padding: '80px 20px' }}>
+      <div style={{ backgroundColor: 'white', padding: '80px 20px', color: '#000' }}>
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: '50px' }}>
             <h2 style={{
               fontFamily: 'Georgia, serif',
               fontSize: '2.5rem',
-              color: colores.azulOscuro,
+              color: '#000',
               fontWeight: 'bold',
               marginBottom: '15px'
             }}>
@@ -535,7 +504,7 @@ export const HomeComponent = () => {
                   </div>
                   <p style={{
                     fontStyle: 'italic',
-                    color: '#555',
+                    color: '#000',
                     lineHeight: '1.7',
                     marginBottom: '20px',
                     fontSize: '15px'
@@ -547,14 +516,14 @@ export const HomeComponent = () => {
                     paddingTop: '15px'
                   }}>
                     <h6 style={{
-                      color: colores.azulOscuro,
+                      color: '#000',
                       fontWeight: 'bold',
                       marginBottom: '5px'
                     }}>
                       {testimonio.nombre}
                     </h6>
                     <p style={{
-                      color: '#999',
+                      color: '#666',
                       fontSize: '13px',
                       margin: 0
                     }}>
@@ -587,20 +556,22 @@ export const HomeComponent = () => {
             fontFamily: 'Georgia, serif',
             fontSize: '2.2rem',
             fontWeight: 'bold',
-            marginBottom: '15px'
+            marginBottom: '15px',
+            color: 'white'
           }}>
             ¿Listo para tu próxima experiencia?
           </h3>
           <p style={{
             fontSize: '1.1rem',
             marginBottom: '30px',
-            opacity: 0.9
+            opacity: 0.9,
+            color: 'white'
           }}>
             Visítanos hoy y descubre por qué somos la cafetería favorita de la ciudad
           </p>
           <button style={{
             backgroundColor: colores.dorado,
-            color: 'white',
+            color: 'black',
             border: 'none',
             padding: '18px 45px',
             borderRadius: '30px',
@@ -615,7 +586,7 @@ export const HomeComponent = () => {
         </div>
       </div>
 
-      {/* FOOTER */}
+      {/* FOOTER (mantuve texto blanco por contraste con fondo oscuro) */}
       <div style={{
         backgroundColor: colores.azulOscuro,
         color: 'white',
@@ -631,12 +602,14 @@ export const HomeComponent = () => {
           </div>
           <h4 style={{
             fontFamily: 'Georgia, serif',
-            marginBottom: '10px'
+            marginBottom: '10px',
+            color: 'white'
           }}>
             El Café Elegante
           </h4>
           <p style={{
-            opacity: 0.7,
+            color: 'white',
+            opacity: 0.9,
             fontSize: '14px',
             marginBottom: '20px'
           }}>
@@ -650,7 +623,8 @@ export const HomeComponent = () => {
             <p style={{
               fontSize: '13px',
               opacity: 0.6,
-              margin: 0
+              margin: 0,
+              color: 'white'
             }}>
               © 2024 El Café Elegante. Todos los derechos reservados.
             </p>
