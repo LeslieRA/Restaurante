@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { HeroSlider } from "./HeroSlider";
 import { listaProductos } from "../services/ProductoService";
 
 export const HomeComponent = () => {
