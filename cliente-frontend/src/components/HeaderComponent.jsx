@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { getUsuarioLogueado, logout } from "../services/AuthService";
 
 export const HeaderComponent = () => {
   const [usuario, setUsuario] = useState(getUsuarioLogueado());
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false); // mobile menu
+  const [adminOpen, setAdminOpen] = useState(false); // admin dropdown
+  const adminRef = useRef(null);
 
   useEffect(() => {
     const handler = () => setUsuario(getUsuarioLogueado());
@@ -12,328 +14,346 @@ export const HeaderComponent = () => {
     return () => window.removeEventListener("authChange", handler);
   }, []);
 
+  // cerrar el dropdown de admin al hacer clic fuera
+  useEffect(() => {
+    const onClickOutside = (e) => {
+      if (adminRef.current && !adminRef.current.contains(e.target)) {
+        setAdminOpen(false);
+      }
+    };
+    if (adminOpen) document.addEventListener("mousedown", onClickOutside);
+    else document.removeEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, [adminOpen]);
+
   const rol = usuario?.perfil;
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
+  const toggleAdmin = () => setAdminOpen((s) => !s);
 
   return (
     <>
       <style>{`
-        /* =========================================
-           ESTILOS DEL HEADER
-           ========================================= */
+        /* ---------- HEADER BASE ---------- */
         .main-header {
           background-color: #2f4858;
-          padding: 0 1.5rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
           position: fixed;
           top: 0;
           left: 0;
           right: 0;
           z-index: 2000;
-          font-family: 'Arial', sans-serif;
-          width: 100%;
-          box-sizing: border-box;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+          font-family: Arial, Helvetica, sans-serif;
+          color: #f1f1f1;
         }
 
         .container-fluid {
-          width: 100%;
-          max-width: 100%;
+          max-width: 1200px;
+          margin: 0 auto;
           display: flex;
           align-items: center;
-          gap: 1.5rem;
-          padding: 0.8rem 1.5rem;
           justify-content: space-between;
+          gap: 1rem;
+          padding: 0.8rem 1rem;
+          box-sizing: border-box;
         }
 
-        /* LOGO */
-        .logo {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          flex-shrink: 0;
-        }
-
+        /* logo */
         .logo-link {
-          color: #c29c5e;
-          text-decoration: none;
-          font-size: 1.5rem;
-          font-weight: bold;
-          font-family: 'Georgia', serif;
           display: flex;
           align-items: center;
-          gap: 12px;
-          white-space: nowrap;
-          min-width: fit-content;
+          gap: 10px;
+          text-decoration: none;
+          color: #c29c5e;
+          font-weight: 700;
+          font-family: Georgia, serif;
+          font-size: 1.4rem;
         }
 
         .logo-img {
-          width: 55px;
-          height: 55px;
-          object-fit: cover;
-          transition: transform 0.3s ease;
+          width: 48px;
+          height: 48px;
           border-radius: 8px;
+          object-fit: cover;
         }
 
-        .logo-img:hover {
-          transform: scale(1.05);
-        }
-
-        .brandText {
-          color: #c29c5e;
-        }
-
-        /* NAVEGACIÓN */
-        .nav-root {
-          width: 100%;
-          display: flex;
-        }
-
+        /* navegación principal */
+        .nav-root { flex: 1; display: flex; justify-content: center; }
         .nav-collapse {
           display: flex;
           align-items: center;
-          gap: 1.5rem;
-          justify-content: space-between;
-          flex: 1;
-        }
-
-        .nav-list-main,
-        .nav-list-right {
-          margin: 0;
-          padding: 0;
-          list-style: none;
-          display: flex;
-          gap: 0.5rem;
-          align-items: center;
+          width: 100%;
+          justify-content: center;
         }
 
         .nav-list-main {
-          flex: 1;
+          display: flex;
+          gap: 0.6rem;
+          align-items: center;
+          flex-wrap: wrap; /* permite que las opciones "salten" a la siguiente línea si hay muchas */
           justify-content: center;
-          overflow-x: auto;
-          scrollbar-width: none;
+          padding: 0;
+          margin: 0;
+          list-style: none;
         }
 
-        .nav-list-main::-webkit-scrollbar {
-          display: none;
-        }
-
+        .nav-item { display: inline-flex; }
         .nav-link {
-          color: #f0f0f0;
+          display: inline-block;
+          padding: 0.45rem 0.9rem;
           text-decoration: none;
-          font-size: 0.9rem;
-          padding: 0.6rem 1rem;
+          color: #eef3f4;
           border-radius: 6px;
-          transition: all 0.2s ease;
-          font-weight: 500;
+          font-weight: 600;
+          font-size: 0.95rem;
+          transition: background 0.18s, transform 0.18s;
           white-space: nowrap;
         }
-
         .nav-link:hover {
-          background-color: rgba(255, 255, 255, 0.1);
-          color: #ffffff;
+          background: rgba(255,255,255,0.06);
           transform: translateY(-2px);
         }
 
-        /* USUARIO */
-        .user-info {
+        /* zona derecha (login / user) */
+        .nav-list-right {
           display: flex;
+          gap: 0.8rem;
           align-items: center;
-          gap: 1rem;
-          border-left: 1px solid rgba(255, 255, 255, 0.15);
-          padding-left: 1.2rem;
+          list-style: none;
+          margin: 0;
+          padding: 0;
         }
 
-        .welcomeText {
+        .btn-plain {
+          padding: 0.45rem 0.9rem;
+          border-radius: 6px;
+          border: 1px solid transparent;
+          background: transparent;
+          color: #fff;
+          cursor: pointer;
+          font-weight: 600;
+        }
+
+        .btn-cta {
+          background: #c75f54;
+          color: white;
+          border: none;
           padding: 0.5rem 1rem;
           border-radius: 8px;
-          font-weight: 600;
-          font-size: 0.9rem;
-          color: #fff;
-          background: rgba(255, 255, 255, 0.05);
-        }
-
-        .username-text {
-          color: #f4e6c8;
-        }
-
-        .btn-logout {
-          background: #d9534f;
-          border: none;
-          padding: 0.5rem 1.1rem;
-          color: #fff;
-          font-weight: 600;
-          border-radius: 6px;
           cursor: pointer;
-          transition: all 0.2s ease;
+          font-weight: 700;
+        }
+        .btn-cta:hover { transform: translateY(-2px); }
+
+        /* ADMIN DROPDOWN */
+        .admin-button {
+          position: relative;
         }
 
-        .btn-logout:hover {
-          background-color: #c9302c;
-          transform: translateY(-2px);
+        .admin-dropdown {
+          position: absolute;
+          top: calc(100% + 8px);
+          right: 0;
+          background: #2b3f47;
+          border-radius: 8px;
+          padding: 0.5rem;
+          box-shadow: 0 10px 30px rgba(15,15,15,0.35);
+          min-width: 240px;
+          z-index: 3000;
         }
 
-        /* BOTÓN HAMBURGUESA */
+        .admin-dropdown ul {
+          list-style: none;
+          padding: 0.4rem;
+          margin: 0;
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 0.35rem;
+        }
+
+        .admin-dropdown a {
+          display: block;
+          padding: 0.5rem 0.7rem;
+          text-decoration: none;
+          color: #eef3f4;
+          border-radius: 6px;
+          font-weight: 600;
+        }
+        .admin-dropdown a:hover {
+          background: rgba(255,255,255,0.04);
+        }
+
+        .admin-dropdown .logout-row {
+          margin-top: 0.4rem;
+          display: flex;
+          gap: 0.5rem;
+          justify-content: flex-end;
+        }
+
+        /* BOTÓN HAMBURGUESA (móvil) */
         .navbar-toggler-custom {
           display: none;
           background: transparent;
-          border: 1px solid rgba(255, 255, 255, 0.3);
+          border: 1px solid rgba(255,255,255,0.14);
           color: #fff;
-          padding: 0.5rem 0.8rem;
+          padding: 0.45rem 0.6rem;
           border-radius: 6px;
           cursor: pointer;
-          font-size: 1.2rem;
         }
 
-        /* === MEGA MENÚ ESPECIAL ADMIN === */
-        .admin-grid {
-          display: grid;
-          grid-template-columns: repeat(2, auto);
-          gap: 0.5rem 1.5rem;
-          padding: 0.5rem 1rem;
-        }
+        /* ajustes globales para no superponer contenido bajo header */
+        body { padding-top: 86px; }
 
+        /* RESPONSIVE */
         @media (max-width: 992px) {
-          .admin-grid {
-            grid-template-columns: 1fr;
-          }
+          .nav-root { justify-content: flex-end; }
+          .nav-collapse { flex-direction: column; align-items: stretch; gap: 0.6rem; }
+          .nav-list-main { justify-content: flex-start; padding-left: 0.4rem; }
+          .navbar-toggler-custom { display: inline-flex; }
 
-          .navbar-toggler-custom {
-            display: inline-flex;
-          }
+          /* cuando está cerrado el menu, lo ocultamos con clases dinámicas en JSX */
+          .nav-collapse.mobile-hidden { display: none; }
 
-          .nav-collapse {
-            display: ${menuOpen ? "flex" : "none"};
-            flex-direction: column;
-            background: #2f4858;
-            padding: 1rem;
-            border-radius: 12px;
-          }
-
-          .nav-list-main,
-          .nav-list-right {
-            flex-direction: column;
-            width: 100%;
-          }
-
-          .nav-link {
-            width: 100%;
-            padding: 0.7rem 1rem;
-          }
-
-          .user-info {
-            flex-direction: column;
-            border-left: none;
-            padding-left: 0;
-            width: 100%;
-          }
+          .admin-dropdown { right: 1rem; left: 1rem; }
         }
 
-        body {
-          padding-top: 90px;
+        /* ajustes visuales menores */
+        .welcomeText {
+          padding: 0.45rem 0.8rem;
+          border-radius: 8px;
+          background: rgba(255,255,255,0.03);
+          color: #f5f3ea;
+          font-weight: 600;
         }
+
       `}</style>
 
       <header className="main-header">
         <div className="container-fluid">
-
           {/* LOGO */}
-          <div className="logo">
-            <Link to="/" className="logo-link">
-              <img src="/logo.png" className="logo-img" alt="Logo" />
-              <span className="brandText">Café del Sol</span>
-            </Link>
-          </div>
+          <Link to="/" className="logo-link" aria-label="Inicio">
+            <img src="/logo.png" alt="logo" className="logo-img" />
+            <span>Café del Sol</span>
+          </Link>
 
-          {/* BOTÓN MÓVIL */}
-          <button className="navbar-toggler-custom" onClick={toggleMenu}>
+          {/* BOTON HAMBURGUESA (solo visible small) */}
+          <button
+            className="navbar-toggler-custom"
+            onClick={toggleMenu}
+            aria-label="Abrir menú"
+          >
             ☰
           </button>
 
-          <nav className="nav-root">
-            <div className={`nav-collapse ${menuOpen ? "open" : ""}`}>
+          {/* NAVEGACIÓN */}
+          <nav className="nav-root" role="navigation" aria-label="Menú principal">
+            <div className={`nav-collapse ${menuOpen ? "" : "mobile-hidden"}`}>
 
-              <ul className="nav-list-main">
-                <li className="nav-item">
-                  <Link className="nav-link" to="/">🏠 Inicio</Link>
+              <ul className="nav-list-main" role="menubar">
+                <li className="nav-item" role="none">
+                  <Link className="nav-link" to="/" role="menuitem">Inicio</Link>
                 </li>
 
-                {/* CLIENTE */}
                 {rol === "cliente" && (
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/reserva/lista">📅 Mis Reservas</Link>
-                  </li>
+                  <li className="nav-item"><Link className="nav-link" to="/reserva/lista">Mis Reservas</Link></li>
                 )}
 
-                {/* MESERO */}
                 {rol === "mesero" && (
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/venta/lista">📊 Ventas</Link>
-                  </li>
+                  <li className="nav-item"><Link className="nav-link" to="/venta/lista">Ventas</Link></li>
                 )}
 
-                {/* CAJERO */}
                 {rol === "cajero" && (
                   <>
-                    <li className="nav-item"><Link className="nav-link" to="/cliente/lista">👥 Clientes</Link></li>
-                    <li className="nav-item"><Link className="nav-link" to="/reserva/lista">📅 Reservas</Link></li>
-                    <li className="nav-item"><Link className="nav-link" to="/venta/lista">📊 Ventas</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/cliente/lista">Clientes</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/reserva/lista">Reservas</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/venta/lista">Ventas</Link></li>
                   </>
                 )}
 
-                {/* SUPERVISOR */}
                 {rol === "supervisor" && (
                   <>
-                    <li className="nav-item"><Link className="nav-link" to="/usuarios/lista">👤 Usuarios</Link></li>
-                    <li className="nav-item"><Link className="nav-link" to="/empleado/lista">👨‍💼 Empleados</Link></li>
-                    <li className="nav-item"><Link className="nav-link" to="/cliente/lista">👥 Clientes</Link></li>
-                    <li className="nav-item"><Link className="nav-link" to="/producto/lista">🍽️ Productos</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/usuarios/lista">Usuarios</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/empleado/lista">Empleados</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/cliente/lista">Clientes</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/producto/lista">Productos</Link></li>
                   </>
                 )}
 
-                {/* ADMINISTRADOR (EN 2 COLUMNAS) */}
+                {/* ADMIN: un único botón que abre un dropdown con las opciones */}
                 {rol === "administrador" && (
-                  <div className="admin-grid">
-                    <li className="nav-item"><Link className="nav-link" to="/usuarios/lista">👤 Usuarios</Link></li>
-                    <li className="nav-item"><Link className="nav-link" to="/cliente/lista">👥 Clientes</Link></li>
+                  <li className="nav-item admin-button" ref={adminRef}>
+                    <button
+                      onClick={toggleAdmin}
+                      className="nav-link btn-plain"
+                      aria-expanded={adminOpen}
+                      aria-haspopup="true"
+                    >
+                      Administración
+                    </button>
 
-                    <li className="nav-item"><Link className="nav-link" to="/empleado/lista">👨‍💼 Empleados</Link></li>
-                    <li className="nav-item"><Link className="nav-link" to="/mesa/lista">📍 Mesas</Link></li>
+                    {adminOpen && (
+                      <div className="admin-dropdown" role="menu" aria-label="Panel de administración">
+                        <ul>
+                          <li><Link to="/usuarios/lista">Usuarios</Link></li>
+                          <li><Link to="/cliente/lista">Clientes</Link></li>
+                          <li><Link to="/empleado/lista">Empleados</Link></li>
+                          <li><Link to="/mesa/lista">Mesas</Link></li>
+                          <li><Link to="/tipoProducto/lista">Tipos de productos</Link></li>
+                          <li><Link to="/producto/lista">Productos</Link></li>
+                          <li><Link to="/reserva/lista">Reservas</Link></li>
+                          <li><Link to="/venta/lista">Ventas</Link></li>
+                        </ul>
 
-                    <li className="nav-item"><Link className="nav-link" to="/tipoProducto/lista">🏷️ Tipos de productos</Link></li>
-                    <li className="nav-item"><Link className="nav-link" to="/producto/lista">🍽️ Productos</Link></li>
-
-                    <li className="nav-item"><Link className="nav-link" to="/reserva/lista">📅 Reservas</Link></li>
-                    <li className="nav-item"><Link className="nav-link" to="/venta/lista">📊 Ventas</Link></li>
-                  </div>
-                )}
-              </ul>
-
-              {/* DERECHA */}
-              <ul className="nav-list-right">
-                {!usuario ? (
-                  <>
-                    <li><Link className="nav-link" to="/login">🔐 Iniciar sesión</Link></li>
-                    <li><Link className="nav-link" to="/usuarios/crear">➕ Registrarse</Link></li>
-                  </>
-                ) : (
-                  <li className="user-list-item">
-                    <div className="user-info">
-                      <span className="welcomeText">
-                        🤗 Bienvenido <span className="username-text">{rol} {usuario.nombre}</span>
-                      </span>
-                      <button onClick={logout} className="btn-logout">⍈ Cerrar sesión</button>
-                    </div>
+                        <div className="logout-row">
+                          <button
+                            onClick={() => { setAdminOpen(false); logout(); }}
+                            className="btn-cta"
+                          >
+                            Cerrar sesión
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </li>
                 )}
+
               </ul>
 
             </div>
           </nav>
 
+          {/* ZONA DERECHA: si no hay usuario --> mostrar links de login/registro.
+              Si hay usuario y no es admin (o incluso si es admin), se muestra un saludo compacto. */}
+          <ul className="nav-list-right" aria-hidden={false}>
+            {!usuario ? (
+              <>
+                <li><Link className="nav-link" to="/login">Iniciar sesión</Link></li>
+                <li><Link className="nav-link" to="/usuarios/crear">Registrarse</Link></li>
+              </>
+            ) : (
+              <>
+                {/* Si quieres que el admin también tenga aquí algo, lo dejamos simple */}
+                <li>
+                  <div className="welcomeText" title={`Conectado como ${usuario.nombre}`}>
+                    {usuario.nombre}
+                  </div>
+                </li>
+
+                {/* En caso de que quieras un botón de logout rápido visible para todos */}
+                {rol !== "administrador" && (
+                  <li>
+                    <button
+                      onClick={logout}
+                      className="btn-cta"
+                    >
+                      Cerrar sesión
+                    </button>
+                  </li>
+                )}
+                {/* Nota: para el administrador el botón de cerrar sesión está dentro del dropdown como pediste */}
+              </>
+            )}
+          </ul>
         </div>
       </header>
     </>
