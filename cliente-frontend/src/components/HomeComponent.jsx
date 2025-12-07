@@ -72,7 +72,7 @@ export const HomeComponent = () => {
             marginBottom: '20px',
             fontSize: '14px',
             fontWeight: 'bold',
-            color: 'white',
+            color: '#2f4858',
             letterSpacing: '1px'
           }}>
             ✨ CAFETERÍA PREMIUM
