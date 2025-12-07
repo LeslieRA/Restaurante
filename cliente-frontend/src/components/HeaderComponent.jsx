@@ -49,7 +49,7 @@ export const HeaderComponent = () => {
           justify-content: space-between;
         }
 
-        /* LOGOTIPO */
+        /* LOGO */
         .logo {
           display: flex;
           align-items: center;
@@ -98,7 +98,6 @@ export const HeaderComponent = () => {
           gap: 1.5rem;
           justify-content: space-between;
           flex: 1;
-          overflow: visible;
         }
 
         .nav-list-main,
@@ -109,7 +108,6 @@ export const HeaderComponent = () => {
           display: flex;
           gap: 0.5rem;
           align-items: center;
-          flex-wrap: nowrap;
         }
 
         .nav-list-main {
@@ -123,27 +121,15 @@ export const HeaderComponent = () => {
           display: none;
         }
 
-        .nav-list-right {
-          gap: 0.8rem;
-        }
-
-        .nav-item {
-          display: inline-flex;
-        }
-
         .nav-link {
           color: #f0f0f0;
           text-decoration: none;
           font-size: 0.9rem;
           padding: 0.6rem 1rem;
           border-radius: 6px;
-          transition: all 0.22s ease;
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
+          transition: all 0.2s ease;
           font-weight: 500;
           white-space: nowrap;
-          background: transparent;
         }
 
         .nav-link:hover {
@@ -152,14 +138,13 @@ export const HeaderComponent = () => {
           transform: translateY(-2px);
         }
 
-        /* USUARIO Y CERRAR SESIÓN */
+        /* USUARIO */
         .user-info {
           display: flex;
           align-items: center;
           gap: 1rem;
           border-left: 1px solid rgba(255, 255, 255, 0.15);
           padding-left: 1.2rem;
-          white-space: nowrap;
         }
 
         .welcomeText {
@@ -169,14 +154,10 @@ export const HeaderComponent = () => {
           font-size: 0.9rem;
           color: #fff;
           background: rgba(255, 255, 255, 0.05);
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
         }
 
         .username-text {
           color: #f4e6c8;
-          margin-left: 4px;
         }
 
         .btn-logout {
@@ -188,14 +169,11 @@ export const HeaderComponent = () => {
           border-radius: 6px;
           cursor: pointer;
           transition: all 0.2s ease;
-          font-size: 0.9rem;
-          white-space: nowrap;
         }
 
         .btn-logout:hover {
           background-color: #c9302c;
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         /* BOTÓN HAMBURGUESA */
@@ -210,43 +188,35 @@ export const HeaderComponent = () => {
           font-size: 1.2rem;
         }
 
-        .navbar-toggler-custom:hover {
-          background: rgba(255, 255, 255, 0.1);
+        /* === MEGA MENÚ ESPECIAL ADMIN === */
+        .admin-grid {
+          display: grid;
+          grid-template-columns: repeat(2, auto);
+          gap: 0.5rem 1.5rem;
+          padding: 0.5rem 1rem;
         }
 
-        /* RESPONSIVE */
         @media (max-width: 992px) {
-          .container-fluid {
-            padding: 0.5rem 0;
-            flex-wrap: wrap;
+          .admin-grid {
+            grid-template-columns: 1fr;
           }
 
           .navbar-toggler-custom {
             display: inline-flex;
-            margin-left: auto;
           }
 
           .nav-collapse {
-            display: none;
-            width: 100%;
+            display: ${menuOpen ? "flex" : "none"};
             flex-direction: column;
-            gap: 0.5rem;
             background: #2f4858;
-            border-radius: 8px;
             padding: 1rem;
-            margin-top: 0.5rem;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-          }
-
-          .nav-collapse.open {
-            display: flex;
+            border-radius: 12px;
           }
 
           .nav-list-main,
           .nav-list-right {
             flex-direction: column;
             width: 100%;
-            gap: 0.5rem;
           }
 
           .nav-link {
@@ -259,76 +229,33 @@ export const HeaderComponent = () => {
             border-left: none;
             padding-left: 0;
             width: 100%;
-            gap: 0.5rem;
-          }
-
-          .welcomeText {
-            width: 100%;
-            justify-content: center;
-          }
-
-          .btn-logout {
-            width: 100%;
-          }
-
-          .logo-img {
-            width: 50px;
-            height: 50px;
-          }
-
-          .logo-link {
-            font-size: 1.3rem;
           }
         }
 
-        /* Espaciado para el contenido debajo del header */
         body {
           padding-top: 90px;
-        }
-
-        @media (max-width: 1400px) {
-          .nav-link {
-            font-size: 0.85rem;
-            padding: 0.5rem 0.8rem;
-          }
-        }
-
-        @media (max-width: 1200px) {
-          .logo-link {
-            font-size: 1.3rem;
-          }
-          .logo-img {
-            width: 48px;
-            height: 48px;
-          }
-          .nav-link {
-            font-size: 0.8rem;
-            padding: 0.5rem 0.7rem;
-          }
-          .nav-list-main {
-            gap: 0.3rem;
-          }
         }
       `}</style>
 
       <header className="main-header">
         <div className="container-fluid">
+
           {/* LOGO */}
           <div className="logo">
             <Link to="/" className="logo-link">
               <img src="/logo.png" className="logo-img" alt="Logo" />
-              <span className="brandText">Café del Sol </span>
+              <span className="brandText">Café del Sol</span>
             </Link>
           </div>
 
-          {/* BOTÓN HAMBURGUESA (móvil) */}
+          {/* BOTÓN MÓVIL */}
           <button className="navbar-toggler-custom" onClick={toggleMenu}>
-            <span>☰</span>
+            ☰
           </button>
 
-          {/* NAVEGACIÓN */}
           <nav className="nav-root">
-            <div className={`nav-collapse ${menuOpen ? 'open' : ''}`}>
+            <div className={`nav-collapse ${menuOpen ? "open" : ""}`}>
+
               <ul className="nav-list-main">
                 <li className="nav-item">
                   <Link className="nav-link" to="/">🏠 Inicio</Link>
@@ -351,93 +278,62 @@ export const HeaderComponent = () => {
                 {/* CAJERO */}
                 {rol === "cajero" && (
                   <>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/cliente/lista">👥 Clientes</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/reserva/lista">📅 Reservas</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/venta/lista">📊 Ventas</Link>
-                    </li>
+                    <li className="nav-item"><Link className="nav-link" to="/cliente/lista">👥 Clientes</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/reserva/lista">📅 Reservas</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/venta/lista">📊 Ventas</Link></li>
                   </>
                 )}
 
                 {/* SUPERVISOR */}
                 {rol === "supervisor" && (
                   <>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/usuarios/lista">👤 Usuarios</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/empleado/lista">👨‍💼 Empleados</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/cliente/lista">👥 Clientes</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/producto/lista">🍽️ Productos</Link>
-                    </li>
+                    <li className="nav-item"><Link className="nav-link" to="/usuarios/lista">👤 Usuarios</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/empleado/lista">👨‍💼 Empleados</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/cliente/lista">👥 Clientes</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/producto/lista">🍽️ Productos</Link></li>
                   </>
                 )}
 
-                {/* ADMINISTRADOR */}
+                {/* ADMINISTRADOR (EN 2 COLUMNAS) */}
                 {rol === "administrador" && (
-                  <>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/usuarios/lista">👤 Usuarios</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/cliente/lista">👥 Clientes</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/empleado/lista">👨‍💼 Empleados</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/mesa/lista">📍 Mesas</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/tipoProducto/lista">🏷️ Tipos de productos</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/producto/lista">🍽️ Productos</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/reserva/lista">📅 Reservas</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/venta/lista">📊 Ventas</Link>
-                    </li>
-                  </>
+                  <div className="admin-grid">
+                    <li className="nav-item"><Link className="nav-link" to="/usuarios/lista">👤 Usuarios</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/cliente/lista">👥 Clientes</Link></li>
+
+                    <li className="nav-item"><Link className="nav-link" to="/empleado/lista">👨‍💼 Empleados</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/mesa/lista">📍 Mesas</Link></li>
+
+                    <li className="nav-item"><Link className="nav-link" to="/tipoProducto/lista">🏷️ Tipos de productos</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/producto/lista">🍽️ Productos</Link></li>
+
+                    <li className="nav-item"><Link className="nav-link" to="/reserva/lista">📅 Reservas</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to="/venta/lista">📊 Ventas</Link></li>
+                  </div>
                 )}
               </ul>
 
-              {/* ZONA DERECHA */}
+              {/* DERECHA */}
               <ul className="nav-list-right">
                 {!usuario ? (
                   <>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/login">🔐 Iniciar sesión</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/usuarios/crear">➕ Registrarse</Link>
-                    </li>
+                    <li><Link className="nav-link" to="/login">🔐 Iniciar sesión</Link></li>
+                    <li><Link className="nav-link" to="/usuarios/crear">➕ Registrarse</Link></li>
                   </>
                 ) : (
-                  <li className="nav-item user-list-item">
+                  <li className="user-list-item">
                     <div className="user-info">
                       <span className="welcomeText">
                         🤗 Bienvenido <span className="username-text">{rol} {usuario.nombre}</span>
                       </span>
-                      <button onClick={logout} className="btn-logout">
-                        ⍈ Cerrar sesión
-                      </button>
+                      <button onClick={logout} className="btn-logout">⍈ Cerrar sesión</button>
                     </div>
                   </li>
                 )}
               </ul>
+
             </div>
           </nav>
+
         </div>
       </header>
     </>
