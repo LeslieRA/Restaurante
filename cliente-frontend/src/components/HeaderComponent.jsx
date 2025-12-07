@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { getUsuarioLogueado, logout } from "../services/AuthService";
 
@@ -7,11 +7,30 @@ export const HeaderComponent = () => {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [hoveredLink, setHoveredLink] = useState(null);
   const [hoveredBtn, setHoveredBtn] = useState(false);
+  const headerRef = useRef(null);
 
   useEffect(() => {
     const handler = () => setUsuario(getUsuarioLogueado());
     window.addEventListener("authChange", handler);
     return () => window.removeEventListener("authChange", handler);
+  }, []);
+
+  // Ajusta padding del body para que el contenido no quede debajo del header fijo
+  useEffect(() => {
+    const setBodyPadding = () => {
+      const h = headerRef.current ? headerRef.current.offsetHeight : 100;
+      document.documentElement.style.setProperty("--header-height", `${h}px`);
+      document.body.style.paddingTop = `${h}px`;
+    };
+
+    setBodyPadding();
+    window.addEventListener("resize", setBodyPadding);
+    return () => {
+      window.removeEventListener("resize", setBodyPadding);
+      // limpiar padding si el componente se desmonta
+      document.body.style.paddingTop = "";
+      document.documentElement.style.removeProperty("--header-height");
+    };
   }, []);
 
   const rol = usuario?.perfil;
@@ -20,7 +39,7 @@ export const HeaderComponent = () => {
   const handleMouseLeave = () => setHoveredLink(null);
 
   return (
-    <header className="main-header">
+    <header className="main-header" ref={headerRef}>
       <nav>
         <div className="container-fluid" style={{display: 'flex', alignItems: 'center', width: '100%'}}>
 
@@ -209,10 +228,14 @@ export const HeaderComponent = () => {
           align-items: center;
           justify-content: space-between; /* Separa Logo de la Navegación */
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-          position: sticky;
+          position: fixed; /* <- FIXED para que no se mueva */
           top: 0;
+          left: 0;
+          right: 0;
           z-index: 1000;
           font-family: 'Arial', sans-serif;
+          width: 100%;
+          box-sizing: border-box;
         }
 
         /* simple container use */
@@ -465,10 +488,10 @@ export const HeaderComponent = () => {
         .navbar-toggler-custom { display: none; }
         @media (max-width: 992px) {
           .navbar-toggler-custom { display: block !important; }
-          .nav-collapse { display: none; position: absolute; top: 100%; right: 1rem; left: 1rem; background: #2f4858; border-radius: 8px; padding: 1rem; flex-direction: column; gap: 0.5rem; box-shadow: 0 8px 24px rgba(0,0,0,0.2); z-index: 1002; }
+          .nav-collapse { display: none; position: absolute; top: var(--header-height, 100px); right: 1rem; left: 1rem; background: #2f4858; border-radius: 8px; padding: 1rem; flex-direction: column; gap: 0.5rem; box-shadow: 0 8px 24px rgba(0,0,0,0.2); z-index: 1002; }
           .nav-collapse.open { display: flex; }
           .nav-list-main, .nav-list-right { flex-direction: column; gap: 0.25rem; }
-          .main-header { height: auto; padding: 0.75rem 1rem; }
+          .main-header { height: auto; padding: 0.75rem 1rem; position: fixed; }
         }
       `}</style>
     </header>
