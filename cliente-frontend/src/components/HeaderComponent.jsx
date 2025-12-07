@@ -6,9 +6,7 @@ export const HeaderComponent = () => {
   const [usuario, setUsuario] = useState(getUsuarioLogueado());
   const [menuOpen, setMenuOpen] = useState(false); // mobile menu
   const [userMenuOpen, setUserMenuOpen] = useState(false); // dropdown for user
-  const [adminOpen, setAdminOpen] = useState(false); // dropdown for admin
   const userRef = useRef(null);
-  const adminRef = useRef(null);
 
   useEffect(() => {
     const handler = () => setUsuario(getUsuarioLogueado());
@@ -16,36 +14,32 @@ export const HeaderComponent = () => {
     return () => window.removeEventListener("authChange", handler);
   }, []);
 
-  // cerrar dropdowns al hacer clic fuera
+  // cerrar dropdown de usuario al hacer clic fuera
   useEffect(() => {
     const onClickOutside = (e) => {
       if (userRef.current && !userRef.current.contains(e.target)) {
         setUserMenuOpen(false);
       }
-      if (adminRef.current && !adminRef.current.contains(e.target)) {
-        setAdminOpen(false);
-      }
     };
-    if (userMenuOpen || adminOpen) document.addEventListener("mousedown", onClickOutside);
+    if (userMenuOpen) document.addEventListener("mousedown", onClickOutside);
     return () => document.removeEventListener("mousedown", onClickOutside);
-  }, [userMenuOpen, adminOpen]);
+  }, [userMenuOpen]);
 
   const rol = usuario?.perfil;
 
   const toggleMenu = () => setMenuOpen((s) => !s);
   const toggleUserMenu = () => setUserMenuOpen((s) => !s);
-  const toggleAdminMenu = () => setAdminOpen((s) => !s);
 
-  // Links para administrador (van dentro del dropdown en dos columnas)
+  // Links comunes / admin
   const adminLinks = [
-    { to: "/usuarios/lista", label: "Usuarios" },
     { to: "/cliente/lista", label: "Clientes" },
+    { to: "/producto/lista", label: "Productos" },
     { to: "/empleado/lista", label: "Empleados" },
     { to: "/mesa/lista", label: "Mesas" },
     { to: "/tipoProducto/lista", label: "Tipos de productos" },
-    { to: "/producto/lista", label: "Productos" },
     { to: "/reserva/lista", label: "Reservas" },
     { to: "/venta/lista", label: "Ventas" },
+    { to: "/usuarios/lista", label: "Usuarios" },
   ];
 
   return (
@@ -96,8 +90,13 @@ export const HeaderComponent = () => {
           list-style: none;
           margin: 0;
           padding: 0;
-          flex-wrap: wrap;
+          flex-wrap: nowrap; /* Mantener en horizontal (scroll si hace falta) */
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
         }
+        /* Ocultar scrollbar visual en la mayoría de navegadores */
+        .nav-list::-webkit-scrollbar { height: 6px; }
+        .nav-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 6px; }
         .nav-item { display: inline-flex; }
         .nav-link {
           text-decoration: none;
@@ -107,52 +106,9 @@ export const HeaderComponent = () => {
           font-weight: 600;
           font-size: 0.95rem;
           transition: background 0.15s, transform 0.12s;
+          white-space: nowrap;
         }
         .nav-link:hover { background: rgba(255,255,255,0.04); transform: translateY(-2px); }
-
-        /* ADMIN PILL (visible en barra principal para admin) */
-        .admin-pill {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 0.35rem 0.7rem;
-          border-radius: 8px;
-          background: rgba(255,255,255,0.02);
-          cursor: pointer;
-          border: 1px solid rgba(255,255,255,0.03);
-          font-weight: 700;
-          color: #eef2f3;
-        }
-
-        /* ADMIN DROPDOWN (2 columnas) */
-        .admin-dropdown {
-          position: absolute;
-          top: calc(100% + 8px);
-          left: 50%;
-          transform: translateX(-50%);
-          background: #2f3e44;
-          padding: 0.6rem;
-          border-radius: 8px;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-          min-width: 360px;
-          z-index: 3000;
-        }
-
-        .admin-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 0.35rem 0.8rem;
-        }
-
-        .admin-grid a {
-          display: block;
-          padding: 0.45rem 0.6rem;
-          border-radius: 6px;
-          text-decoration: none;
-          color: #eef2f3;
-          font-weight: 600;
-        }
-        .admin-grid a:hover { background: rgba(255,255,255,0.04); }
 
         /* RIGHT user */
         .nav-right { display: flex; align-items: center; gap: 0.8rem; margin: 0; padding: 0; }
@@ -229,12 +185,9 @@ export const HeaderComponent = () => {
         /* RESPONSIVE */
         @media (max-width: 992px) {
           .nav-root { justify-content: flex-start; }
-          .nav-list { display: none; flex-direction: column; gap: 0.6rem; background: transparent; padding: 0.6rem 0; }
+          .nav-list { display: none; flex-direction: column; gap: 0.6rem; background: transparent; padding: 0.6rem 0; overflow: visible; }
           .nav-list.open { display: flex; }
           .navbar-toggler-custom { display: inline-flex; }
-          .admin-dropdown { left: 1rem; right: 1rem; transform: none; min-width: auto; }
-          .admin-grid { grid-template-columns: 1fr; }
-          .user-dropdown { right: 0.6rem; left: auto; }
         }
       `}</style>
 
@@ -258,8 +211,14 @@ export const HeaderComponent = () => {
           {/* NAVEGACIÓN CENTRADA */}
           <nav className="nav-root" role="navigation" aria-label="Menú principal">
             <ul className={`nav-list ${menuOpen ? "open" : ""}`} role="menubar">
-              {/* Otros roles: mostramos su set de opciones */}
-              {rol !== "administrador" && (
+              {/* Mostrar las rutas en horizontal para ADMIN y para los demás roles */}
+              {rol === "administrador" ? (
+                adminLinks.map((l) => (
+                  <li className="nav-item" key={l.to} role="none">
+                    <Link role="menuitem" className="nav-link" to={l.to}>{l.label}</Link>
+                  </li>
+                ))
+              ) : (
                 <>
                   <li className="nav-item"><Link className="nav-link" to="/">Inicio</Link></li>
 
@@ -288,25 +247,6 @@ export const HeaderComponent = () => {
                     </>
                   )}
                 </>
-              )}
-
-              {/* ADMIN: mostramos un pill "Administración" que abre dropdown */}
-              {rol === "administrador" && (
-                <li className="nav-item" ref={adminRef} style={{ position: "relative" }}>
-                  <div className="admin-pill" onClick={toggleAdminMenu} role="button" aria-haspopup="true" aria-expanded={adminOpen}>
-                    Administración
-                  </div>
-
-                  {adminOpen && (
-                    <div className="admin-dropdown" role="menu" aria-label="Panel administración">
-                      <div className="admin-grid">
-                        {adminLinks.map((l) => (
-                          <Link key={l.to} to={l.to}>{l.label}</Link>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </li>
               )}
             </ul>
           </nav>
