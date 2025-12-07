@@ -85,17 +85,7 @@ export const HeaderComponent = () => {
           <div className={`nav-collapse ${menuAbierto ? "open" : ""}`}>
 
             <ul className="nav-list-main" style={{display: 'flex', gap: '0.5rem', alignItems: 'center', margin: 0, padding: 0}}>
-              <li>
-                <Link
-                  to="/"
-                  className="nav-link"
-                  onMouseEnter={() => handleMouseEnter('inicio')}
-                  onMouseLeave={handleMouseLeave}
-                  style={ hoveredLink === 'inicio' ? { backgroundColor: 'rgba(255,255,255,0.08)'} : {} }
-                >
-                  🏠 Inicio
-                </Link>
-              </li>
+              
 
               {rol === "cliente" && (
                 <li>
