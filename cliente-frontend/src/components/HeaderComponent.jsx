@@ -96,7 +96,7 @@ export const HeaderComponent = () => {
                     onMouseLeave={handleMouseLeave}
                     style={ hoveredLink === 'reservas' ? { backgroundColor: 'rgba(255,255,255,0.08)'} : {} }
                   >
-                    📅 Mis Reservas
+                    Mis Reservas
                   </Link>
                 </li>
               )}
@@ -110,7 +110,7 @@ export const HeaderComponent = () => {
                     onMouseLeave={handleMouseLeave}
                     style={ hoveredLink === 'ventas' ? { backgroundColor: 'rgba(255,255,255,0.08)'} : {} }
                   >
-                    📊 Ventas
+                    Ventas
                   </Link>
                 </li>
               )}
@@ -165,7 +165,7 @@ export const HeaderComponent = () => {
                       onMouseLeave={handleMouseLeave}
                       style={ hoveredLink === 'login' ? { backgroundColor: 'rgba(245, 165, 64, 0.4)', transform: 'translateY(-2px)'} : {} }
                     >
-                      🔐 Iniciar sesión
+                      Iniciar sesión
                     </Link>
                   </li>
                   <li>
@@ -176,7 +176,7 @@ export const HeaderComponent = () => {
                       onMouseLeave={handleMouseLeave}
                       style={ hoveredLink === 'registro' ? { backgroundColor: 'rgba(245, 165, 64, 0.4)', transform: 'translateY(-2px)'} : {} }
                     >
-                      ➕ Registrarse
+                      Registrarse
                     </Link>
                   </li>
                 </>
@@ -193,7 +193,7 @@ export const HeaderComponent = () => {
                       onMouseLeave={() => setHoveredBtn(false)}
                       style={ hoveredBtn ? { backgroundColor: '#c9302c', color: '#fff' } : {} }
                     >
-                      ⚡ Cerrar sesión
+                      Cerrar sesión
                     </button>
                   </div>
                 </li>
