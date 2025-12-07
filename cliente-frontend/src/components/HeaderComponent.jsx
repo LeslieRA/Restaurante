@@ -15,20 +15,17 @@ export const HeaderComponent = () => {
     return () => window.removeEventListener("authChange", handler);
   }, []);
 
-  // Ajusta padding del body para que el contenido no quede debajo del header fijo
+  // Evita que el contenido quede oculto bajo el header fijo
   useEffect(() => {
     const setBodyPadding = () => {
       const h = headerRef.current ? headerRef.current.offsetHeight : 100;
       document.documentElement.style.setProperty("--header-height", `${h}px`);
       document.body.style.paddingTop = `${h}px`;
     };
-
-    // Ejecutar en montaje y en resize
     setBodyPadding();
     window.addEventListener("resize", setBodyPadding);
     return () => {
       window.removeEventListener("resize", setBodyPadding);
-      // limpiar al desmontar
       document.body.style.paddingTop = "";
       document.documentElement.style.removeProperty("--header-height");
     };
@@ -75,7 +72,7 @@ export const HeaderComponent = () => {
               <li className="nav-item">
                 <Link
                   to="/"
-                  className="nav-link"
+                  className={`nav-link ${hoveredLink === 'inicio' ? 'hovered' : ''}`}
                   onMouseEnter={() => handleMouseEnter('inicio')}
                   onMouseLeave={handleMouseLeave}
                 >
@@ -135,10 +132,14 @@ export const HeaderComponent = () => {
               {!usuario && (
                 <>
                   <li className="nav-item">
-                    <Link to="/login" className="nav-link btnAuth">🔐 Iniciar sesión</Link>
+                    <Link to="/login" className="nav-link btnAuth" onMouseEnter={() => handleMouseEnter('login')} onMouseLeave={handleMouseLeave}>
+                      🔐 Iniciar sesión
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <Link to="/usuarios/crear" className="nav-link btnAuth">➕ Registrarse</Link>
+                    <Link to="/usuarios/crear" className="nav-link btnAuth" onMouseEnter={() => handleMouseEnter('registro')} onMouseLeave={handleMouseLeave}>
+                      ➕ Registrarse
+                    </Link>
                   </li>
                 </>
               )}
@@ -146,7 +147,9 @@ export const HeaderComponent = () => {
               {usuario && (
                 <li className="nav-item user-list-item">
                   <div className="user-info">
-                    <span className="welcomeText" title={usuario.nombre}>🤗 Bienvenido <strong className="username-text">{usuario.nombre}</strong></span>
+                    <span className="welcomeText" title={usuario.nombre}>
+                      🤗 Bienvenido <strong className="username-text">{usuario.nombre}</strong>
+                    </span>
                     <button
                       onClick={logout}
                       className={`btn-logout ${hoveredBtn ? "hover" : ""}`}
@@ -163,13 +166,12 @@ export const HeaderComponent = () => {
         </div>
       </nav>
 
-      {/* CSS inyectado: usa las mismas clases del estilo que me diste + ajustes para que no se corte */}
       <style>{`
         /* =========================================
            1. ESTILOS BASE DEL HEADER
            ========================================= */
         .main-header {
-          background-color: #2f4858;
+          background-color: #2f4858; /* Azul oscuro elegante */
           padding: 0 1.5rem;
           display: flex;
           align-items: center;
@@ -185,7 +187,6 @@ export const HeaderComponent = () => {
           box-sizing: border-box;
         }
 
-        /* container interno */
         .container-fluid {
           width: 100%;
           max-width: 1200px;
@@ -223,7 +224,6 @@ export const HeaderComponent = () => {
           object-fit: cover;
           transition: transform 0.6s ease;
           border-radius: 6px;
-          backface-visibility: hidden;
         }
 
         .brandText { color: #c29c5e; }
@@ -240,7 +240,7 @@ export const HeaderComponent = () => {
           gap: 1rem;
           justify-content: flex-end;
           flex: 1;
-          overflow: visible; /* importante para que no se corte nada */
+          overflow: visible;
         }
 
         .nav-collapse.open { display: flex; }
@@ -274,7 +274,9 @@ export const HeaderComponent = () => {
           white-space: nowrap;
           background: transparent;
         }
-        .nav-link:hover {
+
+        .nav-link:hover,
+        .nav-link.hovered {
           background-color: rgba(255, 255, 255, 0.08);
           color: #ffffff;
           transform: translateY(-2px);
@@ -303,7 +305,7 @@ export const HeaderComponent = () => {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          max-width: 280px; /* evita que el texto sea demasiado grande */
+          max-width: 320px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
@@ -328,7 +330,6 @@ export const HeaderComponent = () => {
           box-shadow: 0 6px 14px rgba(0,0,0,0.18);
         }
 
-        /* asegúrate que el area derecha no quede oculta por scroll vertical */
         .nav-list-right, .user-list-item { z-index: 2100; }
 
         /* =========================================
@@ -364,9 +365,10 @@ export const HeaderComponent = () => {
           .nav-link { padding: 0.6rem 0.75rem; }
           .user-info { border-left: none; padding-left: 0; }
           .welcomeText { max-width: 100%; }
+          .logo-img { width: 44px; height: 44px; }
         }
 
-        /* seguridades visuales: evita que contenido fijo se meta bajo el header */
+        /* seguridad visual: evita que contenido se pegue al header */
         html { scroll-padding-top: var(--header-height, 100px); }
       `}</style>
     </header>
