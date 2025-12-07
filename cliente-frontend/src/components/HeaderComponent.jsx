@@ -288,7 +288,7 @@ export const HeaderComponent = () => {
           <div className="logo">
             <Link to="/" className="logo-link">
               <img src="/logo.png" className="logo-img" alt="Logo" />
-              <span className="brandText">Qué Birria</span>
+              <span className="brandText">Café del Sol ☕</span>
             </Link>
           </div>
 
