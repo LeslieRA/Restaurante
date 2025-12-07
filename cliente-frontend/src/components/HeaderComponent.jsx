@@ -30,20 +30,22 @@ export const HeaderComponent = () => {
   const toggleMenu = () => setMenuOpen((s) => !s);
   const toggleUserMenu = () => setUserMenuOpen((s) => !s);
 
-  // Opciones visibles para administrador (puedes ajustar según tu app)
+  // Links para administrador (mostrados en la navegación central cuando rol === "administrador")
   const adminLinks = [
     { to: "/cliente/lista", label: "Clientes" },
     { to: "/producto/lista", label: "Productos" },
     { to: "/empleado/lista", label: "Empleados" },
     { to: "/mesa/lista", label: "Mesas" },
+    { to: "/tipoProducto/lista", label: "Tipos de productos" },
     { to: "/reserva/lista", label: "Reservas" },
     { to: "/venta/lista", label: "Ventas" },
+    { to: "/usuarios/lista", label: "Usuarios" },
   ];
 
   return (
     <>
       <style>{`
-        /* HEADER */
+        /* ===== HEADER ===== */
         .main-header {
           position: fixed;
           top: 0;
@@ -62,7 +64,7 @@ export const HeaderComponent = () => {
           align-items: center;
           justify-content: space-between;
           gap: 1rem;
-          padding: 0.8rem 1rem;
+          padding: 0.75rem 1rem;
           box-sizing: border-box;
         }
 
@@ -75,40 +77,35 @@ export const HeaderComponent = () => {
           color: #d6b875;
           font-weight: 700;
           font-family: Georgia, serif;
-          font-size: 1.4rem;
+          font-size: 1.2rem;
         }
-        .logo-img {
-          width: 44px;
-          height: 44px;
-          border-radius: 8px;
-          object-fit: cover;
-        }
+        .logo-img { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; }
 
-        /* NAV */
+        /* NAV CENTER */
         .nav-root { flex: 1; display: flex; justify-content: center; }
         .nav-list {
           display: flex;
-          gap: 1.2rem;
+          gap: 1.1rem;
           align-items: center;
           list-style: none;
           margin: 0;
           padding: 0;
-          flex-wrap: wrap; /* evita overflow cuando hay muchas opciones */
+          flex-wrap: wrap;
         }
         .nav-item { display: inline-flex; }
         .nav-link {
           text-decoration: none;
           color: #eef2f3;
-          padding: 0.5rem 0.6rem;
+          padding: 0.45rem 0.6rem;
           border-radius: 6px;
           font-weight: 600;
-          font-size: 1rem;
+          font-size: 0.95rem;
           transition: background 0.15s, transform 0.12s;
         }
         .nav-link:hover { background: rgba(255,255,255,0.04); transform: translateY(-2px); }
 
-        /* RIGHT (user) */
-        .nav-right { display: flex; align-items: center; gap: 0.8rem; list-style: none; margin: 0; padding: 0; }
+        /* RIGHT user */
+        .nav-right { display: flex; align-items: center; gap: 0.8rem; margin: 0; padding: 0; }
         .user-pill {
           display: inline-flex;
           align-items: center;
@@ -118,6 +115,7 @@ export const HeaderComponent = () => {
           border-radius: 10px;
           cursor: pointer;
           border: 1px solid rgba(255,255,255,0.03);
+          user-select: none;
         }
         .user-avatar {
           width: 34px;
@@ -132,23 +130,29 @@ export const HeaderComponent = () => {
           font-size: 0.95rem;
           text-transform: uppercase;
         }
-        .user-name { font-weight: 700; color: #f3f1ea; font-size: 0.98rem; }
+        .user-name { font-weight: 700; color: #f3f1ea; font-size: 0.95rem; }
+        .user-role { color: #cfc7a8; font-weight: 600; font-size: 0.85rem; margin-left: 6px; }
 
-        /* user dropdown */
+        /* USER DROPDOWN */
         .user-dropdown {
           position: absolute;
           right: 1rem;
-          top: calc(100% + 10px);
+          top: calc(100% + 8px);
           background: #2f3e44;
-          padding: 0.6rem;
+          padding: 0.5rem;
           border-radius: 8px;
           box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-          min-width: 180px;
+          min-width: 190px;
           z-index: 2500;
+        }
+        .user-dropdown .name {
+          color: #e7efef;
+          font-weight: 700;
+          margin-bottom: 0.6rem;
         }
         .user-dropdown button {
           width: 100%;
-          padding: 0.5rem 0.7rem;
+          padding: 0.48rem 0.6rem;
           border-radius: 6px;
           border: none;
           cursor: pointer;
@@ -158,7 +162,7 @@ export const HeaderComponent = () => {
         }
         .user-dropdown button:hover { transform: translateY(-2px); }
 
-        /* hamburger (mobile) */
+        /* HAMBURGER */
         .navbar-toggler-custom {
           display: none;
           background: transparent;
@@ -170,13 +174,15 @@ export const HeaderComponent = () => {
         }
 
         /* spacing so page content doesn't go under header */
-        body { padding-top: 76px; }
+        body { padding-top: 72px; }
 
         /* RESPONSIVE */
         @media (max-width: 992px) {
           .nav-root { justify-content: flex-start; }
-          .nav-list { display: ${menuOpen ? "flex" : "none"}; flex-direction: column; gap: 0.6rem; background: transparent; padding: 0.6rem 0; }
+          .nav-list { display: none; flex-direction: column; gap: 0.6rem; background: transparent; padding: 0.6rem 0; }
+          .nav-list.open { display: flex; }
           .navbar-toggler-custom { display: inline-flex; }
+          .user-dropdown { right: 0.6rem; left: auto; }
         }
       `}</style>
 
@@ -188,15 +194,19 @@ export const HeaderComponent = () => {
             <span>Café del Sol</span>
           </Link>
 
-          {/* HAMBURGUESA (solo visible en mobile) */}
-          <button className="navbar-toggler-custom" onClick={toggleMenu} aria-label="Abrir menú">
+          {/* HAMBURGER (mobile) */}
+          <button
+            className="navbar-toggler-custom"
+            onClick={toggleMenu}
+            aria-label="Abrir menú"
+          >
             ☰
           </button>
 
-          {/* NAVEGACIÓN CENTRAL */}
+          {/* NAVEGACIÓN CENTRADA */}
           <nav className="nav-root" role="navigation" aria-label="Menú principal">
-            <ul className="nav-list" role="menubar">
-              {/* Si es administrador mostramos todas las opciones como en tu imagen */}
+            <ul className={`nav-list ${menuOpen ? "open" : ""}`} role="menubar">
+              {/* Si es administrador mostramos todas las opciones principales */}
               {rol === "administrador" ? (
                 adminLinks.map((l) => (
                   <li className="nav-item" key={l.to} role="none">
@@ -204,17 +214,40 @@ export const HeaderComponent = () => {
                   </li>
                 ))
               ) : (
-                /* En caso de otros roles, muestra solo lo que corresponda (ajusta según tu app) */
+                /* Otros roles: mostramos su set de opciones */
                 <>
                   <li className="nav-item"><Link className="nav-link" to="/">Inicio</Link></li>
-                  {rol === "cliente" && <li className="nav-item"><Link className="nav-link" to="/reserva/lista">Reservas</Link></li>}
-                  {rol === "mesero" && <li className="nav-item"><Link className="nav-link" to="/venta/lista">Ventas</Link></li>}
+
+                  {rol === "cliente" && (
+                    <li className="nav-item"><Link className="nav-link" to="/reserva/lista">Reservas</Link></li>
+                  )}
+
+                  {rol === "mesero" && (
+                    <li className="nav-item"><Link className="nav-link" to="/venta/lista">Ventas</Link></li>
+                  )}
+
+                  {rol === "cajero" && (
+                    <>
+                      <li className="nav-item"><Link className="nav-link" to="/cliente/lista">Clientes</Link></li>
+                      <li className="nav-item"><Link className="nav-link" to="/reserva/lista">Reservas</Link></li>
+                      <li className="nav-item"><Link className="nav-link" to="/venta/lista">Ventas</Link></li>
+                    </>
+                  )}
+
+                  {rol === "supervisor" && (
+                    <>
+                      <li className="nav-item"><Link className="nav-link" to="/usuarios/lista">Usuarios</Link></li>
+                      <li className="nav-item"><Link className="nav-link" to="/empleado/lista">Empleados</Link></li>
+                      <li className="nav-item"><Link className="nav-link" to="/cliente/lista">Clientes</Link></li>
+                      <li className="nav-item"><Link className="nav-link" to="/producto/lista">Productos</Link></li>
+                    </>
+                  )}
                 </>
               )}
             </ul>
           </nav>
 
-          {/* DERECHA: usuario / login */}
+          {/* ZONA DERECHA: usuario / login */}
           <div style={{ position: "relative" }} ref={userRef}>
             {!usuario ? (
               <div style={{ display: "flex", gap: "0.6rem" }}>
@@ -222,29 +255,37 @@ export const HeaderComponent = () => {
                 <Link className="nav-link" to="/usuarios/crear">Registrarse</Link>
               </div>
             ) : (
-              <div className="user-pill" onClick={toggleUserMenu} role="button" aria-haspopup="true" aria-expanded={userMenuOpen}>
-                <div className="user-avatar">
-                  {usuario.nombre ? usuario.nombre.charAt(0) : "U"}
-                </div>
-                <div className="user-name">{usuario.nombre}</div>
-              </div>
-            )}
-
-            {/* DROPDOWN del usuario: visible solo si userMenuOpen */}
-            {userMenuOpen && usuario && (
-              <div className="user-dropdown" role="menu" aria-label="Menú de usuario">
-                <div style={{ marginBottom: "0.5rem", color: "#dfe7e8", fontWeight: 700 }}>
-                  {usuario.nombre}
-                </div>
-                <button
-                  onClick={() => {
-                    setUserMenuOpen(false);
-                    logout();
-                  }}
+              <>
+                <div
+                  className="user-pill"
+                  onClick={toggleUserMenu}
+                  role="button"
+                  aria-haspopup="true"
+                  aria-expanded={userMenuOpen}
                 >
-                  Cerrar sesión
-                </button>
-              </div>
+                  <div className="user-avatar">
+                    {usuario.nombre ? usuario.nombre.charAt(0) : "U"}
+                  </div>
+                  <div>
+                    <div className="user-name">{usuario.nombre}</div>
+                    <div className="user-role">{rol}</div>
+                  </div>
+                </div>
+
+                {userMenuOpen && (
+                  <div className="user-dropdown" role="menu" aria-label="Menú de usuario">
+                    <div className="name">{usuario.nombre} — {rol}</div>
+                    <button
+                      onClick={() => {
+                        setUserMenuOpen(false);
+                        logout();
+                      }}
+                    >
+                      Cerrar sesión
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
