@@ -44,8 +44,8 @@ export const HeaderComponent = () => {
           max-width: 100%;
           display: flex;
           align-items: center;
-          gap: 2rem;
-          padding: 0.6rem 1rem;
+          gap: 1.5rem;
+          padding: 0.8rem 1.5rem;
           justify-content: space-between;
         }
 
@@ -60,18 +60,19 @@ export const HeaderComponent = () => {
         .logo-link {
           color: #c29c5e;
           text-decoration: none;
-          font-size: 1.4rem;
+          font-size: 1.5rem;
           font-weight: bold;
           font-family: 'Georgia', serif;
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 12px;
           white-space: nowrap;
+          min-width: fit-content;
         }
 
         .logo-img {
-          width: 50px;
-          height: 50px;
+          width: 55px;
+          height: 55px;
           object-fit: cover;
           transition: transform 0.3s ease;
           border-radius: 8px;
@@ -106,7 +107,7 @@ export const HeaderComponent = () => {
           padding: 0;
           list-style: none;
           display: flex;
-          gap: 0.3rem;
+          gap: 0.5rem;
           align-items: center;
           flex-wrap: nowrap;
         }
@@ -122,6 +123,10 @@ export const HeaderComponent = () => {
           display: none;
         }
 
+        .nav-list-right {
+          gap: 0.8rem;
+        }
+
         .nav-item {
           display: inline-flex;
         }
@@ -129,13 +134,13 @@ export const HeaderComponent = () => {
         .nav-link {
           color: #f0f0f0;
           text-decoration: none;
-          font-size: 0.85rem;
-          padding: 0.5rem 0.8rem;
+          font-size: 0.9rem;
+          padding: 0.6rem 1rem;
           border-radius: 6px;
           transition: all 0.22s ease;
           display: inline-flex;
           align-items: center;
-          gap: 5px;
+          gap: 6px;
           font-weight: 500;
           white-space: nowrap;
           background: transparent;
@@ -151,22 +156,22 @@ export const HeaderComponent = () => {
         .user-info {
           display: flex;
           align-items: center;
-          gap: 0.8rem;
+          gap: 1rem;
           border-left: 1px solid rgba(255, 255, 255, 0.15);
-          padding-left: 1rem;
+          padding-left: 1.2rem;
           white-space: nowrap;
         }
 
         .welcomeText {
-          padding: 0.4rem 0.8rem;
+          padding: 0.5rem 1rem;
           border-radius: 8px;
           font-weight: 600;
-          font-size: 0.85rem;
+          font-size: 0.9rem;
           color: #fff;
           background: rgba(255, 255, 255, 0.05);
           display: inline-flex;
           align-items: center;
-          gap: 5px;
+          gap: 6px;
         }
 
         .username-text {
@@ -177,13 +182,13 @@ export const HeaderComponent = () => {
         .btn-logout {
           background: #d9534f;
           border: none;
-          padding: 0.4rem 0.9rem;
+          padding: 0.5rem 1.1rem;
           color: #fff;
           font-weight: 600;
           border-radius: 6px;
           cursor: pointer;
           transition: all 0.2s ease;
-          font-size: 0.85rem;
+          font-size: 0.9rem;
           white-space: nowrap;
         }
 
@@ -278,7 +283,31 @@ export const HeaderComponent = () => {
 
         /* Espaciado para el contenido debajo del header */
         body {
-          padding-top: 80px;
+          padding-top: 90px;
+        }
+
+        @media (max-width: 1400px) {
+          .nav-link {
+            font-size: 0.85rem;
+            padding: 0.5rem 0.8rem;
+          }
+        }
+
+        @media (max-width: 1200px) {
+          .logo-link {
+            font-size: 1.3rem;
+          }
+          .logo-img {
+            width: 48px;
+            height: 48px;
+          }
+          .nav-link {
+            font-size: 0.8rem;
+            padding: 0.5rem 0.7rem;
+          }
+          .nav-list-main {
+            gap: 0.3rem;
+          }
         }
       `}</style>
 
@@ -288,7 +317,7 @@ export const HeaderComponent = () => {
           <div className="logo">
             <Link to="/" className="logo-link">
               <img src="/logo.png" className="logo-img" alt="Logo" />
-              <span className="brandText">Café del Sol ☕</span>
+              <span className="brandText">Café del Sol </span>
             </Link>
           </div>
 
