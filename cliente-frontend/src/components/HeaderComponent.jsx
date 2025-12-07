@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { getUsuarioLogueado, logout } from "../services/AuthService";
 
 export const HeaderComponent = () => {
   const [usuario, setUsuario] = useState(getUsuarioLogueado());
   const [menuOpen, setMenuOpen] = useState(false); // mobile menu
-  const [adminOpen, setAdminOpen] = useState(false); // admin dropdown
-  const adminRef = useRef(null);
+  const [userMenuOpen, setUserMenuOpen] = useState(false); // dropdown for user
+  const userRef = useRef(null);
 
   useEffect(() => {
     const handler = () => setUsuario(getUsuarioLogueado());
@@ -14,39 +14,47 @@ export const HeaderComponent = () => {
     return () => window.removeEventListener("authChange", handler);
   }, []);
 
-  // cerrar el dropdown de admin al hacer clic fuera
+  // cerrar dropdown de usuario al hacer clic fuera
   useEffect(() => {
     const onClickOutside = (e) => {
-      if (adminRef.current && !adminRef.current.contains(e.target)) {
-        setAdminOpen(false);
+      if (userRef.current && !userRef.current.contains(e.target)) {
+        setUserMenuOpen(false);
       }
     };
-    if (adminOpen) document.addEventListener("mousedown", onClickOutside);
-    else document.removeEventListener("mousedown", onClickOutside);
+    if (userMenuOpen) document.addEventListener("mousedown", onClickOutside);
     return () => document.removeEventListener("mousedown", onClickOutside);
-  }, [adminOpen]);
+  }, [userMenuOpen]);
 
   const rol = usuario?.perfil;
 
-  const toggleMenu = () => setMenuOpen(!menuOpen);
-  const toggleAdmin = () => setAdminOpen((s) => !s);
+  const toggleMenu = () => setMenuOpen((s) => !s);
+  const toggleUserMenu = () => setUserMenuOpen((s) => !s);
+
+  // Opciones visibles para administrador (puedes ajustar según tu app)
+  const adminLinks = [
+    { to: "/cliente/lista", label: "Clientes" },
+    { to: "/producto/lista", label: "Productos" },
+    { to: "/empleado/lista", label: "Empleados" },
+    { to: "/mesa/lista", label: "Mesas" },
+    { to: "/reserva/lista", label: "Reservas" },
+    { to: "/venta/lista", label: "Ventas" },
+  ];
 
   return (
     <>
       <style>{`
-        /* ---------- HEADER BASE ---------- */
+        /* HEADER */
         .main-header {
-          background-color: #2f4858;
           position: fixed;
           top: 0;
           left: 0;
           right: 0;
           z-index: 2000;
+          background: #32444c;
+          color: #eef2f3;
           box-shadow: 0 4px 12px rgba(0,0,0,0.12);
           font-family: Arial, Helvetica, sans-serif;
-          color: #f1f1f1;
         }
-
         .container-fluid {
           max-width: 1200px;
           margin: 0 auto;
@@ -58,174 +66,118 @@ export const HeaderComponent = () => {
           box-sizing: border-box;
         }
 
-        /* logo */
+        /* LOGO */
         .logo-link {
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 12px;
           text-decoration: none;
-          color: #c29c5e;
+          color: #d6b875;
           font-weight: 700;
           font-family: Georgia, serif;
           font-size: 1.4rem;
         }
-
         .logo-img {
-          width: 48px;
-          height: 48px;
+          width: 44px;
+          height: 44px;
           border-radius: 8px;
           object-fit: cover;
         }
 
-        /* navegación principal */
+        /* NAV */
         .nav-root { flex: 1; display: flex; justify-content: center; }
-        .nav-collapse {
+        .nav-list {
           display: flex;
+          gap: 1.2rem;
           align-items: center;
-          width: 100%;
-          justify-content: center;
-        }
-
-        .nav-list-main {
-          display: flex;
-          gap: 0.6rem;
-          align-items: center;
-          flex-wrap: wrap; /* permite que las opciones "salten" a la siguiente línea si hay muchas */
-          justify-content: center;
-          padding: 0;
-          margin: 0;
           list-style: none;
+          margin: 0;
+          padding: 0;
+          flex-wrap: wrap; /* evita overflow cuando hay muchas opciones */
         }
-
         .nav-item { display: inline-flex; }
         .nav-link {
-          display: inline-block;
-          padding: 0.45rem 0.9rem;
           text-decoration: none;
-          color: #eef3f4;
+          color: #eef2f3;
+          padding: 0.5rem 0.6rem;
           border-radius: 6px;
           font-weight: 600;
-          font-size: 0.95rem;
-          transition: background 0.18s, transform 0.18s;
-          white-space: nowrap;
+          font-size: 1rem;
+          transition: background 0.15s, transform 0.12s;
         }
-        .nav-link:hover {
-          background: rgba(255,255,255,0.06);
-          transform: translateY(-2px);
-        }
+        .nav-link:hover { background: rgba(255,255,255,0.04); transform: translateY(-2px); }
 
-        /* zona derecha (login / user) */
-        .nav-list-right {
-          display: flex;
-          gap: 0.8rem;
+        /* RIGHT (user) */
+        .nav-right { display: flex; align-items: center; gap: 0.8rem; list-style: none; margin: 0; padding: 0; }
+        .user-pill {
+          display: inline-flex;
           align-items: center;
-          list-style: none;
-          margin: 0;
-          padding: 0;
-        }
-
-        .btn-plain {
-          padding: 0.45rem 0.9rem;
-          border-radius: 6px;
-          border: 1px solid transparent;
-          background: transparent;
-          color: #fff;
+          gap: 10px;
+          background: rgba(255,255,255,0.03);
+          padding: 0.35rem 0.8rem;
+          border-radius: 10px;
           cursor: pointer;
-          font-weight: 600;
+          border: 1px solid rgba(255,255,255,0.03);
         }
+        .user-avatar {
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+          background: #4b646c;
+          color: #fff;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 700;
+          font-size: 0.95rem;
+          text-transform: uppercase;
+        }
+        .user-name { font-weight: 700; color: #f3f1ea; font-size: 0.98rem; }
 
-        .btn-cta {
-          background: #c75f54;
-          color: white;
-          border: none;
-          padding: 0.5rem 1rem;
+        /* user dropdown */
+        .user-dropdown {
+          position: absolute;
+          right: 1rem;
+          top: calc(100% + 10px);
+          background: #2f3e44;
+          padding: 0.6rem;
           border-radius: 8px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+          min-width: 180px;
+          z-index: 2500;
+        }
+        .user-dropdown button {
+          width: 100%;
+          padding: 0.5rem 0.7rem;
+          border-radius: 6px;
+          border: none;
           cursor: pointer;
           font-weight: 700;
+          background: #c75f54;
+          color: #fff;
         }
-        .btn-cta:hover { transform: translateY(-2px); }
+        .user-dropdown button:hover { transform: translateY(-2px); }
 
-        /* ADMIN DROPDOWN */
-        .admin-button {
-          position: relative;
-        }
-
-        .admin-dropdown {
-          position: absolute;
-          top: calc(100% + 8px);
-          right: 0;
-          background: #2b3f47;
-          border-radius: 8px;
-          padding: 0.5rem;
-          box-shadow: 0 10px 30px rgba(15,15,15,0.35);
-          min-width: 240px;
-          z-index: 3000;
-        }
-
-        .admin-dropdown ul {
-          list-style: none;
-          padding: 0.4rem;
-          margin: 0;
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 0.35rem;
-        }
-
-        .admin-dropdown a {
-          display: block;
-          padding: 0.5rem 0.7rem;
-          text-decoration: none;
-          color: #eef3f4;
-          border-radius: 6px;
-          font-weight: 600;
-        }
-        .admin-dropdown a:hover {
-          background: rgba(255,255,255,0.04);
-        }
-
-        .admin-dropdown .logout-row {
-          margin-top: 0.4rem;
-          display: flex;
-          gap: 0.5rem;
-          justify-content: flex-end;
-        }
-
-        /* BOTÓN HAMBURGUESA (móvil) */
+        /* hamburger (mobile) */
         .navbar-toggler-custom {
           display: none;
           background: transparent;
-          border: 1px solid rgba(255,255,255,0.14);
+          border: 1px solid rgba(255,255,255,0.12);
           color: #fff;
           padding: 0.45rem 0.6rem;
           border-radius: 6px;
           cursor: pointer;
         }
 
-        /* ajustes globales para no superponer contenido bajo header */
-        body { padding-top: 86px; }
+        /* spacing so page content doesn't go under header */
+        body { padding-top: 76px; }
 
         /* RESPONSIVE */
         @media (max-width: 992px) {
-          .nav-root { justify-content: flex-end; }
-          .nav-collapse { flex-direction: column; align-items: stretch; gap: 0.6rem; }
-          .nav-list-main { justify-content: flex-start; padding-left: 0.4rem; }
+          .nav-root { justify-content: flex-start; }
+          .nav-list { display: ${menuOpen ? "flex" : "none"}; flex-direction: column; gap: 0.6rem; background: transparent; padding: 0.6rem 0; }
           .navbar-toggler-custom { display: inline-flex; }
-
-          /* cuando está cerrado el menu, lo ocultamos con clases dinámicas en JSX */
-          .nav-collapse.mobile-hidden { display: none; }
-
-          .admin-dropdown { right: 1rem; left: 1rem; }
         }
-
-        /* ajustes visuales menores */
-        .welcomeText {
-          padding: 0.45rem 0.8rem;
-          border-radius: 8px;
-          background: rgba(255,255,255,0.03);
-          color: #f5f3ea;
-          font-weight: 600;
-        }
-
       `}</style>
 
       <header className="main-header">
@@ -236,124 +188,65 @@ export const HeaderComponent = () => {
             <span>Café del Sol</span>
           </Link>
 
-          {/* BOTON HAMBURGUESA (solo visible small) */}
-          <button
-            className="navbar-toggler-custom"
-            onClick={toggleMenu}
-            aria-label="Abrir menú"
-          >
+          {/* HAMBURGUESA (solo visible en mobile) */}
+          <button className="navbar-toggler-custom" onClick={toggleMenu} aria-label="Abrir menú">
             ☰
           </button>
 
-          {/* NAVEGACIÓN */}
+          {/* NAVEGACIÓN CENTRAL */}
           <nav className="nav-root" role="navigation" aria-label="Menú principal">
-            <div className={`nav-collapse ${menuOpen ? "" : "mobile-hidden"}`}>
-
-              <ul className="nav-list-main" role="menubar">
-                <li className="nav-item" role="none">
-                  <Link className="nav-link" to="/" role="menuitem">Inicio</Link>
-                </li>
-
-                {rol === "cliente" && (
-                  <li className="nav-item"><Link className="nav-link" to="/reserva/lista">Mis Reservas</Link></li>
-                )}
-
-                {rol === "mesero" && (
-                  <li className="nav-item"><Link className="nav-link" to="/venta/lista">Ventas</Link></li>
-                )}
-
-                {rol === "cajero" && (
-                  <>
-                    <li className="nav-item"><Link className="nav-link" to="/cliente/lista">Clientes</Link></li>
-                    <li className="nav-item"><Link className="nav-link" to="/reserva/lista">Reservas</Link></li>
-                    <li className="nav-item"><Link className="nav-link" to="/venta/lista">Ventas</Link></li>
-                  </>
-                )}
-
-                {rol === "supervisor" && (
-                  <>
-                    <li className="nav-item"><Link className="nav-link" to="/usuarios/lista">Usuarios</Link></li>
-                    <li className="nav-item"><Link className="nav-link" to="/empleado/lista">Empleados</Link></li>
-                    <li className="nav-item"><Link className="nav-link" to="/cliente/lista">Clientes</Link></li>
-                    <li className="nav-item"><Link className="nav-link" to="/producto/lista">Productos</Link></li>
-                  </>
-                )}
-
-                {/* ADMIN: un único botón que abre un dropdown con las opciones */}
-                {rol === "administrador" && (
-                  <li className="nav-item admin-button" ref={adminRef}>
-                    <button
-                      onClick={toggleAdmin}
-                      className="nav-link btn-plain"
-                      aria-expanded={adminOpen}
-                      aria-haspopup="true"
-                    >
-                      Administración
-                    </button>
-
-                    {adminOpen && (
-                      <div className="admin-dropdown" role="menu" aria-label="Panel de administración">
-                        <ul>
-                          <li><Link to="/usuarios/lista">Usuarios</Link></li>
-                          <li><Link to="/cliente/lista">Clientes</Link></li>
-                          <li><Link to="/empleado/lista">Empleados</Link></li>
-                          <li><Link to="/mesa/lista">Mesas</Link></li>
-                          <li><Link to="/tipoProducto/lista">Tipos de productos</Link></li>
-                          <li><Link to="/producto/lista">Productos</Link></li>
-                          <li><Link to="/reserva/lista">Reservas</Link></li>
-                          <li><Link to="/venta/lista">Ventas</Link></li>
-                        </ul>
-
-                        <div className="logout-row">
-                          <button
-                            onClick={() => { setAdminOpen(false); logout(); }}
-                            className="btn-cta"
-                          >
-                            Cerrar sesión
-                          </button>
-                        </div>
-                      </div>
-                    )}
+            <ul className="nav-list" role="menubar">
+              {/* Si es administrador mostramos todas las opciones como en tu imagen */}
+              {rol === "administrador" ? (
+                adminLinks.map((l) => (
+                  <li className="nav-item" key={l.to} role="none">
+                    <Link role="menuitem" className="nav-link" to={l.to}>{l.label}</Link>
                   </li>
-                )}
-
-              </ul>
-
-            </div>
+                ))
+              ) : (
+                /* En caso de otros roles, muestra solo lo que corresponda (ajusta según tu app) */
+                <>
+                  <li className="nav-item"><Link className="nav-link" to="/">Inicio</Link></li>
+                  {rol === "cliente" && <li className="nav-item"><Link className="nav-link" to="/reserva/lista">Reservas</Link></li>}
+                  {rol === "mesero" && <li className="nav-item"><Link className="nav-link" to="/venta/lista">Ventas</Link></li>}
+                </>
+              )}
+            </ul>
           </nav>
 
-          {/* ZONA DERECHA: si no hay usuario --> mostrar links de login/registro.
-              Si hay usuario y no es admin (o incluso si es admin), se muestra un saludo compacto. */}
-          <ul className="nav-list-right" aria-hidden={false}>
+          {/* DERECHA: usuario / login */}
+          <div style={{ position: "relative" }} ref={userRef}>
             {!usuario ? (
-              <>
-                <li><Link className="nav-link" to="/login">Iniciar sesión</Link></li>
-                <li><Link className="nav-link" to="/usuarios/crear">Registrarse</Link></li>
-              </>
+              <div style={{ display: "flex", gap: "0.6rem" }}>
+                <Link className="nav-link" to="/login">Iniciar sesión</Link>
+                <Link className="nav-link" to="/usuarios/crear">Registrarse</Link>
+              </div>
             ) : (
-              <>
-                {/* Si quieres que el admin también tenga aquí algo, lo dejamos simple */}
-                <li>
-                  <div className="welcomeText" title={`Conectado como ${usuario.nombre}`}>
-                    {usuario.nombre}
-                  </div>
-                </li>
-
-                {/* En caso de que quieras un botón de logout rápido visible para todos */}
-                {rol !== "administrador" && (
-                  <li>
-                    <button
-                      onClick={logout}
-                      className="btn-cta"
-                    >
-                      Cerrar sesión
-                    </button>
-                  </li>
-                )}
-                {/* Nota: para el administrador el botón de cerrar sesión está dentro del dropdown como pediste */}
-              </>
+              <div className="user-pill" onClick={toggleUserMenu} role="button" aria-haspopup="true" aria-expanded={userMenuOpen}>
+                <div className="user-avatar">
+                  {usuario.nombre ? usuario.nombre.charAt(0) : "U"}
+                </div>
+                <div className="user-name">{usuario.nombre}</div>
+              </div>
             )}
-          </ul>
+
+            {/* DROPDOWN del usuario: visible solo si userMenuOpen */}
+            {userMenuOpen && usuario && (
+              <div className="user-dropdown" role="menu" aria-label="Menú de usuario">
+                <div style={{ marginBottom: "0.5rem", color: "#dfe7e8", fontWeight: 700 }}>
+                  {usuario.nombre}
+                </div>
+                <button
+                  onClick={() => {
+                    setUserMenuOpen(false);
+                    logout();
+                  }}
+                >
+                  Cerrar sesión
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </header>
     </>
