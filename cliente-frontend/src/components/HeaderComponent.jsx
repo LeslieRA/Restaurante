@@ -41,11 +41,12 @@ export const HeaderComponent = () => {
 
         .container-fluid {
           width: 100%;
-          max-width: 1400px;
+          max-width: 100%;
           display: flex;
           align-items: center;
-          gap: 1rem;
-          padding: 0.6rem 0;
+          gap: 2rem;
+          padding: 0.6rem 1rem;
+          justify-content: space-between;
         }
 
         /* LOGOTIPO */
@@ -59,18 +60,18 @@ export const HeaderComponent = () => {
         .logo-link {
           color: #c29c5e;
           text-decoration: none;
-          font-size: 1.6rem;
+          font-size: 1.4rem;
           font-weight: bold;
           font-family: 'Georgia', serif;
           display: flex;
           align-items: center;
-          gap: 12px;
+          gap: 10px;
           white-space: nowrap;
         }
 
         .logo-img {
-          width: 60px;
-          height: 60px;
+          width: 50px;
+          height: 50px;
           object-fit: cover;
           transition: transform 0.3s ease;
           border-radius: 8px;
@@ -107,12 +108,18 @@ export const HeaderComponent = () => {
           display: flex;
           gap: 0.3rem;
           align-items: center;
-          flex-wrap: wrap;
+          flex-wrap: nowrap;
         }
 
         .nav-list-main {
           flex: 1;
           justify-content: center;
+          overflow-x: auto;
+          scrollbar-width: none;
+        }
+
+        .nav-list-main::-webkit-scrollbar {
+          display: none;
         }
 
         .nav-item {
@@ -122,13 +129,13 @@ export const HeaderComponent = () => {
         .nav-link {
           color: #f0f0f0;
           text-decoration: none;
-          font-size: 0.95rem;
-          padding: 0.6rem 1rem;
+          font-size: 0.85rem;
+          padding: 0.5rem 0.8rem;
           border-radius: 6px;
           transition: all 0.22s ease;
           display: inline-flex;
           align-items: center;
-          gap: 6px;
+          gap: 5px;
           font-weight: 500;
           white-space: nowrap;
           background: transparent;
@@ -154,11 +161,12 @@ export const HeaderComponent = () => {
           padding: 0.4rem 0.8rem;
           border-radius: 8px;
           font-weight: 600;
+          font-size: 0.85rem;
           color: #fff;
           background: rgba(255, 255, 255, 0.05);
           display: inline-flex;
           align-items: center;
-          gap: 6px;
+          gap: 5px;
         }
 
         .username-text {
@@ -169,13 +177,14 @@ export const HeaderComponent = () => {
         .btn-logout {
           background: #d9534f;
           border: none;
-          padding: 0.5rem 1rem;
+          padding: 0.4rem 0.9rem;
           color: #fff;
           font-weight: 600;
           border-radius: 6px;
           cursor: pointer;
           transition: all 0.2s ease;
-          font-size: 0.9rem;
+          font-size: 0.85rem;
+          white-space: nowrap;
         }
 
         .btn-logout:hover {
