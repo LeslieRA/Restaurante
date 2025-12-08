@@ -82,7 +82,7 @@ export const HomeComponent = () => {
             fontFamily: 'Georgia, serif',
             fontSize: '3.5rem',
             fontWeight: 'bold',
-            color: 'white',
+            color: 'black',
             marginBottom: '20px',
             textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
           }}>
