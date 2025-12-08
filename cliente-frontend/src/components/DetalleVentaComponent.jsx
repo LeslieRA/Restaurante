@@ -14,11 +14,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const estilos = {
   container: {
     maxWidth: '1200px',
-    margin: '2rem auto',
+    margin: '0 auto', // Ajustado para modal
     padding: '2rem',
     backgroundColor: 'white',
     borderRadius: '15px',
-    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+    boxShadow: 'none', // Sin sombra dentro del modal
     border: '3px solid #c29c5e'
   },
   title: {
@@ -182,9 +182,17 @@ export const DetalleVentaComponent = ({ show, handleClose, ventaId }) => {
     return p ? p.nombreProducto : '—';
   };
 
+  // ✅ CORRECCIÓN DE HORA: Forzamos UTC ('Z') para que el navegador reste las 6 horas
   const formatearFecha = (fecha) => {
+    if (!fecha) return "—";
     try {
-      const f = new Date(fecha);
+      let fechaStr = String(fecha);
+      // Si no trae Z ni offset (+/-), se asume que viene "limpia" del backend y le agregamos Z
+      if (!fechaStr.endsWith("Z") && !fechaStr.includes("+") && !fechaStr.includes("-")) {
+         fechaStr += "Z"; 
+      }
+      
+      const f = new Date(fechaStr);
       return f.toLocaleString('es-MX', {
         dateStyle: 'medium',
         timeStyle: 'short',
@@ -199,7 +207,6 @@ export const DetalleVentaComponent = ({ show, handleClose, ventaId }) => {
     const ventanaImpresion = window.open('', '', 'width=800,height=600');
     
     ventanaImpresion.document.write('<html><head><title>Imprimir Ticket</title>');
-    // No necesitamos importar CSS externo porque todos los estilos ahora están inline en el JS
     ventanaImpresion.document.write('</head><body style="font-family: Arial, sans-serif; padding: 20px;">');
     ventanaImpresion.document.write(contenidoModal.innerHTML);
     ventanaImpresion.document.write('</body></html>');
@@ -212,18 +219,11 @@ export const DetalleVentaComponent = ({ show, handleClose, ventaId }) => {
 
   return (
     <Modal show={show} onHide={handleClose} size="lg" centered>
-      {/* Ocultamos el Header por defecto de bootstrap o lo personalizamos para que coincida */}
       <Modal.Header closeButton style={{ borderBottom: 'none', paddingBottom: 0 }}>
       </Modal.Header>
       
       <Modal.Body id="ticketVenta" style={{ padding: '0 1rem 1rem 1rem' }}>
-        {/* Contenedor principal estilizado */}
-        <div style={{
-            ...estilos.container,
-            margin: '0', // Reseteamos margen para el modal
-            maxWidth: '100%', // Ancho completo dentro del modal
-            boxShadow: 'none' // Quitamos sombra doble
-        }}>
+        <div style={estilos.container}>
           
           <h4 style={estilos.title}>🎫 TICKET DE VENTA 🎫</h4>
 

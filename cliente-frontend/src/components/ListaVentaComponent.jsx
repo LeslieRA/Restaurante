@@ -386,9 +386,16 @@ export const ListaVentaComponent = () => {
       });
   }
 
+  // ✅ CORRECCIÓN DE HORA APLICADA AQUÍ TAMBIÉN
   function formatearFecha(f) {
+    if (!f) return "—";
     try {
-      return new Date(f).toLocaleString("es-MX", {
+      let fechaStr = String(f);
+      if (!fechaStr.endsWith("Z") && !fechaStr.includes("+") && !fechaStr.includes("-")) {
+         fechaStr += "Z";
+      }
+
+      return new Date(fechaStr).toLocaleString("es-MX", {
         dateStyle: "medium",
         timeStyle: "short",
       });
