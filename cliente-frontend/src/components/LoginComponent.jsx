@@ -334,7 +334,7 @@ export const LoginComponent = () => {
               ¿No tienes cuenta?{' '}
               <a 
                 style={estilos.link}
-                onClick={() => navigate('/register')}
+                onClick={() => navigate('/usuarios/crear')}
               >
                 Regístrate aquí
               </a>
