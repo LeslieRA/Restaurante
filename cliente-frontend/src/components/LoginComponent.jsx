@@ -123,7 +123,8 @@ export const LoginComponent = () => {
       transition: 'all 0.3s ease',
       outline: 'none',
       backgroundColor: 'white',
-      boxSizing: 'border-box'
+      boxSizing: 'border-box',
+      color: '#000000'       // ✅ AGREGA ESTO: Fuerza el texto a negro
     },
     inputFocused: {
       borderColor: '#c29c5e',

@@ -8,6 +8,84 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getCliente, updateCliente, deleteCliente} from "../services/ClienteService";
 import { getEmpleado, updateEmpleado, deleteEmpleado, crearEmpleado } from "../services/EmpleadoService";
 
+// --- ESTILOS DEFINIDOS (Tema Dorado/Elegante) ---
+const estilos = {
+  container: {
+    maxWidth: '600px', // Ancho ideal para formulario de usuario
+    margin: '2rem auto',
+    padding: '2rem',
+    backgroundColor: 'white',
+    borderRadius: '15px',
+    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+    border: '3px solid #c29c5e'
+  },
+  title: {
+    fontFamily: 'Georgia, serif',
+    color: '#2f4858',
+    textAlign: 'center',
+    fontSize: '2.5rem',
+    marginBottom: '2rem',
+    paddingBottom: '1rem',
+    borderBottom: '3px solid #c29c5e',
+    fontWeight: 'bold',
+    textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+  },
+  formInput: {
+    width: '100%',
+    padding: '0.8rem 1rem',
+    border: '2px solid #e0ddd0',
+    borderRadius: '8px',
+    fontSize: '1rem',
+    fontFamily: 'Arial, sans-serif',
+    transition: 'all 0.3s ease',
+    outline: 'none',
+    backgroundColor: '#fff',
+    color: '#2f4858', // ✅ SOLUCIÓN: Letra oscura para que se vea bien
+  },
+  label: {
+    color: '#2f4858',
+    fontWeight: 'bold',
+    marginBottom: '0.5rem',
+    display: 'block'
+  },
+  btnPrimary: {
+    backgroundColor: '#c29c5e',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    padding: '0.8rem 1.5rem',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem',
+    boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+  },
+  btnSecondary: {
+    backgroundColor: 'white',
+    color: '#2f4858',
+    border: '2px solid #c29c5e',
+    borderRadius: '8px',
+    padding: '0.8rem 1.5rem',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem'
+  },
+  errorMsg: {
+    color: '#c0615f',
+    fontSize: '0.85rem',
+    marginTop: '0.25rem'
+  }
+};
+
 export const UsuarioComponent = () => {
   const [nombre, setNombre] = useState("");
   const [perfil, setPerfil] = useState("");
@@ -128,22 +206,17 @@ export const UsuarioComponent = () => {
       password: password || null,
     };
 
-    // ==========================================
-    //      SI ES EDICIÓN
-    // ==========================================
+    // SI ES EDICIÓN
     if (id) {
       getUsuario(id).then(({ data: usuarioAnterior }) => {
         const perfilAnterior = usuarioAnterior.perfil;
 
         updateUsuario(id, usuario)
           .then(async () => {
-            // ==========================================
-            //      SI NO CAMBIÓ EL PERFIL
-            // ==========================================
+            // SI NO CAMBIÓ EL PERFIL
             if (perfilAnterior === perfil) {
               if (perfil === "cliente") {
                 const cli = await getCliente(id).catch(() => null);
-
                 if (cli?.data) {
                   await updateCliente(id, {
                     idCliente: id,
@@ -156,7 +229,6 @@ export const UsuarioComponent = () => {
 
               if (["cajero","mesero","cocinero","supervisor","administrador"].includes(perfil)) {
                 const emp = await getEmpleado(id).catch(() => null);
-
                 if (emp?.data) {
                   await updateEmpleado(id, {
                     idEmpleado: id,
@@ -165,40 +237,31 @@ export const UsuarioComponent = () => {
                   });
                 }
               }
-
               return "ok";
             }
 
-            // ==========================================
-            //      SI CAMBIÓ DE CLIENTE → EMPLEADO
-            // ==========================================
+            // SI CAMBIÓ DE CLIENTE → EMPLEADO
             if (
               perfilAnterior === "cliente" &&
               ["cajero","mesero","cocinero","supervisor","administrador"].includes(perfil)
             ) {
               await deleteCliente(id).catch(() => null);
-
               await crearEmpleado({
                 idEmpleado: id,
                 nombre,
                 puesto: perfil,
               });
-
               return "ok";
             }
 
-            // ==========================================
-            //      SI CAMBIÓ DE EMPLEADO → CLIENTE
-            // ==========================================
+            // SI CAMBIÓ DE EMPLEADO → CLIENTE
             if (
               ["cajero","mesero","cocinero","supervisor","administrador"].includes(perfilAnterior) &&
               perfil === "cliente"
             ) {
               await deleteEmpleado(id).catch(() => null);
-
-              // 🚀 INDICAR QUE HAY REDIRECCIÓN PERSONALIZADA
               navegar(`/cliente/crear?idUsuario=${id}&nombre=${nombre}`);
-              return "redirect"; // <-- IMPORTANTE
+              return "redirect";
             }
 
             return "ok";
@@ -210,14 +273,10 @@ export const UsuarioComponent = () => {
           })
           .catch((err) => console.error("ERROR AL ACTUALIZAR USUARIO:", err));
       });
-
       return;
     }
 
-
-    // ==========================================
-    //       SI ES CREACIÓN (NO SE TOCA)
-    // ==========================================
+    // SI ES CREACIÓN
     crearUsuario(usuario)
       .then((response) => {
         const nuevo = response.data;
@@ -232,23 +291,17 @@ export const UsuarioComponent = () => {
       .catch(console.error);
   }
 
-
   function cancelar() {
     const logged = JSON.parse(localStorage.getItem("usuario"));
 
-    // Si NO hay usuario logueado → es un cliente creando su cuenta
     if (!logged) {
       navegar("/");
       return;
     }
-    
-    // ⭐ Caso 2: Cajero registrando clientes
     if (logged.perfil === "cajero") {
       navegar("/cliente/lista");
       return;
     }
-
-    // ⭐ Caso 3: Admin o Supervisor
     if (logged.perfil === "administrador" || logged.perfil === "supervisor") {
       navegar("/usuarios/lista");
       return;
@@ -260,78 +313,69 @@ export const UsuarioComponent = () => {
   }
 
   return (
-    <div className="container mt-4">
-      <div className="form-header text-center mb-4" style={{ color: "#75421e" }}>
-        <h2>{pagTitulo()}</h2>
-      </div>
+    <div style={estilos.container}>
+      <h2 style={estilos.title}>{pagTitulo()}</h2>
 
-      <form
-        className="p-4 shadow rounded mx-auto"
-        style={{ backgroundColor: "#fff7e6", maxWidth: "500px" }}
-      >
+      <form onSubmit={saveUsuario}>
         {/* Nombre */}
-        <div className="mb-3">
-          <label className="form-label fw-bold" style={{ color: "#f28724" }}>
-            Nombre completo
-          </label>
+        <div style={{ marginBottom: '1.5rem' }}>
+          <label style={estilos.label}>Nombre completo</label>
           <input
             type="text"
-            className={`form-control ${errors.nombre ? "is-invalid" : ""}`}
+            style={{
+                ...estilos.formInput,
+                borderColor: errors.nombre ? '#c0615f' : estilos.formInput.border.split(' ')[2]
+            }}
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
             placeholder="Ingresa el nombre del usuario"
           />
-          {errors.nombre && <div className="invalid-feedback">{errors.nombre}</div>}
+          {errors.nombre && <div style={estilos.errorMsg}>{errors.nombre}</div>}
         </div>
 
         {/* Perfil */}
-        <div className="mb-3">
-          <label className="form-label fw-bold" style={{ color: "#f28724" }}>
-            Perfil
-          </label>
-
+        <div style={{ marginBottom: '1.5rem' }}>
+          <label style={estilos.label}>Perfil</label>
           <select
-            className={`form-control ${errors.perfil ? "is-invalid" : ""}`}
+            style={{
+                ...estilos.formInput,
+                borderColor: errors.perfil ? '#c0615f' : estilos.formInput.border.split(' ')[2]
+            }}
             value={perfil}
             onChange={(e) => setPerfil(e.target.value)}
           >
             <option value="">Seleccione un perfil</option>
-
             {perfilesPermitidos().map((p) => (
               <option key={p} value={p}>
                 {p.charAt(0).toUpperCase() + p.slice(1)}
               </option>
             ))}
           </select>
-
-          {errors.perfil && <div className="invalid-feedback">{errors.perfil}</div>}
+          {errors.perfil && <div style={estilos.errorMsg}>{errors.perfil}</div>}
         </div>
 
         {/* Username */}
-        <div className="mb-3">
-          <label className="form-label fw-bold" style={{ color: "#f28724" }}>
-            Username
-          </label>
+        <div style={{ marginBottom: '1.5rem' }}>
+          <label style={estilos.label}>Username</label>
           <input
             type="text"
-            className={`form-control ${errors.username ? "is-invalid" : ""}`}
+            style={{
+                ...estilos.formInput,
+                borderColor: errors.username ? '#c0615f' : estilos.formInput.border.split(' ')[2]
+            }}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Nombre de usuario (login)"
           />
-          {errors.username && (
-            <div className="invalid-feedback">{errors.username}</div>
-          )}
+          {errors.username && <div style={estilos.errorMsg}>{errors.username}</div>}
         </div>
 
         {/* Password */}
-        <div className="mb-3">
-          <label className="form-label fw-bold" style={{ color: "#f28724" }}>
-            Contraseña
-          </label>
+        <div style={{ marginBottom: '1.5rem' }}>
+          <label style={estilos.label}>Contraseña</label>
           <input
             type="password"
-            className="form-control"
+            style={estilos.formInput}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Dejar vacío si no desea cambiarla"
@@ -339,13 +383,14 @@ export const UsuarioComponent = () => {
         </div>
 
         {/* Estatus */}
-        <div className="mb-3">
-          <label className="form-label fw-bold" style={{ color: "#f28724" }}>
-            Estatus
-          </label>
-
+        <div style={{ marginBottom: '2rem' }}>
+          <label style={estilos.label}>Estatus</label>
           <select
-            className="form-control"
+            style={{
+                ...estilos.formInput,
+                backgroundColor: !id ? '#f0f0f0' : '#fff', // Gris claro si está deshabilitado
+                color: !id ? '#999' : '#2f4858' 
+            }}
             value={estatus}
             onChange={(e) => setEstatus(e.target.value)}
             disabled={!id}
@@ -356,23 +401,20 @@ export const UsuarioComponent = () => {
         </div>
 
         {/* Botones */}
-        <div className="d-flex gap-2 justify-content-center">
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1rem' }}>
           <button
             type="submit"
-            onClick={saveUsuario}
-            className="btn text-white"
-            style={{ backgroundColor: "#f28724" }}
+            style={estilos.btnPrimary}
           >
-            {id ? "🔄Actualizar" : "✅Guardar"}
+            {id ? "🔄 Actualizar" : "✅ Guardar"}
           </button>
 
           <button
             type="button"
-            className="btn"
-            style={{ borderColor: "#f28724", color: "#f28724" }}
+            style={estilos.btnSecondary}
             onClick={cancelar}
           >
-            ❌Cancelar
+            ❌ Cancelar
           </button>
         </div>
       </form>
