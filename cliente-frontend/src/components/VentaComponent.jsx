@@ -1,12 +1,118 @@
 import React, { useState, useEffect } from 'react';
 import { crearVenta, getVenta, updateVenta } from '../services/VentaService';
-import { getDetallesByVenta } from '../services/DetalleVentaService'; // ✅
+import { getDetallesByVenta } from '../services/DetalleVentaService';
 import { listaClientes } from '../services/ClienteService';
 import { listaProductos } from '../services/ProductoService';
 import { listaEmpleados } from '../services/EmpleadoService';
-import { listaAtenciones, crearAtencion } from '../services/AtenderService'; // ✅
+import { listaAtenciones, crearAtencion } from '../services/AtenderService';
 import { getReserva } from '../services/ReservaService';
 import { useNavigate, useParams } from 'react-router-dom';
+
+// --- ESTILOS DEFINIDOS (Mismo objeto que el anterior) ---
+const estilos = {
+  container: {
+    maxWidth: '800px', // Ajustado un poco para formulario
+    margin: '2rem auto',
+    padding: '2rem',
+    backgroundColor: 'white',
+    borderRadius: '15px',
+    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+    border: '3px solid #c29c5e'
+  },
+  title: {
+    fontFamily: 'Georgia, serif',
+    color: '#2f4858',
+    textAlign: 'center',
+    fontSize: '2.5rem',
+    marginBottom: '2rem',
+    paddingBottom: '1rem',
+    borderBottom: '3px solid #c29c5e',
+    fontWeight: 'bold',
+    textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+  },
+  // Reutilizamos el estilo de input de búsqueda para los inputs del formulario
+  formInput: {
+    width: '100%',
+    padding: '0.8rem 1rem',
+    border: '2px solid #e0ddd0',
+    borderRadius: '8px',
+    fontSize: '1rem',
+    fontFamily: 'Arial, sans-serif',
+    transition: 'all 0.3s ease',
+    outline: 'none',
+    backgroundColor: '#fff'
+  },
+  label: {
+    color: '#2f4858',
+    fontWeight: 'bold',
+    marginBottom: '0.5rem',
+    display: 'block'
+  },
+  btnPrimary: {
+    backgroundColor: '#c29c5e',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    padding: '0.8rem 1.5rem',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem',
+    boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+  },
+  btnSecondary: {
+    backgroundColor: 'white',
+    color: '#2f4858',
+    border: '2px solid #c29c5e',
+    borderRadius: '8px',
+    padding: '0.8rem 1.5rem',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem'
+  },
+  btnDelete: {
+    backgroundColor: '#c0615f',
+    color: 'white',
+    border: 'none',
+    borderRadius: '6px',
+    padding: '0.5rem 1rem',
+    fontSize: '0.9rem',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '0.5rem'
+  },
+  totalContainer: {
+    textAlign: 'center',
+    marginBottom: '1.5rem',
+    padding: '1rem',
+    backgroundColor: '#f9f9f9',
+    borderRadius: '8px',
+    border: '1px dashed #c29c5e'
+  },
+  totalText: {
+    color: '#c29c5e',
+    fontSize: '1.8rem',
+    fontWeight: 'bold',
+    fontFamily: 'Georgia, serif'
+  },
+  errorMsg: {
+    color: '#c0615f',
+    fontSize: '0.85rem',
+    marginTop: '0.25rem'
+  }
+};
 
 export const VentaComponent = () => {
   const [cliente, setCliente] = useState('');
@@ -137,87 +243,70 @@ export const VentaComponent = () => {
 
   // 💾 Guardar / actualizar venta
   async function saveVenta(e) {
-  e.preventDefault();
-  if (!validaForm()) return;
+    e.preventDefault();
+    if (!validaForm()) return;
 
-  const venta = {
-    idCliente: Number(cliente),
-    idReserva: reserva ? Number(reserva) : null,
-    detalles: detalles
-      .filter(d => d.idProducto && Number(d.cantidad) > 0)
-      .map(d => ({ idProducto: Number(d.idProducto), cantidad: Number(d.cantidad) })),
-  };
-
-  try {
-    // 1) Crear/actualizar venta
-    const { data: ventaGuardada } = id
-      ? await updateVenta(id, venta)
-      : await crearVenta(venta);
-
-    // 2) Armar payload base de atención
-    const atenderBase = {
-      idEmpleado: Number(empleado),
-      idVenta: Number(ventaGuardada.idVenta),
+    const venta = {
+      idCliente: Number(cliente),
+      idReserva: reserva ? Number(reserva) : null,
+      detalles: detalles
+        .filter(d => d.idProducto && Number(d.cantidad) > 0)
+        .map(d => ({ idProducto: Number(d.idProducto), cantidad: Number(d.cantidad) })),
     };
 
-    // 3) Buscar si ya existe atención para esta venta
-    const { data: atenciones } = await listaAtenciones();
-    const existente = atenciones.find(
-      a => Number(a.idVenta ?? a.idventa) === Number(ventaGuardada.idVenta)
-    );
+    try {
+      const { data: ventaGuardada } = id
+        ? await updateVenta(id, venta)
+        : await crearVenta(venta);
 
-    if (existente) {
-      const idAtender = Number(existente.idAtender ?? existente.idatender);
-      const idEmpleadoExistente = Number(existente.idEmpleado ?? existente.idempleado);
+      const atenderBase = {
+        idEmpleado: Number(empleado),
+        idVenta: Number(ventaGuardada.idVenta),
+      };
 
-      // 👉 IMPORTANTE: muchos backends exigen idAtender también en el body del PUT
-      const atenderPayload = { ...atenderBase, idAtender };
+      const { data: atenciones } = await listaAtenciones();
+      const existente = atenciones.find(
+        a => Number(a.idVenta ?? a.idventa) === Number(ventaGuardada.idVenta)
+      );
 
-      if (idEmpleadoExistente !== atenderPayload.idEmpleado) {
-        await updateAtencion(idAtender, atenderPayload); // PUT /atender/{id}
-        console.log('✅ Atención actualizada (mesero cambiado)');
+      if (existente) {
+        const idAtender = Number(existente.idAtender ?? existente.idatender);
+        const idEmpleadoExistente = Number(existente.idEmpleado ?? existente.idempleado);
+        const atenderPayload = { ...atenderBase, idAtender };
+
+        if (idEmpleadoExistente !== atenderPayload.idEmpleado) {
+          await updateAtencion(idAtender, atenderPayload); 
+        }
       } else {
-        console.log('ℹ️ Atención sin cambios');
+        await crearAtencion(atenderBase);
       }
-    } else {
-      await crearAtencion(atenderBase); // POST
-      console.log('✅ Atención creada');
+
+      alert(id ? 'Venta actualizada correctamente' : 'Venta registrada correctamente');
+      navegar('/venta/lista');
+    } catch (error) {
+      console.error('Error al guardar venta o atención:', error);
+      const msg = error?.response?.data ?? 'Ocurrió un error al registrar la venta.';
+      alert(msg);
     }
-
-    alert(id ? 'Venta actualizada correctamente' : 'Venta registrada correctamente');
-    navegar('/venta/lista');
-  } catch (error) {
-    console.error('Error al guardar venta o atención:', error);
-    const msg = error?.response?.data ?? 'Ocurrió un error al registrar la venta.';
-    alert(msg);
   }
-}
-
 
   const cancelar = () => navegar('/venta/lista');
 
-  const pagTitulo = () => (
-    <h2 className="text-center">{id ? 'Modificar venta' : 'Registrar venta'}</h2>
-  );
-
   return (
-    <div className="container mt-4">
-      <div className="form-header text-center mb-4" style={{ color: '#75421e' }}>
-        {pagTitulo()}
-      </div>
+    <div style={estilos.container}>
+      <h2 style={estilos.title}>{id ? 'Modificar venta' : 'Registrar venta'}</h2>
 
-      <form
-        className="p-4 shadow rounded mx-auto"
-        style={{ backgroundColor: '#fff7e6', maxWidth: '700px' }}
-      >
+      <form onSubmit={saveVenta}>
+        
         {/* Cliente */}
         {!reserva && (
-          <div className="mb-3">
-            <label className="form-label fw-bold" style={{ color: '#f28724' }}>
-              Cliente
-            </label>
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label style={estilos.label}>Cliente</label>
             <select
-              className={`form-select ${errors.cliente ? 'is-invalid' : ''}`}
+              style={{
+                ...estilos.formInput,
+                borderColor: errors.cliente ? '#c0615f' : estilos.formInput.border.split(' ')[2]
+              }}
               value={cliente}
               onChange={(e) => setCliente(e.target.value)}
             >
@@ -228,17 +317,18 @@ export const VentaComponent = () => {
                 </option>
               ))}
             </select>
-            {errors.cliente && <div className="invalid-feedback">{errors.cliente}</div>}
+            {errors.cliente && <div style={estilos.errorMsg}>{errors.cliente}</div>}
           </div>
         )}
 
         {/* Empleado */}
-        <div className="mb-3">
-          <label className="form-label fw-bold" style={{ color: '#f28724' }}>
-            Empleado (Mesero)
-          </label>
+        <div style={{ marginBottom: '1.5rem' }}>
+          <label style={estilos.label}>Empleado (Mesero)</label>
           <select
-            className={`form-select ${errors.empleado ? 'is-invalid' : ''}`}
+            style={{
+                ...estilos.formInput,
+                borderColor: errors.empleado ? '#c0615f' : estilos.formInput.border.split(' ')[2]
+            }}
             value={empleado}
             onChange={(e) => setEmpleado(e.target.value)}
           >
@@ -252,21 +342,23 @@ export const VentaComponent = () => {
               </option>
             ))}
           </select>
-          {errors.empleado && <div className="invalid-feedback">{errors.empleado}</div>}
+          {errors.empleado && <div style={estilos.errorMsg}>{errors.empleado}</div>}
         </div>
 
         {/* Productos */}
-        <div className="mb-3">
-          <label className="form-label fw-bold" style={{ color: '#f28724' }}>Productos</label>
+        <div style={{ marginBottom: '2rem' }}>
+          <label style={{ ...estilos.label, borderBottom: '1px solid #eee', paddingBottom: '0.5rem', marginBottom: '1rem' }}>
+            Productos
+          </label>
+          
           {detalles.map((det, index) => (
             <div key={index} className="d-flex align-items-center mb-2 gap-2">
               <select
-                className="form-select"
-                style={{ flex: 3 }}
+                style={{ ...estilos.formInput, flex: 3 }}
                 value={det.idProducto}
                 onChange={(e) => actualizarDetalle(index, 'idProducto', e.target.value)}
               >
-                <option value="">Seleccione un producto</option>
+                <option value="">Seleccione producto</option>
                 {productos.map((p) => (
                   <option key={p.id_producto} value={p.id_producto}>
                     {p.nombreProducto} — ${p.precioProducto}
@@ -277,56 +369,58 @@ export const VentaComponent = () => {
               <input
                 type="number"
                 min="1"
-                className="form-control"
-                style={{ flex: 1 }}
+                style={{ ...estilos.formInput, flex: 1, minWidth: '80px' }}
                 value={det.cantidad}
                 onChange={(e) => actualizarDetalle(index, 'cantidad', e.target.value)}
               />
 
               <button
                 type="button"
-                className="btn btn-danger btn-sm"
+                style={estilos.btnDelete}
                 onClick={() => eliminarDetalle(index)}
+                title="Eliminar producto"
               >
                 ✘
               </button>
             </div>
           ))}
 
-          <button
-            type="button"
-            className="btn btn-sm text-white"
-            style={{ backgroundColor: '#f28724' }}
-            onClick={agregarDetalle}
-          >
-            ➕Agregar producto
-          </button>
+          <div style={{ marginTop: '1rem' }}>
+             <button
+                type="button"
+                style={{...estilos.btnPrimary, fontSize: '0.9rem', padding: '0.6rem 1rem'}}
+                onClick={agregarDetalle}
+            >
+                ➕ Agregar otro producto
+            </button>
+          </div>
+          {errors.detalles && <div style={estilos.errorMsg}>{errors.detalles}</div>}
         </div>
 
         {/* Total */}
-        <div className="text-center mb-3">
-          <h5 style={{ color: '#75421e' }}>Total: 💲{total.toFixed(2)}</h5>
+        <div style={estilos.totalContainer}>
+          <span style={{ fontSize: '1.2rem', color: '#2f4858', marginRight: '1rem' }}>Total a Pagar:</span>
+          <span style={estilos.totalText}>💲{total.toFixed(2)}</span>
         </div>
 
-        {/* Botones */}
-        <div className="d-flex gap-2 justify-content-center">
+        {/* Botones de Acción */}
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '2rem' }}>
           <button
             type="submit"
-            onClick={saveVenta}
-            className="btn text-white"
-            style={{ backgroundColor: '#f28724' }}
+            style={estilos.btnPrimary}
           >
-            {id ? '🔄Actualizar' : '✅Guardar'}
+            {id ? '🔄 Actualizar Venta' : '✅ Registrar Venta'}
           </button>
+          
           <button
             type="button"
-            className="btn"
-            style={{ borderColor: '#f28724', color: '#f28724' }}
+            style={estilos.btnSecondary}
             onClick={cancelar}
           >
-            ❌Cancelar
+            ❌ Cancelar
           </button>
         </div>
+
       </form>
     </div>
   );
