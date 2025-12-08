@@ -51,7 +51,9 @@ export const ListaClienteComponent = () => {
       fontSize: '1rem',
       fontFamily: 'Arial, sans-serif',
       transition: 'all 0.3s ease',
-      outline: 'none'
+      outline: 'none',
+      backgroundColor: '#ffffff', // ✅ CORREGIDO: Fondo blanco explícito
+      color: '#000000',           // ✅ CORREGIDO: Letras negras explícitas
     },
     searchInputFocus: {
       borderColor: '#c29c5e',
