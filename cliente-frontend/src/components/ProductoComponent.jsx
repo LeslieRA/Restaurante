@@ -3,6 +3,84 @@ import { crearProducto, getProducto, updateProducto } from '../services/Producto
 import { listaTiposProductos } from '../services/TipoProductoService';
 import { useNavigate, useParams } from 'react-router-dom';
 
+// --- ESTILOS DEFINIDOS (Tema Dorado/Elegante) ---
+const estilos = {
+  container: {
+    maxWidth: '600px', // Un poco más ancho para que quepa bien la descripción
+    margin: '2rem auto',
+    padding: '2rem',
+    backgroundColor: 'white',
+    borderRadius: '15px',
+    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+    border: '3px solid #c29c5e'
+  },
+  title: {
+    fontFamily: 'Georgia, serif',
+    color: '#2f4858',
+    textAlign: 'center',
+    fontSize: '2.5rem',
+    marginBottom: '2rem',
+    paddingBottom: '1rem',
+    borderBottom: '3px solid #c29c5e',
+    fontWeight: 'bold',
+    textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+  },
+  formInput: {
+    width: '100%',
+    padding: '0.8rem 1rem',
+    border: '2px solid #e0ddd0',
+    borderRadius: '8px',
+    fontSize: '1rem',
+    fontFamily: 'Arial, sans-serif',
+    transition: 'all 0.3s ease',
+    outline: 'none',
+    backgroundColor: '#fff',
+    color: '#2f4858', // ✅ TEXTO OSCURO
+  },
+  label: {
+    color: '#2f4858',
+    fontWeight: 'bold',
+    marginBottom: '0.5rem',
+    display: 'block'
+  },
+  btnPrimary: {
+    backgroundColor: '#c29c5e',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    padding: '0.8rem 1.5rem',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem',
+    boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+  },
+  btnSecondary: {
+    backgroundColor: 'white',
+    color: '#2f4858',
+    border: '2px solid #c29c5e',
+    borderRadius: '8px',
+    padding: '0.8rem 1.5rem',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem'
+  },
+  errorMsg: {
+    color: '#c0615f',
+    fontSize: '0.85rem',
+    marginTop: '0.25rem'
+  }
+};
+
 export const ProductoComponent = () => {
   const [nombreProducto, setNombreProducto] = useState('');
   const [descripcionProducto, setDescripcionProducto] = useState('');
@@ -20,64 +98,63 @@ export const ProductoComponent = () => {
   });
 
   const navegar = useNavigate();
-  const {id} = useParams();
+  const { id } = useParams();
 
   // Funciones para actualizar los estados
   const actualizaNombreProducto = (e) => setNombreProducto(e.target.value);
   const actualizaDescripcionProducto = (e) => setDescripcionProducto(e.target.value);
   const actualizaPrecioProducto = (e) => setPrecioProducto(e.target.value);
   const actualizaTipo = (e) => setTipo(e.target.value);
-  
-  //Validación del formulario
-  function validaForm(){
+
+  // Validación del formulario
+  function validaForm() {
     let valida = true;
-    const errorsCopy = {...errors};
+    const errorsCopy = { ...errors };
 
-    if(String(nombreProducto).trim()){
-        errorsCopy.nombreProducto = '';
-    }else{
-        errorsCopy.nombreProducto = 'El nombre es requerido';
-        valida = false;
+    if (String(nombreProducto).trim()) {
+      errorsCopy.nombreProducto = '';
+    } else {
+      errorsCopy.nombreProducto = 'El nombre es requerido';
+      valida = false;
     }
 
-    if(String(descripcionProducto).trim()){
-        errorsCopy.descripcionProducto = '';
-    }else{
-        errorsCopy.descripcionProducto = 'La descripción es requerida';
-        valida = false;
+    if (String(descripcionProducto).trim()) {
+      errorsCopy.descripcionProducto = '';
+    } else {
+      errorsCopy.descripcionProducto = 'La descripción es requerida';
+      valida = false;
     }
 
-     if(String(precioProducto).trim()){
-        errorsCopy.precioProducto = '';
-    }else{
-        errorsCopy.precioProducto = 'El precio es requerido';
-        valida = false;
+    if (String(precioProducto).trim()) {
+      errorsCopy.precioProducto = '';
+    } else {
+      errorsCopy.precioProducto = 'El precio es requerido';
+      valida = false;
     }
 
-     if(String(tipo).trim()){
-        errorsCopy.tipo = '';
-    }else{
-        errorsCopy.tipo = 'El tipo es requerido';
-        valida = false;
+    if (String(tipo).trim()) {
+      errorsCopy.tipo = '';
+    } else {
+      errorsCopy.tipo = 'El tipo es requerido';
+      valida = false;
     }
 
     setErrors(errorsCopy);
     return valida;
   }
 
-  //Cargar los datos si es edición
-  useEffect(() =>{
-    if(!id) return;
+  // Cargar los datos si es edición
+  useEffect(() => {
+    if (!id) return;
     getProducto(id)
-      .then(({data}) => {
-
+      .then(({ data }) => {
         setNombreProducto(data.nombreProducto ?? '');
         setDescripcionProducto(data.descripcionProducto ?? '');
         setPrecioProducto(data.precioProducto != null ? String(data.precioProducto) : '');
         setTipo(data.tipo?.id_tipo != null ? String(data.tipo.id_tipo) : '');
         setEstado(data.estado ?? true);
-    })
-    .catch((err) => console.error(err));
+      })
+      .catch((err) => console.error(err));
   }, [id]);
 
   // Cargar tipos de producto
@@ -92,106 +169,95 @@ export const ProductoComponent = () => {
     e.preventDefault();
 
     if (validaForm()) {
-    const formData = new FormData();
-    formData.append("nombreProducto", nombreProducto);
-    formData.append("descripcionProducto", descripcionProducto);
-    formData.append("precioProducto", parseFloat(precioProducto));
-    formData.append("estado", estado);
-    formData.append("tipo", tipo);
+      const formData = new FormData();
+      formData.append("nombreProducto", nombreProducto);
+      formData.append("descripcionProducto", descripcionProducto);
+      formData.append("precioProducto", parseFloat(precioProducto));
+      formData.append("estado", estado);
+      formData.append("tipo", tipo);
 
-    // Si el usuario seleccionó una imagen
-    if (imagen) {
-      formData.append("file", imagen);
-    }
+      // Si el usuario seleccionó una imagen
+      if (imagen) {
+        formData.append("file", imagen);
+      }
 
-    // 🟠 Si es edición
-    if (id) {
-      updateProducto(id, formData)
-        .then(() => {
-          alert("Producto actualizado correctamente");
-          navegar("/producto/lista");
-        })
-        .catch((error) => console.error(error));
-    } else {
-      // 🟢 Si es nuevo
-      crearProducto(formData)
-        .then(() => {
-          alert("Producto registrado correctamente");
-          navegar("/producto/lista");
-        })
-        .catch((error) => console.error(error));
+      // 🟠 Si es edición
+      if (id) {
+        updateProducto(id, formData)
+          .then(() => {
+            alert("Producto actualizado correctamente");
+            navegar("/producto/lista");
+          })
+          .catch((error) => console.error(error));
+      } else {
+        // 🟢 Si es nuevo
+        crearProducto(formData)
+          .then(() => {
+            alert("Producto registrado correctamente");
+            navegar("/producto/lista");
+          })
+          .catch((error) => console.error(error));
+      }
     }
   }
- 
-}
 
-  function cancelar(){
+  function cancelar() {
     navegar('/producto/lista');
   }
 
-  function pagTitulo(){
-    if(id){
-      return <h2 className='text-center'>Modificar producto</h2>
-    }else{
-      return <h2 className='text-center'>Agregar producto</h2>
-    }
+  function pagTitulo() {
+    return id ? "Modificar producto" : "Agregar producto";
   }
 
   return (
-    <div className="container mt-4">
-      <div className="form-header text-center mb-4" style={{ color: '#75421e' }}>
-        <h2>{pagTitulo()}</h2>
-      </div>
+    <div style={estilos.container}>
+      <h2 style={estilos.title}>{pagTitulo()}</h2>
 
-      <form
-        className="p-4 shadow rounded mx-auto"
-        style={{ backgroundColor: '#fff7e6', maxWidth: '500px' }}
-      >
+      <form onSubmit={saveProducto}>
+        
         {/* Nombre */}
-        <div className="mb-3">
-          <label className="form-label fw-bold" style={{ color: '#f28724' }}>
-            Nombre del Producto
-          </label>
+        <div style={{ marginBottom: '1.5rem' }}>
+          <label style={estilos.label}>Nombre del Producto</label>
           <input
             type="text"
-            className={`form-control ${errors.nombreProducto ? 'is-invalid' : ''}`}
             placeholder="Ejemplo: Taco de birria, Agua de horchata..."
             value={nombreProducto}
             onChange={actualizaNombreProducto}
-            required
+            style={{
+                ...estilos.formInput,
+                borderColor: errors.nombreProducto ? '#c0615f' : estilos.formInput.border.split(' ')[2]
+            }}
           />
-          {errors.nombreProducto && (
-            <div className="invalid-feedback">{errors.nombreProducto}</div>
-          )}
+          {errors.nombreProducto && <div style={estilos.errorMsg}>{errors.nombreProducto}</div>}
         </div>
 
         {/* Descripción */}
-        <div className="mb-3">
-          <label className="form-label fw-bold" style={{ color: '#f28724' }}>
-            Descripción
-          </label>
+        <div style={{ marginBottom: '1.5rem' }}>
+          <label style={estilos.label}>Descripción</label>
           <textarea
-            className={`form-control ${errors.descripcionProducto ? 'is-invalid' : ''}`}
             rows="3"
             placeholder="Describe brevemente el producto"
             value={descripcionProducto}
             onChange={actualizaDescripcionProducto}
+            style={{
+                ...estilos.formInput,
+                minHeight: '100px',
+                borderColor: errors.descripcionProducto ? '#c0615f' : estilos.formInput.border.split(' ')[2]
+            }}
           />
-          {errors.descripcionProducto && (
-            <div className="invalid-feedback">{errors.descripcionProducto}</div>
-          )}
+          {errors.descripcionProducto && <div style={estilos.errorMsg}>{errors.descripcionProducto}</div>}
         </div>
 
         {/* Tipo */}
-        <div className="mb-3">
-          <label className="form-label fw-bold" style={{ color: '#f28724' }}>
-            Tipo de Producto
-          </label>
+        <div style={{ marginBottom: '1.5rem' }}>
+          <label style={estilos.label}>Tipo de Producto</label>
           <select
-            className={`form-select ${errors.tipo ? 'is-invalid' : ''}`}
             value={tipo}
             onChange={actualizaTipo}
-            required
+            style={{
+                ...estilos.formInput,
+                borderColor: errors.tipo ? '#c0615f' : estilos.formInput.border.split(' ')[2]
+            }}
           >
             <option value="">Seleccione un tipo</option>
             {tipos.map((t) => (
@@ -200,60 +266,57 @@ export const ProductoComponent = () => {
               </option>
             ))}
           </select>
-          {errors.tipo && (
-            <div className="invalid-feedback">{errors.tipo}</div>
-          )}
+          {errors.tipo && <div style={estilos.errorMsg}>{errors.tipo}</div>}
         </div>
 
         {/* Precio */}
-        <div className="mb-3">
-          <label className="form-label fw-bold" style={{ color: '#f28724' }}>
-            Precio
-          </label>
+        <div style={{ marginBottom: '1.5rem' }}>
+          <label style={estilos.label}>Precio</label>
           <input
             type="number"
-            className={`form-control ${errors.precioProducto ? 'is-invalid' : ''}`}
             placeholder="Ejemplo: 35.50"
             value={precioProducto}
             onChange={actualizaPrecioProducto}
-            required
+            style={{
+                ...estilos.formInput,
+                borderColor: errors.precioProducto ? '#c0615f' : estilos.formInput.border.split(' ')[2]
+            }}
           />
-          {errors.precioProducto && (
-            <div className="invalid-feedback">{errors.precioProducto}</div>
-          )}
+          {errors.precioProducto && <div style={estilos.errorMsg}>{errors.precioProducto}</div>}
         </div>
+
         {/* Imagen */}
-        <div className="mb-3">
-          <label className="form-label fw-bold" style={{ color: '#f28724' }}>
-            Selecciona una imagen
-          </label>
+        <div style={{ marginBottom: '2rem' }}>
+          <label style={estilos.label}>Selecciona una imagen</label>
           <input
             type="file"
-            className="form-control"
             accept="image/*"
             onChange={(e) => setImagen(e.target.files[0])}
+            style={{
+                ...estilos.formInput,
+                padding: '0.6rem', // Ajuste ligero para input file
+            }}
           />
         </div>
 
         {/* Botones */}
-        <div className="d-flex gap-2 justify-content-center">
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1rem' }}>
           <button
             type="submit"
-            onClick={saveProducto}
-            className="btn btn-lg text-white"
-            style={{ backgroundColor: '#f28724' }}
+            style={estilos.btnPrimary}
           >
-            {id ? '🔄Actualizar' : '✅Guardar'}
+            {id ? '🔄 Actualizar' : '✅ Guardar'}
           </button>
+          
           <button
             type="button"
-            className="btn btn-lg"
-            style={{ borderColor: '#f28724', color: '#f28724' }}
+            style={estilos.btnSecondary}
             onClick={cancelar}
           >
-            ❌Cancelar
+            ❌ Cancelar
           </button>
         </div>
+
       </form>
     </div>
   );
