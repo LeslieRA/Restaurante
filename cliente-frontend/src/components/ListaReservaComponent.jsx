@@ -7,7 +7,7 @@ import {
 } from '../services/ReservaService';
 import { listaMesas, updateMesa } from '../services/MesaService';
 import { listaClientes } from '../services/ClienteService';
-import { listaVentas } from '../services/VentaService';   
+import { listaVentas } from '../services/VentaService';    
 import { useNavigate } from 'react-router-dom';
 import { getUsuarioLogueado } from "../services/AuthService";
 
@@ -61,7 +61,10 @@ export const ListaReservaComponent = () => {
             fontSize: '1rem',
             fontFamily: 'Arial, sans-serif',
             transition: 'all 0.3s ease',
-            outline: 'none'
+            outline: 'none',
+            backgroundColor: '#ffffff', // ✅ CORREGIDO: Fondo blanco
+            color: '#000000',           // ✅ CORREGIDO: Texto negro
+            cursor: 'pointer'
         },
         searchInputFocus: {
             borderColor: '#c29c5e',
