@@ -62,7 +62,9 @@ export const ListaProductosComponent = () => {
       fontSize: '1rem',
       fontFamily: 'Arial, sans-serif',
       transition: 'all 0.3s ease',
-      outline: 'none'
+      outline: 'none',
+      backgroundColor: '#ffffff', // ✅ CORREGIDO: Fondo blanco
+      color: '#000000',           // ✅ CORREGIDO: Texto negro
     },
     searchInputFocus: {
       borderColor: '#c29c5e',
@@ -201,7 +203,8 @@ export const ListaProductosComponent = () => {
       fontFamily: 'Arial, sans-serif',
       transition: 'all 0.3s ease',
       outline: 'none',
-      backgroundColor: 'white',
+      backgroundColor: '#ffffff', // ✅ CORREGIDO: Fondo blanco
+      color: '#000000',           // ✅ CORREGIDO: Texto negro
       cursor: 'pointer'
     }
   };
