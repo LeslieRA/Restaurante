@@ -22,65 +22,83 @@ export const ClienteComponent = () => {
   const idUsuario = searchParams.get("idUsuario");
   const nombreFromUsuario = searchParams.get("nombre");
 
-  // Estilos con paleta azul elegante
+  // Estilos elegantes
   const estilos = {
     container: {
       maxWidth: '600px',
       margin: '3rem auto',
       padding: '0 1rem'
     },
-    formCard: {
+    card: {
       backgroundColor: 'white',
-      borderRadius: '15px',
-      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
+      borderRadius: '20px',
+      boxShadow: '0 15px 35px rgba(0, 0, 0, 0.15)',
       border: '3px solid #c29c5e',
-      padding: '2.5rem',
+      overflow: 'hidden'
+    },
+    header: {
+      background: 'linear-gradient(135deg, #2f4858 0%, #899458 100%)',
+      padding: '2.5rem 2rem',
+      textAlign: 'center',
       position: 'relative',
       overflow: 'hidden'
     },
-    decorativeBorder: {
+    headerPattern: {
       position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
-      height: '6px',
-      background: 'linear-gradient(90deg, #2f4858 0%, #c29c5e 50%, #899458 100%)'
+      bottom: 0,
+      backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)',
+      backgroundSize: '30px 30px',
+      opacity: 0.3
     },
     title: {
-      fontFamily: 'Georgia, serif',
-      color: '#2f4858',
-      textAlign: 'center',
+      color: 'white',
       fontSize: '2rem',
-      marginBottom: '2rem',
       fontWeight: 'bold',
-      textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+      fontFamily: 'Georgia, serif',
+      margin: 0,
+      position: 'relative',
+      zIndex: 1,
+      textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
     },
-    fieldGroup: {
-      marginBottom: '1.5rem'
+    subtitle: {
+      color: '#f5f5dc',
+      fontSize: '1rem',
+      marginTop: '0.5rem',
+      position: 'relative',
+      zIndex: 1
+    },
+    formBody: {
+      padding: '2.5rem 2rem'
+    },
+    formGroup: {
+      marginBottom: '1.8rem'
     },
     label: {
       display: 'block',
-      fontWeight: '600',
       color: '#2f4858',
-      fontSize: '0.95rem',
+      fontSize: '1rem',
+      fontWeight: '600',
       marginBottom: '0.5rem',
-      fontFamily: 'Arial, sans-serif'
+      fontFamily: 'Georgia, serif'
     },
     input: {
       width: '100%',
       padding: '0.9rem 1rem',
       border: '2px solid #e0ddd0',
-      borderRadius: '8px',
+      borderRadius: '10px',
       fontSize: '1rem',
-      fontFamily: 'Arial, sans-serif',
       transition: 'all 0.3s ease',
       outline: 'none',
-      backgroundColor: 'white'
+      backgroundColor: 'white',
+      boxSizing: 'border-box'
     },
-    inputFocus: {
+    inputFocused: {
       borderColor: '#c29c5e',
-      boxShadow: '0 0 0 3px rgba(194, 156, 94, 0.2)',
-      backgroundColor: '#fffef8'
+      boxShadow: '0 0 0 4px rgba(194, 156, 94, 0.15)',
+      transform: 'translateY(-2px)'
     },
     inputError: {
       borderColor: '#c0615f',
@@ -88,13 +106,13 @@ export const ClienteComponent = () => {
     },
     inputDisabled: {
       backgroundColor: '#f5f5f5',
-      color: '#999',
-      cursor: 'not-allowed'
+      cursor: 'not-allowed',
+      color: '#999'
     },
     errorMessage: {
       color: '#c0615f',
       fontSize: '0.85rem',
-      marginTop: '0.4rem',
+      marginTop: '0.5rem',
       display: 'flex',
       alignItems: 'center',
       gap: '0.3rem'
@@ -109,7 +127,7 @@ export const ClienteComponent = () => {
       backgroundColor: '#c29c5e',
       color: 'white',
       border: 'none',
-      borderRadius: '8px',
+      borderRadius: '10px',
       padding: '0.9rem 2rem',
       fontSize: '1rem',
       fontWeight: 'bold',
@@ -118,13 +136,13 @@ export const ClienteComponent = () => {
       display: 'flex',
       alignItems: 'center',
       gap: '0.5rem',
-      boxShadow: '0 3px 10px rgba(194, 156, 94, 0.3)'
+      boxShadow: '0 4px 12px rgba(194, 156, 94, 0.3)'
     },
     btnSecondary: {
       backgroundColor: 'white',
-      color: '#2f4858',
-      border: '2px solid #c29c5e',
-      borderRadius: '8px',
+      color: '#c0615f',
+      border: '2px solid #c0615f',
+      borderRadius: '10px',
       padding: '0.9rem 2rem',
       fontSize: '1rem',
       fontWeight: 'bold',
@@ -134,16 +152,18 @@ export const ClienteComponent = () => {
       alignItems: 'center',
       gap: '0.5rem'
     },
-    icon: {
-      fontSize: '1.2rem',
-      color: '#c29c5e',
-      marginRight: '0.5rem'
+    infoBox: {
+      backgroundColor: '#f5f5dc',
+      border: '2px solid #c29c5e',
+      borderRadius: '10px',
+      padding: '1rem',
+      marginBottom: '1.5rem',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.8rem'
     },
-    helperText: {
-      fontSize: '0.85rem',
-      color: '#666',
-      marginTop: '0.3rem',
-      fontStyle: 'italic'
+    icon: {
+      fontSize: '1.5rem'
     }
   };
 
@@ -218,7 +238,7 @@ export const ClienteComponent = () => {
     crearCliente(cliente)
       .then(() => {
         if (loggedUser) {
-          alert("✔️ Cliente creado correctamente");
+          alert("✔️ Cliente registrado correctamente");
           navegar("/cliente/lista");
         } else {
           alert("✔️ Registro completado. Ahora puedes iniciar sesión.");
@@ -260,40 +280,57 @@ export const ClienteComponent = () => {
   }
 
   function pagTitulo() {
-    return id ? "✏️ Modificar Cliente" : "➕ Agregar Cliente";
+    return id ? "Modificar Cliente" : "Agregar Cliente";
   }
 
-  const getInputStyle = (fieldName) => {
-    let style = { ...estilos.input };
+  const getInputStyle = (field) => {
+    const baseStyle = { ...estilos.input };
     
-    if (errors[fieldName]) {
-      style = { ...style, ...estilos.inputError };
-    } else if (focusedField === fieldName) {
-      style = { ...style, ...estilos.inputFocus };
+    if (errors[field]) {
+      return { ...baseStyle, ...estilos.inputError };
     }
     
-    if (fieldName === 'nombreCliente' && nombreFromUsuario) {
-      style = { ...style, ...estilos.inputDisabled };
+    if (field === 'nombreCliente' && nombreFromUsuario) {
+      return { ...baseStyle, ...estilos.inputDisabled };
     }
     
-    return style;
+    if (focusedField === field) {
+      return { ...baseStyle, ...estilos.inputFocused };
+    }
+    
+    return baseStyle;
   };
 
   return (
     <div style={estilos.container}>
-      <div style={estilos.formCard}>
-        <div style={estilos.decorativeBorder}></div>
-        
-        <h2 style={estilos.title}>
-          {pagTitulo()}
-        </h2>
+      <div style={estilos.card}>
+        {/* Header con degradado */}
+        <div style={estilos.header}>
+          <div style={estilos.headerPattern}></div>
+          <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>
+            {id ? '📝' : '👤'}
+          </div>
+          <h2 style={estilos.title}>{pagTitulo()}</h2>
+          <p style={estilos.subtitle}>
+            {id ? 'Actualiza la información del cliente' : 'Complete los datos del nuevo cliente'}
+          </p>
+        </div>
 
-        <div>
+        {/* Cuerpo del formulario */}
+        <div style={estilos.formBody}>
+          {nombreFromUsuario && (
+            <div style={estilos.infoBox}>
+              <span style={estilos.icon}>ℹ️</span>
+              <span style={{ color: '#2f4858', fontSize: '0.9rem' }}>
+                El nombre proviene de tu usuario y no puede ser modificado aquí
+              </span>
+            </div>
+          )}
+
           {/* Nombre */}
-          <div style={estilos.fieldGroup}>
+          <div style={estilos.formGroup}>
             <label style={estilos.label}>
-              <span style={estilos.icon}>👤</span>
-              Nombre del Cliente
+              👤 Nombre del Cliente
             </label>
             <input
               type="text"
@@ -303,26 +340,20 @@ export const ClienteComponent = () => {
               onFocus={() => setFocusedField('nombreCliente')}
               onBlur={() => setFocusedField(null)}
               disabled={!!nombreFromUsuario}
-              placeholder="Ingresa el nombre completo"
+              placeholder="Ingrese el nombre completo"
             />
-            {nombreFromUsuario && (
-              <div style={estilos.helperText}>
-                Este campo fue completado automáticamente desde el usuario
-              </div>
-            )}
             {errors.nombreCliente && (
               <div style={estilos.errorMessage}>
                 <span>⚠️</span>
-                {errors.nombreCliente}
+                <span>{errors.nombreCliente}</span>
               </div>
             )}
           </div>
 
           {/* Teléfono */}
-          <div style={estilos.fieldGroup}>
+          <div style={estilos.formGroup}>
             <label style={estilos.label}>
-              <span style={estilos.icon}>📱</span>
-              Teléfono
+              📞 Teléfono
             </label>
             <input
               type="tel"
@@ -331,21 +362,20 @@ export const ClienteComponent = () => {
               onChange={(e) => setTelefonoCliente(e.target.value)}
               onFocus={() => setFocusedField('telefonoCliente')}
               onBlur={() => setFocusedField(null)}
-              placeholder="Ej: 7771234567"
+              placeholder="Ej: 777-123-4567"
             />
             {errors.telefonoCliente && (
               <div style={estilos.errorMessage}>
                 <span>⚠️</span>
-                {errors.telefonoCliente}
+                <span>{errors.telefonoCliente}</span>
               </div>
             )}
           </div>
 
           {/* Correo */}
-          <div style={estilos.fieldGroup}>
+          <div style={estilos.formGroup}>
             <label style={estilos.label}>
-              <span style={estilos.icon}>📧</span>
-              Correo Electrónico
+              📧 Correo Electrónico
             </label>
             <input
               type="email"
@@ -354,12 +384,12 @@ export const ClienteComponent = () => {
               onChange={(e) => setCorreoCliente(e.target.value)}
               onFocus={() => setFocusedField('correoCliente')}
               onBlur={() => setFocusedField(null)}
-              placeholder="ejemplo@correo.com"
+              placeholder="correo@ejemplo.com"
             />
             {errors.correoCliente && (
               <div style={estilos.errorMessage}>
                 <span>⚠️</span>
-                {errors.correoCliente}
+                <span>{errors.correoCliente}</span>
               </div>
             )}
           </div>
@@ -371,33 +401,35 @@ export const ClienteComponent = () => {
               style={estilos.btnPrimary}
               onClick={saveCliente}
               onMouseOver={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 5px 15px rgba(194, 156, 94, 0.4)';
+                e.currentTarget.style.transform = 'translateY(-3px)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(194, 156, 94, 0.4)';
               }}
               onMouseOut={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 3px 10px rgba(194, 156, 94, 0.3)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(194, 156, 94, 0.3)';
               }}
             >
-              <span>{id ? "🔄" : "✅"}</span>
-              {id ? "Actualizar" : "Guardar"}
+              <span>{id ? '🔄' : '✅'}</span>
+              <span>{id ? 'Actualizar' : 'Guardar'}</span>
             </button>
-            
+
             <button
               type="button"
               style={estilos.btnSecondary}
               onClick={cancelar}
               onMouseOver={(e) => {
-                e.currentTarget.style.backgroundColor = '#f5f5dc';
-                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.backgroundColor = '#fff5f5';
+                e.currentTarget.style.transform = 'translateY(-3px)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(192, 97, 95, 0.2)';
               }}
               onMouseOut={(e) => {
                 e.currentTarget.style.backgroundColor = 'white';
                 e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
               }}
             >
               <span>❌</span>
-              Cancelar
+              <span>Cancelar</span>
             </button>
           </div>
         </div>
