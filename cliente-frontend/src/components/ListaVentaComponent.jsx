@@ -8,250 +8,20 @@ import { useNavigate } from 'react-router-dom';
 import { DetalleVentaComponent } from './DetalleVentaComponent';
 
 export const ListaVentaComponent = () => {
+
   const [ventas, setVentas] = useState([]);
   const [clientes, setClientes] = useState([]);
   const [empleados, setEmpleados] = useState([]);
   const [atenciones, setAtenciones] = useState([]);
   const [reservas, setReservas] = useState([]);
+
   const [fechaBusqueda, setFechaBusqueda] = useState('');
+
   const [showModal, setShowModal] = useState(false);
   const [ventaSeleccionada, setVentaSeleccionada] = useState(null);
-  const [hoveredRow, setHoveredRow] = useState(null);
-  const [focusedInput, setFocusedInput] = useState(null);
 
   const navegar = useNavigate();
   const usuario = JSON.parse(localStorage.getItem("usuario"));
-
-  // Estilos con paleta azul elegante
-  const estilos = {
-    container: {
-      maxWidth: '1400px',
-      margin: '2rem auto',
-      padding: '2rem',
-      backgroundColor: 'white',
-      borderRadius: '15px',
-      boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
-      border: '3px solid #c29c5e'
-    },
-    title: {
-      fontFamily: 'Georgia, serif',
-      color: '#2f4858',
-      textAlign: 'center',
-      fontSize: '2.5rem',
-      marginBottom: '2rem',
-      paddingBottom: '1rem',
-      borderBottom: '3px solid #c29c5e',
-      fontWeight: 'bold',
-      textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
-    },
-    searchContainer: {
-      display: 'flex',
-      gap: '1rem',
-      marginBottom: '2rem',
-      flexWrap: 'wrap',
-      alignItems: 'center',
-      justifyContent: 'center'
-    },
-    searchInput: {
-      padding: '0.8rem 1rem',
-      border: '2px solid #e0ddd0',
-      borderRadius: '8px',
-      fontSize: '1rem',
-      fontFamily: 'Arial, sans-serif',
-      transition: 'all 0.3s ease',
-      outline: 'none'
-    },
-    searchInputFocus: {
-      borderColor: '#c29c5e',
-      boxShadow: '0 0 0 3px rgba(194, 156, 94, 0.2)'
-    },
-    btnPrimary: {
-      backgroundColor: '#c29c5e',
-      color: 'white',
-      border: 'none',
-      borderRadius: '8px',
-      padding: '0.8rem 1.5rem',
-      fontSize: '1rem',
-      fontWeight: 'bold',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.5rem',
-      whiteSpace: 'nowrap',
-      boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
-    },
-    btnSecondary: {
-      backgroundColor: 'white',
-      color: '#2f4858',
-      border: '2px solid #c29c5e',
-      borderRadius: '8px',
-      padding: '0.8rem 1.5rem',
-      fontSize: '1rem',
-      fontWeight: 'bold',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.5rem',
-      whiteSpace: 'nowrap'
-    },
-    table: {
-      width: '100%',
-      borderCollapse: 'collapse',
-      marginTop: '1.5rem',
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-      borderRadius: '8px',
-      overflow: 'hidden'
-    },
-    thead: {
-      backgroundColor: '#2f4858',
-      color: '#c29c5e'
-    },
-    th: {
-      padding: '1rem',
-      textAlign: 'center',
-      fontWeight: 'bold',
-      fontSize: '1rem',
-      fontFamily: 'Georgia, serif',
-      borderBottom: '2px solid #1e2f3a'
-    },
-    td: {
-      padding: '1rem',
-      textAlign: 'left',
-      borderBottom: '1px solid #ddd',
-      fontSize: '0.95rem',
-      transition: 'all 0.2s ease'
-    },
-    tdCentered: {
-      padding: '1rem',
-      textAlign: 'center',
-      borderBottom: '1px solid #ddd',
-      fontSize: '0.95rem'
-    },
-    rowEven: {
-      backgroundColor: '#f9f9f9'
-    },
-    rowOdd: {
-      backgroundColor: '#ffffff'
-    },
-    rowHover: {
-      backgroundColor: '#e8e4d9',
-      transform: 'scale(1.005)',
-      boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-    },
-    btnView: {
-      backgroundColor: '#2f4858',
-      color: 'white',
-      border: 'none',
-      borderRadius: '6px',
-      padding: '0.4rem 0.8rem',
-      fontSize: '0.85rem',
-      fontWeight: 'bold',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '0.4rem',
-      marginRight: '0.4rem',
-      marginBottom: '0.3rem'
-    },
-    btnEdit: {
-      backgroundColor: '#c29c5e',
-      color: 'white',
-      border: 'none',
-      borderRadius: '6px',
-      padding: '0.4rem 0.8rem',
-      fontSize: '0.85rem',
-      fontWeight: 'bold',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '0.4rem',
-      marginRight: '0.4rem',
-      marginBottom: '0.3rem'
-    },
-    btnDelete: {
-      backgroundColor: '#c0615f',
-      color: 'white',
-      border: 'none',
-      borderRadius: '6px',
-      padding: '0.4rem 0.8rem',
-      fontSize: '0.85rem',
-      fontWeight: 'bold',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '0.4rem',
-      marginBottom: '0.3rem'
-    },
-    btnDisabled: {
-      backgroundColor: '#ccc',
-      color: '#666',
-      border: 'none',
-      borderRadius: '6px',
-      padding: '0.4rem 0.8rem',
-      fontSize: '0.85rem',
-      fontWeight: 'bold',
-      cursor: 'not-allowed',
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '0.4rem',
-      marginRight: '0.4rem',
-      marginBottom: '0.3rem',
-      opacity: 0.6
-    },
-    emptyMessage: {
-      textAlign: 'center',
-      color: '#888',
-      fontSize: '1.1rem',
-      padding: '2rem',
-      fontStyle: 'italic'
-    },
-    buttonContainer: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: '1.5rem',
-      gap: '1rem',
-      flexWrap: 'wrap'
-    },
-    filterLabel: {
-      fontWeight: '600',
-      color: '#2f4858',
-      fontSize: '1rem',
-      whiteSpace: 'nowrap'
-    },
-    reservaBadge: {
-      backgroundColor: '#899458',
-      color: 'white',
-      padding: '0.3rem 0.8rem',
-      borderRadius: '12px',
-      fontSize: '0.85rem',
-      fontWeight: 'bold',
-      display: 'inline-block'
-    },
-    sinReservaBadge: {
-      backgroundColor: '#ddd',
-      color: '#666',
-      padding: '0.3rem 0.8rem',
-      borderRadius: '12px',
-      fontSize: '0.85rem',
-      fontWeight: 'bold',
-      display: 'inline-block'
-    },
-    totalBadge: {
-      backgroundColor: '#578661',
-      color: 'white',
-      padding: '0.4rem 0.9rem',
-      borderRadius: '15px',
-      fontSize: '1rem',
-      fontWeight: 'bold',
-      display: 'inline-block'
-    }
-  };
 
   useEffect(() => {
     cargarTodo();
@@ -295,43 +65,52 @@ export const ListaVentaComponent = () => {
       console.error("Error cargando datos: ", error);
     }
   }
+    // ============================
+    //     BUSCAR POR FECHA
+    // ============================
+    async function buscarPorFecha(e) {
+      e.preventDefault();
 
-  async function buscarPorFecha(e) {
-    e.preventDefault();
-
-    if (!fechaBusqueda) {
-      cargarTodo();
-      return;
-    }
-
-    try {
-      const { data } = await buscarVentaPorFecha(fechaBusqueda);
-      let ventasFiltradas = data;
-
-      if (usuario?.perfil === "mesero") {
-        ventasFiltradas = ventasFiltradas.filter(v =>
-          atenciones.some(a =>
-            Number(a.idVenta ?? a.idventa) === Number(v.idVenta) &&
-            Number(a.idEmpleado ?? a.idempleado) === Number(usuario.id)
-          )
-        );
+      if (!fechaBusqueda) {
+        cargarTodo();
+        return;
       }
 
-      setVentas(ventasFiltradas);
+      try {
+        const { data } = await buscarVentaPorFecha(fechaBusqueda);
 
-    } catch (err) {
-      console.error("Error al buscar ventas:", err);
+        let ventasFiltradas = data;
+
+        // ⭐ MESERO: solo ver las suyas aun en búsqueda
+        if (usuario?.perfil === "mesero") {
+          ventasFiltradas = ventasFiltradas.filter(v =>
+            atenciones.some(a =>
+              Number(a.idVenta ?? a.idventa) === Number(v.idVenta) &&
+              Number(a.idEmpleado ?? a.idempleado) === Number(usuario.id)
+            )
+          );
+        }
+
+        setVentas(ventasFiltradas);
+
+      } catch (err) {
+        console.error("Error al buscar ventas:", err);
+      }
     }
-  }
 
+  // ================================================
+  // LÓGICA PARA PERMITIR O BLOQUEAR LA EDICIÓN
+  // ================================================
   function ventaEditable(venta) {
     const hoy = new Date().toISOString().split("T")[0];
     const fechaVenta = new Date(venta.fechaVenta).toISOString().split("T")[0];
 
+    // Caso 1: Venta SIN reserva → editable solo HOY
     if (!venta.idReserva) {
       return fechaVenta === hoy;
     }
 
+    // Caso 2: Venta CON reserva → se valida contra reservas
     const reserva = reservas.find(r => r.idReserva === venta.idReserva);
     if (!reserva) return false;
 
@@ -356,6 +135,9 @@ export const ListaVentaComponent = () => {
     return "⚠ Venta bloqueada.";
   }
 
+  // ===========================
+  // ACCIONES
+  // ===========================
   function nuevaVenta() {
     navegar('/venta/crear');
   }
@@ -374,13 +156,10 @@ export const ListaVentaComponent = () => {
 
     deleteVenta(idVenta)
       .then(() => {
-        alert("✔️ Venta eliminada correctamente");
+        alert("Venta eliminada");
         cargarTodo();
       })
-      .catch(err => {
-        console.error("Error al eliminar venta:", err);
-        alert("❌ Error al eliminar la venta");
-      });
+      .catch(err => console.error("Error al eliminar venta:", err));
   }
 
   function formatearFecha(f) {
@@ -399,223 +178,125 @@ export const ListaVentaComponent = () => {
     return cli ? cli.nombreCliente : `Cliente #${id}`;
   }
 
-  const getRowStyle = (index) => {
-    const baseStyle = index % 2 === 0 ? estilos.rowEven : estilos.rowOdd;
-    return hoveredRow === index ? { ...baseStyle, ...estilos.rowHover } : baseStyle;
-  };
-
-  const getInputStyle = () => {
-    return focusedInput 
-      ? { ...estilos.searchInput, ...estilos.searchInputFocus }
-      : estilos.searchInput;
-  };
-
   return (
-    <div style={estilos.container}>
-      <div style={estilos.buttonContainer}>
-        <h2 style={{ ...estilos.title, border: 'none', padding: 0, margin: 0 }}>
-          💰 Lista de Ventas
+    <div className="container mt-4">
+
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h2 className="titulo-clientes text-center flex-grow-1">
+          Lista de Ventas
         </h2>
 
         {(usuario.perfil === "administrador" || usuario.perfil === "cajero") && (
-          <button
-            style={estilos.btnPrimary}
-            onClick={nuevaVenta}
-            onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
-            onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-          >
-            <span>➕</span>
-            Nueva Venta
+          <button className="btn text-white" style={{ backgroundColor: "#f28724" }} onClick={nuevaVenta}>
+            ➕Nueva venta
           </button>
         )}
       </div>
+          {/* 🔍 Filtro por fecha */}
+        <div className="d-flex justify-content-center mb-4">
+          <form
+            className="d-flex align-items-center flex-wrap justify-content-center"
+            onSubmit={buscarPorFecha}
+            style={{ gap: "8px" }}          >
+            <label
+              className="fw-semibold mb-0"
+              style={{ color: "#75421e", minWidth: "130px", textAlign: "right" }}            >
+              Buscar por fecha:            </label>
+            <input
+              type="date"
+              value={fechaBusqueda}
+              onChange={(e) => setFechaBusqueda(e.target.value)}
+              style={{ maxWidth: "200px" }}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md"            />
+            <button
+              type="submit"
+              className="btn text-white"
+              style={{ backgroundColor: "#f28724" }}            >
+              🔎Buscar            </button>
+            <button
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={() => {
+                setFechaBusqueda("");
+                cargarTodo();
+              }}            >
+              🧹Limpiar
+            </button>
+          </form>
+        </div>
+      {/* TABLA */}
+      <table className="table table-bordered tabla-clientes align-middle">
+        <thead className="table-light text-center">
+          <tr>
+            <th>ID Venta</th>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Reserva</th>
+            <th>Total</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
 
-      <div style={{ borderBottom: '3px solid #c29c5e', marginBottom: '2rem' }}></div>
+        <tbody>
+          {ventas.length > 0 ? (
+            ventas.map(venta => (
+              <tr key={venta.idVenta}>
+                <td className="text-center">{venta.idVenta}</td>
+                <td>{formatearFecha(venta.fechaVenta)}</td>
+                <td>{obtenerNombreCliente(venta.idCliente)}</td>
+                <td className="text-center">{venta.idReserva ? `#${venta.idReserva}` : "Sin reserva"}</td>
+                <td className="text-end">${venta.total?.toFixed(2)}</td>
 
-      {/* Búsqueda por fecha */}
-      <div style={estilos.searchContainer}>
-        <label style={estilos.filterLabel}>
-          🔍 Buscar por fecha:
-        </label>
-        <input
-          type="date"
-          style={getInputStyle()}
-          value={fechaBusqueda}
-          onChange={(e) => setFechaBusqueda(e.target.value)}
-          onFocus={() => setFocusedInput(true)}
-          onBlur={() => setFocusedInput(false)}
-        />
-        <button
-          type="button"
-          style={estilos.btnPrimary}
-          onClick={buscarPorFecha}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
-          }}
-        >
-          <span>🔎</span>
-          Buscar
-        </button>
-        <button
-          type="button"
-          style={estilos.btnSecondary}
-          onClick={() => {
-            setFechaBusqueda("");
-            cargarTodo();
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.backgroundColor = '#f5f5dc';
-            e.currentTarget.style.transform = 'translateY(-2px)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.backgroundColor = 'white';
-            e.currentTarget.style.transform = 'translateY(0)';
-          }}
-        >
-          <span>🧹</span>
-          Limpiar
-        </button>
-      </div>
+                <td className="text-center">
+                  <div className="d-flex justify-content-center gap-2">
 
-      {/* Tabla de ventas */}
-      <div style={{ overflowX: 'auto' }}>
-        <table style={estilos.table}>
-          <thead style={estilos.thead}>
-            <tr>
-              <th style={estilos.th}>ID Venta</th>
-              <th style={estilos.th}>Fecha</th>
-              <th style={estilos.th}>Cliente</th>
-              <th style={estilos.th}>Reserva</th>
-              <th style={estilos.th}>Total</th>
-              <th style={estilos.th}>Acciones</th>
-            </tr>
-          </thead>
+                    <button className="btn btn-sm text-white"
+                      style={{ backgroundColor: "#2c3e50" }}
+                      onClick={() => verDetalle(venta.idVenta)}>
+                      👁️Ver detalle
+                    </button>
 
-          <tbody>
-            {ventas.length > 0 ? (
-              ventas.map((venta, index) => (
-                <tr
-                  key={venta.idVenta}
-                  style={getRowStyle(index)}
-                  onMouseEnter={() => setHoveredRow(index)}
-                  onMouseLeave={() => setHoveredRow(null)}
-                >
-                  <td style={estilos.tdCentered}>
-                    <strong>{venta.idVenta}</strong>
-                  </td>
-                  <td style={estilos.td}>
-                    <strong style={{ color: '#2f4858' }}>
-                      📅 {formatearFecha(venta.fechaVenta)}
-                    </strong>
-                  </td>
-                  <td style={estilos.td}>
-                    <strong style={{ color: '#2f4858' }}>
-                      {obtenerNombreCliente(venta.idCliente)}
-                    </strong>
-                  </td>
-                  <td style={estilos.tdCentered}>
-                    {venta.idReserva ? (
-                      <span style={estilos.reservaBadge}>
-                        #{venta.idReserva}
-                      </span>
-                    ) : (
-                      <span style={estilos.sinReservaBadge}>
-                        Sin reserva
-                      </span>
-                    )}
-                  </td>
-                  <td style={estilos.tdCentered}>
-                    <span style={estilos.totalBadge}>
-                      ${venta.total?.toFixed(2)}
-                    </span>
-                  </td>
-
-                  <td style={estilos.tdCentered}>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-                      <button
-                        style={estilos.btnView}
-                        onClick={() => verDetalle(venta.idVenta)}
-                        onMouseOver={(e) => {
-                          e.currentTarget.style.backgroundColor = '#1e2f3a';
-                          e.currentTarget.style.transform = 'scale(1.05)';
-                        }}
-                        onMouseOut={(e) => {
-                          e.currentTarget.style.backgroundColor = '#2f4858';
-                          e.currentTarget.style.transform = 'scale(1)';
-                        }}
-                      >
-                        <span>👁️</span>
-                        Ver detalle
-                      </button>
-
-                      {["mesero", "cajero", "administrador"].includes(usuario.perfil) && (
-                        ventaEditable(venta) ? (
-                          <button
-                            style={estilos.btnEdit}
-                            onClick={() => actualizarVenta(venta.idVenta)}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.backgroundColor = '#b08a52';
-                              e.currentTarget.style.transform = 'scale(1.05)';
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.backgroundColor = '#c29c5e';
-                              e.currentTarget.style.transform = 'scale(1)';
-                            }}
-                          >
-                            <span>📝</span>
-                            Editar
-                          </button>
-                        ) : (
-                          <button
-                            style={estilos.btnDisabled}
-                            onClick={() => alert(motivoVentaBloqueada(venta))}
-                            title={motivoVentaBloqueada(venta)}
-                          >
-                            <span>🔒</span>
-                            Venta cerrada
-                          </button>
-                        )
-                      )}
-
-                      {(usuario.perfil === "administrador" || usuario.perfil === "cajero") && (
+                    {/* EDITAR */}
+                    {["mesero", "cajero", "administrador"].includes(usuario.perfil) && (
+                      ventaEditable(venta) ? (
                         <button
-                          style={estilos.btnDelete}
-                          onClick={() => eliminarVenta(venta.idVenta)}
-                          onMouseOver={(e) => {
-                            e.currentTarget.style.backgroundColor = '#a04442';
-                            e.currentTarget.style.transform = 'scale(1.05)';
-                          }}
-                          onMouseOut={(e) => {
-                            e.currentTarget.style.backgroundColor = '#c0615f';
-                            e.currentTarget.style.transform = 'scale(1)';
-                          }}
+                          className="btn btn-sm text-white"
+                          style={{ backgroundColor: "#f28724" }}
+                          onClick={() => actualizarVenta(venta.idVenta)}
                         >
-                          <span>🗑️</span>
-                          Eliminar
+                          📝Editar
                         </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" style={estilos.emptyMessage}>
-                  <div>
-                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>💰</div>
-                    <div>No hay ventas registradas</div>
+                      ) : (
+                        <span
+                          className="d-inline-block"
+                          title={motivoVentaBloqueada(venta)}
+                          onClick={() => alert(motivoVentaBloqueada(venta))}
+                          style={{ cursor: "not-allowed" }}
+                        >
+                          <button className="btn btn-sm btn-secondary" disabled style={{ opacity: 0.65 }}>
+                            🔒 Venta cerrada
+                          </button>
+                        </span>
+                      )
+                    )}
+
+                    {(usuario.perfil === "administrador" || usuario.perfil === "cajero") && (
+                      <button className="btn btn-sm btn-danger" onClick={() => eliminarVenta(venta.idVenta)}>
+                        🗑️Eliminar
+                      </button>
+                    )}
+
                   </div>
                 </td>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="6" className="text-center">❌ No hay ventas registradas.</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
 
       <DetalleVentaComponent
         show={showModal}

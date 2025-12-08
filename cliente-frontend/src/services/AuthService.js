@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://usuarios-w-production.up.railway.app/api/auth/login";
+const API_URL = "https://security-production-702c.up.railway.app/api/auth/login";
 
 // ===============================
 // ⭐ LOGIN (JWT)

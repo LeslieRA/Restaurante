@@ -12,8 +12,6 @@ import { useNavigate } from "react-router-dom";
 export const ListaProductosComponent = () => {
   const [productos, setProductos] = useState([]);
   const [tipos, setTipos] = useState([]);
-  const [hoveredRow, setHoveredRow] = useState(null);
-  const [focusedInput, setFocusedInput] = useState(null);
 
   // Estados para búsqueda
   const [criterio, setCriterio] = useState("nombre");
@@ -23,188 +21,6 @@ export const ListaProductosComponent = () => {
   const [precioMax, setPrecioMax] = useState("");
 
   const navegar = useNavigate();
-
-  // Estilos con paleta azul elegante
-  const estilos = {
-    container: {
-      maxWidth: '1200px',
-      margin: '2rem auto',
-      padding: '2rem',
-      backgroundColor: 'white',
-      borderRadius: '15px',
-      boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
-      border: '3px solid #c29c5e'
-    },
-    title: {
-      fontFamily: 'Georgia, serif',
-      color: '#2f4858',
-      textAlign: 'center',
-      fontSize: '2.5rem',
-      marginBottom: '2rem',
-      paddingBottom: '1rem',
-      borderBottom: '3px solid #c29c5e',
-      fontWeight: 'bold',
-      textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
-    },
-    searchContainer: {
-      display: 'flex',
-      gap: '1rem',
-      marginBottom: '2rem',
-      flexWrap: 'wrap',
-      alignItems: 'center'
-    },
-    searchInput: {
-      flex: 1,
-      minWidth: '250px',
-      padding: '0.8rem 1rem',
-      border: '2px solid #e0ddd0',
-      borderRadius: '8px',
-      fontSize: '1rem',
-      fontFamily: 'Arial, sans-serif',
-      transition: 'all 0.3s ease',
-      outline: 'none'
-    },
-    searchInputFocus: {
-      borderColor: '#c29c5e',
-      boxShadow: '0 0 0 3px rgba(194, 156, 94, 0.2)'
-    },
-    btnPrimary: {
-      backgroundColor: '#c29c5e',
-      color: 'white',
-      border: 'none',
-      borderRadius: '8px',
-      padding: '0.8rem 1.5rem',
-      fontSize: '1rem',
-      fontWeight: 'bold',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.5rem',
-      whiteSpace: 'nowrap',
-      boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
-    },
-    btnSecondary: {
-      backgroundColor: 'white',
-      color: '#2f4858',
-      border: '2px solid #c29c5e',
-      borderRadius: '8px',
-      padding: '0.8rem 1.5rem',
-      fontSize: '1rem',
-      fontWeight: 'bold',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.5rem',
-      whiteSpace: 'nowrap'
-    },
-    table: {
-      width: '100%',
-      borderCollapse: 'collapse',
-      marginTop: '1.5rem',
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-      borderRadius: '8px',
-      overflow: 'hidden'
-    },
-    thead: {
-      backgroundColor: '#2f4858',
-      color: '#c29c5e'
-    },
-    th: {
-      padding: '1rem',
-      textAlign: 'center',
-      fontWeight: 'bold',
-      fontSize: '1rem',
-      fontFamily: 'Georgia, serif',
-      borderBottom: '2px solid #1e2f3a'
-    },
-    td: {
-      padding: '1rem',
-      textAlign: 'left',
-      borderBottom: '1px solid #ddd',
-      fontSize: '0.95rem',
-      transition: 'all 0.2s ease'
-    },
-    tdCentered: {
-      padding: '1rem',
-      textAlign: 'center',
-      borderBottom: '1px solid #ddd',
-      fontSize: '0.95rem'
-    },
-    rowEven: {
-      backgroundColor: '#f9f9f9'
-    },
-    rowOdd: {
-      backgroundColor: '#ffffff'
-    },
-    rowHover: {
-      backgroundColor: '#e8e4d9',
-      transform: 'scale(1.01)',
-      boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-    },
-    btnEdit: {
-      backgroundColor: '#c29c5e',
-      color: 'white',
-      border: 'none',
-      borderRadius: '6px',
-      padding: '0.5rem 1rem',
-      fontSize: '0.9rem',
-      fontWeight: 'bold',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '0.5rem',
-      marginRight: '0.5rem'
-    },
-    btnDelete: {
-      backgroundColor: '#c0615f',
-      color: 'white',
-      border: 'none',
-      borderRadius: '6px',
-      padding: '0.5rem 1rem',
-      fontSize: '0.9rem',
-      fontWeight: 'bold',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '0.5rem'
-    },
-    emptyMessage: {
-      textAlign: 'center',
-      color: '#888',
-      fontSize: '1.1rem',
-      padding: '2rem',
-      fontStyle: 'italic'
-    },
-    buttonContainer: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: '1.5rem',
-      gap: '1rem',
-      flexWrap: 'wrap'
-    },
-    filterLabel: {
-      fontWeight: '600',
-      color: '#2f4858',
-      fontSize: '1rem',
-      whiteSpace: 'nowrap'
-    },
-    select: {
-      padding: '0.8rem 1rem',
-      border: '2px solid #e0ddd0',
-      borderRadius: '8px',
-      fontSize: '1rem',
-      fontFamily: 'Arial, sans-serif',
-      transition: 'all 0.3s ease',
-      outline: 'none',
-      backgroundColor: 'white',
-      cursor: 'pointer'
-    }
-  };
 
   useEffect(() => {
     getAllProductos();
@@ -226,6 +42,7 @@ export const ListaProductosComponent = () => {
       .catch((error) => console.error(error));
   }
 
+  // 🔍 Buscar según el criterio seleccionado
   function realizarBusqueda(e) {
     e.preventDefault();
 
@@ -272,261 +89,179 @@ export const ListaProductosComponent = () => {
     }
   }
 
-  const getRowStyle = (index) => {
-    const baseStyle = index % 2 === 0 ? estilos.rowEven : estilos.rowOdd;
-    return hoveredRow === index ? { ...baseStyle, ...estilos.rowHover } : baseStyle;
-  };
-
-  const getInputStyle = (inputName) => {
-    return focusedInput === inputName
-      ? { ...estilos.searchInput, ...estilos.searchInputFocus }
-      : estilos.searchInput;
-  };
-
   return (
-    <div style={estilos.container}>
-      {/* Botón crear + título */}
-      <div style={estilos.buttonContainer}>
-        <button
-          style={estilos.btnPrimary}
-          onClick={nuevoProducto}
-          onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
-          onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-        >
-          <span>➕</span>
-          Nuevo Producto
-        </button>
-      </div>
+    <div className="container">
+      {/* 🔸 Botón crear */}
+      <button
+        className="btn text-white mb-3"
+        style={{ backgroundColor: "#f28724" }}
+        onClick={nuevoProducto}
+      >
+        ➕Nuevo producto
+      </button>
 
-      <h2 style={estilos.title}>
-        ☕ Lista de Productos
+      <h2 className="text-center titulo-clientes mb-4">
+        Lista de productos
       </h2>
 
-      {/* Barra de filtros */}
-      <div>
-        <div style={estilos.searchContainer}>
-          <label style={estilos.filterLabel}>
-            🔍 Filtro de búsqueda:
-          </label>
+      {/* 🔍 Barra de filtros */}
+      <form
+        className="d-flex align-items-center justify-content-center flex-wrap mb-3"
+        onSubmit={realizarBusqueda}
+      >
+        <label
+          className="fw-semibold me-2 mb-2"
+          style={{ color: "#75421e", minWidth: "140px" }}
+        >
+          ☰Filtro de búsqueda:
+        </label>
 
+        <select
+          className="form-select me-2 mb-2"
+          style={{ maxWidth: "200px" }}
+          value={criterio}
+          onChange={(e) => setCriterio(e.target.value)}
+        >
+          <option value="nombre">Nombre</option>
+          <option value="tipo">Tipo</option>
+          <option value="precio">Rango de precio</option>
+        </select>
+
+        {/* Input dinámico */}
+        {criterio === "nombre" && (
+          <input
+            type="text"
+            className="form-control me-2 mb-2"
+            placeholder="Buscar por nombre..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            style={{ maxWidth: "250px" }}
+          />
+        )}
+
+        {criterio === "tipo" && (
           <select
-            style={estilos.select}
-            value={criterio}
-            onChange={(e) => setCriterio(e.target.value)}
+            className="form-select me-2 mb-2"
+            value={tipoSeleccionado}
+            onChange={(e) => setTipoSeleccionado(e.target.value)}
+            style={{ maxWidth: "220px" }}
           >
-            <option value="nombre">Por Nombre</option>
-            <option value="tipo">Por Tipo</option>
-            <option value="precio">Por Rango de Precio</option>
+            <option value="">Selecciona un tipo</option>
+            {tipos.map((t) => (
+              <option key={t.id_tipo} value={t.id_tipo}>
+                {t.tipo}
+              </option>
+            ))}
           </select>
+        )}
 
-          {/* Input dinámico según criterio */}
-          {criterio === "nombre" && (
+        {criterio === "precio" && (
+          <>
             <input
-              type="text"
-              style={getInputStyle('nombre')}
-              placeholder="Buscar por nombre del producto..."
-              value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
-              onFocus={() => setFocusedInput('nombre')}
-              onBlur={() => setFocusedInput(null)}
+              type="number"
+              className="form-control me-2 mb-2"
+              placeholder="Precio mínimo"
+              value={precioMin}
+              onChange={(e) => setPrecioMin(e.target.value)}
+              style={{ width: "150px" }}
             />
-          )}
+            <input
+              type="number"
+              className="form-control me-2 mb-2"
+              placeholder="Precio máximo"
+              value={precioMax}
+              onChange={(e) => setPrecioMax(e.target.value)}
+              style={{ width: "150px" }}
+            />
+          </>
+        )}
 
-          {criterio === "tipo" && (
-            <select
-              style={estilos.select}
-              value={tipoSeleccionado}
-              onChange={(e) => setTipoSeleccionado(e.target.value)}
-            >
-              <option value="">Selecciona un tipo</option>
-              {tipos.map((t) => (
-                <option key={t.id_tipo} value={t.id_tipo}>
-                  {t.tipo}
-                </option>
-              ))}
-            </select>
-          )}
+        {/* Botones */}
+        <button
+          type="submit"
+          className="btn text-white me-2 mb-2"
+          style={{ backgroundColor: "#f28724" }}
+        >
+          🔎Buscar
+        </button>
+        <button
+          type="button"
+          className="btn btn-outline-secondary mb-2"
+          onClick={limpiarBusqueda}
+        >
+          🧹Limpiar
+        </button>
+      </form>
 
-          {criterio === "precio" && (
-            <>
-              <input
-                type="number"
-                style={getInputStyle('precioMin')}
-                placeholder="Precio mínimo"
-                value={precioMin}
-                onChange={(e) => setPrecioMin(e.target.value)}
-                onFocus={() => setFocusedInput('precioMin')}
-                onBlur={() => setFocusedInput(null)}
-              />
-              <input
-                type="number"
-                style={getInputStyle('precioMax')}
-                placeholder="Precio máximo"
-                value={precioMax}
-                onChange={(e) => setPrecioMax(e.target.value)}
-                onFocus={() => setFocusedInput('precioMax')}
-                onBlur={() => setFocusedInput(null)}
-              />
-            </>
-          )}
-
-          {/* Botones de acción */}
-          <button
-            type="button"
-            style={estilos.btnPrimary}
-            onClick={realizarBusqueda}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
-            }}
-          >
-            <span>🔎</span>
-            Buscar
-          </button>
-          
-          <button
-            type="button"
-            style={estilos.btnSecondary}
-            onClick={limpiarBusqueda}
-            onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = '#f5f5dc';
-              e.currentTarget.style.transform = 'translateY(-2px)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = 'white';
-              e.currentTarget.style.transform = 'translateY(0)';
-            }}
-          >
-            <span>🧹</span>
-            Limpiar
-          </button>
-        </div>
-      </div>
-
-      {/* Tabla de productos */}
-      <div style={{ overflowX: 'auto' }}>
-        <table style={estilos.table}>
-          <thead style={estilos.thead}>
-            <tr>
-              <th style={estilos.th}>ID</th>
-              <th style={estilos.th}>Nombre</th>
-              <th style={estilos.th}>Descripción</th>
-              <th style={estilos.th}>Tipo</th>
-              <th style={estilos.th}>Precio</th>
-              <th style={estilos.th}>Imagen</th>
-              <th style={estilos.th}>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {productos.length > 0 ? (
-              productos.map((producto, index) => (
-                <tr
-                  key={producto.id_producto}
-                  style={getRowStyle(index)}
-                  onMouseEnter={() => setHoveredRow(index)}
-                  onMouseLeave={() => setHoveredRow(null)}
-                >
-                  <td style={estilos.tdCentered}>
-                    <strong>{producto.id_producto}</strong>
-                  </td>
-                  <td style={estilos.td}>
-                    <strong style={{ color: '#2f4858' }}>
-                      {producto.nombreProducto}
-                    </strong>
-                  </td>
-                  <td style={estilos.td}>{producto.descripcionProducto}</td>
-                  <td style={estilos.tdCentered}>
-                    <span style={{
-                      backgroundColor: '#c29c5e',
-                      color: 'white',
-                      padding: '0.3rem 0.8rem',
-                      borderRadius: '12px',
-                      fontSize: '0.85rem',
-                      fontWeight: 'bold'
-                    }}>
-                      {producto.tipo?.tipo}
-                    </span>
-                  </td>
-                  <td style={estilos.tdCentered}>
-                    <span style={{
-                      color: '#578661',
-                      fontWeight: 'bold',
-                      fontSize: '1.1rem'
-                    }}>
-                      ${producto.precioProducto.toFixed(2)}
-                    </span>
-                  </td>
-                  <td style={estilos.tdCentered}>
-                    {producto.imagen ? (
-                      <img
-                        src={producto.imagen}
-                        alt={producto.nombreProducto}
-                        style={{
-                          width: "100px",
-                          height: "100px",
-                          objectFit: "cover",
-                          borderRadius: "8px",
-                          border: "2px solid #e0ddd0",
-                          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-                        }}
-                      />
-                    ) : (
-                      <span style={{ color: '#999', fontStyle: 'italic' }}>
-                        Sin imagen
-                      </span>
-                    )}
-                  </td>
-                  <td style={estilos.tdCentered}>
-                    <button
-                      style={estilos.btnEdit}
-                      onClick={() => actualizarProducto(producto.id_producto)}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.backgroundColor = '#b08a52';
-                        e.currentTarget.style.transform = 'scale(1.05)';
+      {/* 🧾 Tabla */}
+      <table className="table table-bordered tabla-clientes">
+        <thead className="table-light text-center">
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Tipo</th>
+            <th>Precio</th>
+            <th>Imagen</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {productos.length > 0 ? (
+            productos.map((producto) => (
+              <tr key={producto.id_producto}>
+                <td className="text-center">{producto.id_producto}</td>
+                <td>{producto.nombreProducto}</td>
+                <td>{producto.descripcionProducto}</td>
+                <td className="text-center">{producto.tipo?.tipo}</td>
+                <td className="text-end">
+                  ${producto.precioProducto.toFixed(2)}
+                </td>
+                <td className="text-center align-middle">
+                  {producto.imagen ? (
+                    <img
+                      src={producto.imagen}
+                      alt={producto.nombreProducto}
+                      style={{
+                        width: "100px",
+                        height: "150px",
+                        objectFit: "contain",
+                        borderRadius: "8px",
+                        backgroundColor: "#f8f9fa",
+                        padding: "4px",
+                        boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
                       }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.backgroundColor = '#c29c5e';
-                        e.currentTarget.style.transform = 'scale(1)';
-                      }}
-                    >
-                      <span>📝</span>
-                      Editar
-                    </button>
-                    <button
-                      style={estilos.btnDelete}
-                      onClick={() => eliminarProducto(producto.id_producto)}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.backgroundColor = '#a04442';
-                        e.currentTarget.style.transform = 'scale(1.05)';
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.backgroundColor = '#c0615f';
-                        e.currentTarget.style.transform = 'scale(1)';
-                      }}
-                    >
-                      <span>🗑️</span>
-                      Eliminar
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="7" style={estilos.emptyMessage}>
-                  <div>
-                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📭</div>
-                    <div>No hay productos que coincidan con el filtro seleccionado</div>
-                  </div>
+                    />
+                  ) : (
+                    <span className="text-muted fst-italic">Sin imagen</span>
+                  )}
+                </td>
+                <td className="text-center">
+                  <button
+                    className="btn text-white me-2"
+                    style={{ backgroundColor: "#f28724" }}
+                    onClick={() => actualizarProducto(producto.id_producto)}
+                  >
+                    📝Actualizar
+                  </button>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => eliminarProducto(producto.id_producto)}
+                  >
+                    🗑️Eliminar
+                  </button>
                 </td>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="7" className="text-center text-muted">
+                ❌No hay productos que coincidan con el filtro seleccionado.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
     </div>
   );
 };

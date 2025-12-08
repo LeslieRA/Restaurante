@@ -4,179 +4,14 @@ import {
   deleteCliente,
   buscarClientes,
 } from "../services/ClienteService";
-import { deleteUsuario } from "../services/SecurityService";
+
+import { deleteUsuario } from "../services/SecurityService";  //  IMPORTANTE
 import { useNavigate } from "react-router-dom";
 
 export const ListaClienteComponent = () => {
   const [clientes, setClientes] = useState([]);
   const [busqueda, setBusqueda] = useState("");
-  const [hoveredRow, setHoveredRow] = useState(null);
-  const [hoveredBtn, setHoveredBtn] = useState(null);
   const navegar = useNavigate();
-
-  // Estilos con paleta azul elegante
-  const estilos = {
-    container: {
-      maxWidth: '1200px',
-      margin: '2rem auto',
-      padding: '2rem',
-      backgroundColor: 'white',
-      borderRadius: '15px',
-      boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
-      border: '3px solid #c29c5e'
-    },
-    title: {
-      fontFamily: 'Georgia, serif',
-      color: '#2f4858',
-      textAlign: 'center',
-      fontSize: '2.5rem',
-      marginBottom: '2rem',
-      paddingBottom: '1rem',
-      borderBottom: '3px solid #c29c5e',
-      fontWeight: 'bold',
-      textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
-    },
-    searchContainer: {
-      display: 'flex',
-      gap: '1rem',
-      marginBottom: '2rem',
-      flexWrap: 'wrap'
-    },
-    searchInput: {
-      flex: 1,
-      minWidth: '250px',
-      padding: '0.8rem 1rem',
-      border: '2px solid #e0ddd0',
-      borderRadius: '8px',
-      fontSize: '1rem',
-      fontFamily: 'Arial, sans-serif',
-      transition: 'all 0.3s ease',
-      outline: 'none'
-    },
-    searchInputFocus: {
-      borderColor: '#c29c5e',
-      boxShadow: '0 0 0 3px rgba(194, 156, 94, 0.2)'
-    },
-    btnPrimary: {
-      backgroundColor: '#c29c5e',
-      color: 'white',
-      border: 'none',
-      borderRadius: '8px',
-      padding: '0.8rem 1.5rem',
-      fontSize: '1rem',
-      fontWeight: 'bold',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.5rem',
-      whiteSpace: 'nowrap',
-      boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
-    },
-    btnSecondary: {
-      backgroundColor: 'white',
-      color: '#2f4858',
-      border: '2px solid #c29c5e',
-      borderRadius: '8px',
-      padding: '0.8rem 1.5rem',
-      fontSize: '1rem',
-      fontWeight: 'bold',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.5rem',
-      whiteSpace: 'nowrap'
-    },
-    table: {
-      width: '100%',
-      borderCollapse: 'collapse',
-      marginTop: '1.5rem',
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-      borderRadius: '8px',
-      overflow: 'hidden'
-    },
-    thead: {
-      backgroundColor: '#2f4858',
-      color: '#c29c5e'
-    },
-    th: {
-      padding: '1rem',
-      textAlign: 'center',
-      fontWeight: 'bold',
-      fontSize: '1rem',
-      fontFamily: 'Georgia, serif',
-      borderBottom: '2px solid #1e2f3a'
-    },
-    td: {
-      padding: '1rem',
-      textAlign: 'left',
-      borderBottom: '1px solid #ddd',
-      fontSize: '0.95rem',
-      transition: 'all 0.2s ease'
-    },
-    tdCentered: {
-      padding: '1rem',
-      textAlign: 'center',
-      borderBottom: '1px solid #ddd',
-      fontSize: '0.95rem'
-    },
-    rowEven: {
-      backgroundColor: '#f9f9f9'
-    },
-    rowOdd: {
-      backgroundColor: '#ffffff'
-    },
-    rowHover: {
-      backgroundColor: '#e8e4d9',
-      transform: 'scale(1.01)',
-      boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-    },
-    btnEdit: {
-      backgroundColor: '#c29c5e',
-      color: 'white',
-      border: 'none',
-      borderRadius: '6px',
-      padding: '0.5rem 1rem',
-      fontSize: '0.9rem',
-      fontWeight: 'bold',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '0.5rem',
-      marginRight: '0.5rem'
-    },
-    btnDelete: {
-      backgroundColor: '#c0615f',
-      color: 'white',
-      border: 'none',
-      borderRadius: '6px',
-      padding: '0.5rem 1rem',
-      fontSize: '0.9rem',
-      fontWeight: 'bold',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '0.5rem'
-    },
-    emptyMessage: {
-      textAlign: 'center',
-      color: '#888',
-      fontSize: '1.1rem',
-      padding: '2rem',
-      fontStyle: 'italic'
-    },
-    buttonContainer: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: '1.5rem',
-      gap: '1rem',
-      flexWrap: 'wrap'
-    }
-  };
 
   // 🟠 Cargar todos los clientes al inicio
   useEffect(() => {
@@ -217,13 +52,15 @@ export const ListaClienteComponent = () => {
     navegar(`/cliente/edita/${id}`);
   }
 
-  // 🗑️ Eliminar cliente + su usuario correspondiente
+  //Eliminar cliente + su usuario correspondiente
   function eliminarCliente(idCliente) {
     if (!window.confirm("¿Seguro que deseas eliminar este cliente?")) return;
 
     deleteCliente(idCliente)
       .then(() => {
         console.log("Cliente eliminado");
+
+        // 🧨 Intentar eliminar usuario con el mismo ID
         return deleteUsuario(idCliente);
       })
       .then(() => {
@@ -237,138 +74,82 @@ export const ListaClienteComponent = () => {
       });
   }
 
-  const getBtnStyle = (type, isHovered) => {
-    const baseStyle = type === 'edit' ? estilos.btnEdit : estilos.btnDelete;
-    const hoverStyle = {
-      transform: 'translateY(-2px)',
-      boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
-      backgroundColor: type === 'edit' ? '#a78247' : '#a94442'
-    };
-    return isHovered ? { ...baseStyle, ...hoverStyle } : baseStyle;
-  };
 
   return (
-    <div style={estilos.container}>
-      
-      {/* Header con título y botón nuevo */}
-      <div style={estilos.buttonContainer}>
-        <h2 style={{ ...estilos.title, margin: 0, border: 'none', padding: 0 }}>
-          📋 Lista de Clientes
-        </h2>
-        <button
-          style={{
-            ...estilos.btnPrimary,
-            ...(hoveredBtn === 'nuevo' ? {
-              backgroundColor: '#a78247',
-              transform: 'translateY(-2px)',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
-            } : {})
-          }}
-          onClick={nuevoCliente}
-          onMouseEnter={() => setHoveredBtn('nuevo')}
-          onMouseLeave={() => setHoveredBtn(null)}
-        >
-          ➕ Nuevo Cliente
-        </button>
-      </div>
+    <div className="container">
+      {/* Botón nuevo */}
+      <button
+        className="btn text-white mb-3"
+        style={{ backgroundColor: "#f28724" }}
+        onClick={nuevoCliente}
+      >
+        ➕Nuevo cliente
+      </button>
+
+      <h2 className="text-center titulo-clientes">Lista de clientes</h2>
 
       {/* Barra de búsqueda */}
-      <div style={estilos.searchContainer}>
+      <div className="d-flex mb-3">
         <input
           type="text"
-          style={estilos.searchInput}
-          placeholder="🔎 Buscar cliente por nombre..."
+          className="form-control me-2"
+          placeholder="🔎Buscar cliente por nombre..."
           value={busqueda}
           onChange={handleBusqueda}
-          onFocus={(e) => {
-            e.target.style.borderColor = estilos.searchInputFocus.borderColor;
-            e.target.style.boxShadow = estilos.searchInputFocus.boxShadow;
-          }}
-          onBlur={(e) => {
-            e.target.style.borderColor = '#e0ddd0';
-            e.target.style.boxShadow = 'none';
-          }}
         />
         <button
-          style={{
-            ...estilos.btnSecondary,
-            ...(hoveredBtn === 'limpiar' ? {
-              backgroundColor: '#c29c5e',
-              color: 'white',
-              transform: 'translateY(-2px)',
-              boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
-            } : {})
-          }}
+          type="button"
+            className="btn"
+            style={{ borderColor: "#f28724", color: "#75421e" }}
           onClick={() => {
             setBusqueda("");
             getAllClientes();
           }}
-          onMouseEnter={() => setHoveredBtn('limpiar')}
-          onMouseLeave={() => setHoveredBtn(null)}
         >
-          🧹 Limpiar
+          🧹Limpiar
         </button>
       </div>
 
       {/* Tabla */}
-      <table style={estilos.table}>
-        <thead style={estilos.thead}>
+      <table className="table table-bordered tabla-clientes">
+        <thead>
           <tr>
-            <th style={estilos.th}>ID</th>
-            <th style={estilos.th}>Nombre</th>
-            <th style={estilos.th}>Teléfono</th>
-            <th style={estilos.th}>Correo</th>
-            <th style={estilos.th}>Acciones</th>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Teléfono</th>
+            <th>Correo</th>
+            <th>Acciones</th>
           </tr>
         </thead>
 
         <tbody>
           {clientes.length === 0 ? (
             <tr>
-              <td colSpan="5" style={estilos.emptyMessage}>
-                ❌ No hay clientes registrados
+              <td colSpan="5" className="text-center text-muted">
+                ❌No hay clientes registrados
               </td>
             </tr>
           ) : (
-            clientes.map((cliente, index) => (
-              <tr
-                key={cliente.idCliente}
-                style={{
-                  ...(index % 2 === 0 ? estilos.rowEven : estilos.rowOdd),
-                  ...(hoveredRow === cliente.idCliente ? estilos.rowHover : {})
-                }}
-                onMouseEnter={() => setHoveredRow(cliente.idCliente)}
-                onMouseLeave={() => setHoveredRow(null)}
-              >
-                <td style={estilos.tdCentered}>
-                  <strong>{cliente.idCliente}</strong>
-                </td>
-                <td style={estilos.td}>
-                  <strong>{cliente.nombreCliente}</strong>
-                </td>
-                <td style={estilos.td}>
-                  📞 {cliente.telefonoCliente}
-                </td>
-                <td style={estilos.td}>
-                  📧 {cliente.correoCliente}
-                </td>
-                <td style={estilos.tdCentered}>
+            clientes.map((cliente) => (
+              <tr key={cliente.idCcliente}>
+                <td>{cliente.idCliente}</td>
+                <td>{cliente.nombreCliente}</td>
+                <td>{cliente.telefonoCliente}</td>
+                <td>{cliente.correoCliente}</td>
+                <td>
                   <button
-                    style={getBtnStyle('edit', hoveredBtn === `edit-${cliente.idCliente}`)}
+                    className="btn btn-warning btn-sm me-2 text-white"
+                    style={{ backgroundColor: "#f28724" }}
                     onClick={() => editarCliente(cliente.idCliente)}
-                    onMouseEnter={() => setHoveredBtn(`edit-${cliente.idCliente}`)}
-                    onMouseLeave={() => setHoveredBtn(null)}
                   >
-                    📝 Editar
+                    📝Editar
                   </button>
 
                   <button
-                    style={getBtnStyle('delete', hoveredBtn === `delete-${cliente.idCliente}`)}
+                    className="btn btn-danger btn-sm"
                     onClick={() => eliminarCliente(cliente.idCliente)}
-                    onMouseEnter={() => setHoveredBtn(`delete-${cliente.idCliente}`)}
-                    onMouseLeave={() => setHoveredBtn(null)}
                   >
-                    🗑️ Eliminar
+                    🗑️Eliminar
                   </button>
                 </td>
               </tr>
