@@ -40,7 +40,8 @@ const estilos = {
     fontFamily: 'Arial, sans-serif',
     transition: 'all 0.3s ease',
     outline: 'none',
-    backgroundColor: '#121212ff'
+    backgroundColor: '#fff',
+    color: '#000000',        // ✅ AGREGA ESTO: Fuerza el texto a negro
   },
   label: {
     color: '#2f4858',
