@@ -59,7 +59,10 @@ export const ListaVentaComponent = () => {
       fontSize: '1rem',
       fontFamily: 'Arial, sans-serif',
       transition: 'all 0.3s ease',
-      outline: 'none'
+      outline: 'none',
+      backgroundColor: '#ffffff', // ✅ CORREGIDO: Fondo blanco
+      color: '#000000',           // ✅ CORREGIDO: Texto negro
+      cursor: 'pointer'
     },
     searchInputFocus: {
       borderColor: '#c29c5e',
