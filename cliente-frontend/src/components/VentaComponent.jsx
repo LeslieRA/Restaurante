@@ -40,7 +40,7 @@ const estilos = {
     fontFamily: 'Arial, sans-serif',
     transition: 'all 0.3s ease',
     outline: 'none',
-    backgroundColor: '#fff'
+    backgroundColor: '#121212ff'
   },
   label: {
     color: '#2f4858',
