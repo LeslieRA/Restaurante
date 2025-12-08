@@ -14,11 +14,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const estilos = {
   container: {
     maxWidth: '1200px',
-    margin: '0 auto', // Ajustado para modal
+    margin: '0 auto', 
     padding: '2rem',
     backgroundColor: 'white',
     borderRadius: '15px',
-    boxShadow: 'none', // Sin sombra dentro del modal
+    boxShadow: 'none', 
     border: '3px solid #c29c5e'
   },
   title: {
@@ -182,12 +182,13 @@ export const DetalleVentaComponent = ({ show, handleClose, ventaId }) => {
     return p ? p.nombreProducto : '—';
   };
 
-  // ✅ CORRECCIÓN DE HORA: Forzamos UTC ('Z') para que el navegador reste las 6 horas
+  // ✅ CORRECCIÓN DE HORA: Forzamos UTC ('Z') para que reste las 6 horas
   const formatearFecha = (fecha) => {
     if (!fecha) return "—";
     try {
       let fechaStr = String(fecha);
-      // Si no trae Z ni offset (+/-), se asume que viene "limpia" del backend y le agregamos Z
+      // Si la fecha viene como "2025-12-08T11:46:00" (sin Z ni offset)
+      // le pegamos la 'Z' al final para que JS sepa que es UTC.
       if (!fechaStr.endsWith("Z") && !fechaStr.includes("+") && !fechaStr.includes("-")) {
          fechaStr += "Z"; 
       }
@@ -196,6 +197,7 @@ export const DetalleVentaComponent = ({ show, handleClose, ventaId }) => {
       return f.toLocaleString('es-MX', {
         dateStyle: 'medium',
         timeStyle: 'short',
+        hour12: true // AM/PM
       });
     } catch {
       return fecha;
