@@ -1,6 +1,84 @@
 import React, { useEffect, useState } from 'react';
 import { crearTipoProducto, getTipoProducto, updateTipoProducto } from '../services/TipoProductoService';
-import { data, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+
+// --- ESTILOS DEFINIDOS (Tema Dorado/Elegante) ---
+const estilos = {
+  container: {
+    maxWidth: '500px', // Ancho ideal para este formulario pequeño
+    margin: '2rem auto',
+    padding: '2rem',
+    backgroundColor: 'white',
+    borderRadius: '15px',
+    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+    border: '3px solid #c29c5e'
+  },
+  title: {
+    fontFamily: 'Georgia, serif',
+    color: '#2f4858',
+    textAlign: 'center',
+    fontSize: '2.5rem',
+    marginBottom: '2rem',
+    paddingBottom: '1rem',
+    borderBottom: '3px solid #c29c5e',
+    fontWeight: 'bold',
+    textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+  },
+  formInput: {
+    width: '100%',
+    padding: '0.8rem 1rem',
+    border: '2px solid #e0ddd0',
+    borderRadius: '8px',
+    fontSize: '1rem',
+    fontFamily: 'Arial, sans-serif',
+    transition: 'all 0.3s ease',
+    outline: 'none',
+    backgroundColor: '#fff',
+    color: '#2f4858', // ✅ TEXTO OSCURO para evitar letras blancas
+  },
+  label: {
+    color: '#2f4858',
+    fontWeight: 'bold',
+    marginBottom: '0.5rem',
+    display: 'block'
+  },
+  btnPrimary: {
+    backgroundColor: '#c29c5e',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    padding: '0.8rem 1.5rem',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem',
+    boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+  },
+  btnSecondary: {
+    backgroundColor: 'white',
+    color: '#2f4858',
+    border: '2px solid #c29c5e',
+    borderRadius: '8px',
+    padding: '0.8rem 1.5rem',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem'
+  },
+  errorMsg: {
+    color: '#c0615f',
+    fontSize: '0.85rem',
+    marginTop: '0.25rem'
+  }
+};
 
 export const TipoProductoComponent = () => {
   const [tipo, setTipo] = useState('');
@@ -12,27 +90,27 @@ export const TipoProductoComponent = () => {
   })
 
   const navegar = useNavigate();
-  const {id} = useParams();
+  const { id } = useParams();
 
   // Handlers de inputs
   const actualizaTipo = (e) => setTipo(e.target.value);
   const actualizaDescripcion = (e) => setDescripcion(e.target.value);
 
-  //Validación del formulario
-  function validaForm(){
+  // Validación del formulario
+  function validaForm() {
     let valida = true;
-    const errorsCopy = {...errors};
+    const errorsCopy = { ...errors };
 
-    if(tipo.trim()){
+    if (tipo.trim()) {
       errorsCopy.tipo = '';
-    } else{
+    } else {
       errorsCopy.tipo = 'El tipo es requerido';
       valida = false;
     }
 
-     if(descripcion.trim()){
+    if (descripcion.trim()) {
       errorsCopy.descripcion = '';
-    } else{
+    } else {
       errorsCopy.descripcion = 'La descripcion es requerida';
       valida = false;
     }
@@ -41,125 +119,111 @@ export const TipoProductoComponent = () => {
     return valida;
   }
 
-  //Carga datos si es edición
+  // Carga datos si es edición
   useEffect(() => {
-    if(!id) return;
+    if (!id) return;
     getTipoProducto(id)
-    .then(({data}) =>{
-      setTipo(data.tipo ?? '');
-      setDescripcion(data.descripcion ?? '')
-    })
-    .catch((err) => console.error(err));
+      .then(({ data }) => {
+        setTipo(data.tipo ?? '');
+        setDescripcion(data.descripcion ?? '')
+      })
+      .catch((err) => console.error(err));
   }, [id]);
 
   // Guardar Tipo de Producto
   function saveTipoProducto(e) {
     e.preventDefault();
 
-    if(validaForm()){
-    const tipoProducto = { tipo, descripcion };
-    
-    if(id){
-      //Editar un tipo de producto existente
-      updateTipoProducto(id, tipoProducto)
-      .then((response) => {
-        console.log("Tipo de producto actualizado: ", response.data);
-        navegar("/tipoProducto/lista");
-      })
-      .catch((error) => console.error(error));
-    }else{
-        //Crear un nuevo tipo de producto
+    if (validaForm()) {
+      const tipoProducto = { tipo, descripcion };
+
+      if (id) {
+        // Editar
+        updateTipoProducto(id, tipoProducto)
+          .then((response) => {
+            console.log("Tipo de producto actualizado: ", response.data);
+            navegar("/tipoProducto/lista");
+          })
+          .catch((error) => console.error(error));
+      } else {
+        // Crear
         crearTipoProducto(tipoProducto)
-        .then((response) => {
-        console.log("Tipo de producto registrado", response.data);
-        // Redirigir a la lista
-        navegar('/tipoProducto/lista');
-        // Limpiar campos
-        setTipo('');
-        setDescripcion('');
-      })
-      .catch((error) => console.error(error));   
+          .then((response) => {
+            console.log("Tipo de producto registrado", response.data);
+            navegar('/tipoProducto/lista');
+            setTipo('');
+            setDescripcion('');
+          })
+          .catch((error) => console.error(error));
       }
-    }    
+    }
   }
 
-  function cancelar(){
+  function cancelar() {
     navegar('/tipoProducto/lista');
   }
-  
+
   function pagTitulo() {
-    if (id) {
-      return <h2 className="text-center">Modificar tipo de producto</h2>
-    }
-    else {
-      return <h2 className="text-center">Registrar un nuevo tipo de producto</h2>
-    }
+    return id ? "Modificar tipo de producto" : "Registrar nuevo tipo";
   }
 
   return (
-    <div className="container mt-4">
-      <div className="form-header text-center mb-4" style={{ color: '#75421e' }}>
-        <h2>{pagTitulo()}</h2>
-      </div>
+    <div style={estilos.container}>
+      <h2 style={estilos.title}>{pagTitulo()}</h2>
 
-      <form
-        className="p-4 shadow rounded mx-auto"
-        style={{ backgroundColor: '#fff7e6', maxWidth: '500px' }}
-      >
+      <form onSubmit={saveTipoProducto}>
+        
         {/* Tipo */}
-        <div className="mb-3">
-          <label className="form-label fw-bold" style={{ color: '#f28724' }}>
-            Tipo
-          </label>
+        <div style={{ marginBottom: '1.5rem' }}>
+          <label style={estilos.label}>Tipo</label>
           <input
             type="text"
-            className={`form-control ${errors.tipo? 'is-invalid' : ''}`}
+            style={{
+                ...estilos.formInput,
+                borderColor: errors.tipo ? '#c0615f' : estilos.formInput.border.split(' ')[2]
+            }}
             placeholder="Ejemplo: Bebidas, Postres, Tacos..."
             value={tipo}
             onChange={actualizaTipo}
-            required
           />
-          {errors.tipo && (
-            <div className="invalid-feedback">{errors.tipo}</div>
-          )}
+          {errors.tipo && <div style={estilos.errorMsg}>{errors.tipo}</div>}
         </div>
 
         {/* Descripción */}
-        <div className="mb-3">
-          <label className="form-label fw-bold" style={{ color: '#f28724' }}>
-            Descripción
-          </label>
+        <div style={{ marginBottom: '2rem' }}>
+          <label style={estilos.label}>Descripción</label>
           <textarea
-            className={`form-control ${errors.descripcion ? 'is-invalid' : ''}`}
+            style={{
+                ...estilos.formInput,
+                minHeight: '100px', // Altura extra para el textarea
+                borderColor: errors.descripcion ? '#c0615f' : estilos.formInput.border.split(' ')[2]
+            }}
             rows="3"
             placeholder="Describe este tipo de producto"
-            value={descripcion} 
+            value={descripcion}
             onChange={actualizaDescripcion}
           />
-           {errors.descripcion && (
-            <div className="invalid-feedback">{errors.descripcion}</div>
-          )}
+          {errors.descripcion && <div style={estilos.errorMsg}>{errors.descripcion}</div>}
         </div>
 
         {/* Botones */}
-        <div className="d-flex gap-2 justify-content-center">
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1rem' }}>
           <button
             type="submit"
-            onClick={saveTipoProducto}
-            className="btn btn-lg text-white"
-            style={{ backgroundColor: '#f28724' }}
+            style={estilos.btnPrimary}
           >
-            {id ? '🔄Actualizar' : '✅Guardar'}
+            {id ? '🔄 Actualizar' : '✅ Guardar'}
           </button>
+          
           <button
             type="button"
-            className="btn btn-lg"
-            style={{ borderColor: '#f28724', color: '#f28724' }}
+            style={estilos.btnSecondary}
             onClick={cancelar}
           >
-            ❌Cancelar
+            ❌ Cancelar
           </button>
         </div>
+
       </form>
     </div>
   );
