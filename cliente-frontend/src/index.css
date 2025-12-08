@@ -80,36 +80,3 @@ button:focus-visible {
   }
 }
 
-/* Título de la tabla */
-.titulo-clientes {
-  font-weight: bold;
-  color: #75421e; /* Café oscuro */
-  margin-bottom: 20px;
-}
-
-/* Estilo de cabecera */
-.tabla-clientes thead th {
-  background-color: #f5a540; 
-  color: #75421e;
-  font-weight: bold;
-  text-align: center;
-}
-
-/* Alternar colores en filas */
-.tabla-clientes tbody tr:nth-child(odd) {
-  background-color: #f8bc56; /* Amarillo claro */
-}
-
-.tabla-clientes tbody tr:nth-child(even) {
-  background-color: #f5a540; /* Amarillo oscuro */
-}
-
-/* Bordes más definidos */
-.tabla-clientes {
-  border: 1px solid #f28926;
-}
-
-.tabla-clientes td, 
-.tabla-clientes th {
-  border: 1px solid #f28926;
-}
